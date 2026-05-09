@@ -1,0 +1,6 @@
+[
+  { "slug": "cartas",       "title": "Cartas Aeronáuticas", "order_index": 1 },
+  { "slug": "vor-ndb",      "title": "VOR / NDB",            "order_index": 2 },
+  { "slug": "gps-rnav",     "title": "GPS / RNAV",           "order_index": 3 },
+  { "slug": "plano-de-voo", "title": "Plano de Voo",         "order_index": 4 }
+]

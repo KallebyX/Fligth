@@ -1,0 +1,6 @@
+[
+  { "slug": "atmosfera",  "title": "Atmosfera",          "order_index": 1 },
+  { "slug": "metar",      "title": "METAR & TAF",         "order_index": 2 },
+  { "slug": "nuvens",     "title": "Nuvens & Frentes",    "order_index": 3 },
+  { "slug": "fenomenos",  "title": "Fenômenos Perigosos", "order_index": 4 }
+]

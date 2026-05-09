@@ -1,0 +1,6 @@
+[
+  { "slug": "aerodinamica",  "title": "Aerodinâmica",  "order_index": 1 },
+  { "slug": "estabilidade",  "title": "Estabilidade",  "order_index": 2 },
+  { "slug": "performance",   "title": "Performance",   "order_index": 3 },
+  { "slug": "manobras",      "title": "Manobras",      "order_index": 4 }
+]
