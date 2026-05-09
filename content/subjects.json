@@ -1,0 +1,42 @@
+[
+  {
+    "slug": "regulamentos",
+    "name": "Regulamentos de Tráfego Aéreo",
+    "color": "#0EA5E9",
+    "icon": "tower",
+    "order_index": 1,
+    "weight_pct": 20
+  },
+  {
+    "slug": "meteorologia",
+    "name": "Meteorologia",
+    "color": "#10B981",
+    "icon": "cloud",
+    "order_index": 2,
+    "weight_pct": 20
+  },
+  {
+    "slug": "navegacao",
+    "name": "Navegação Aérea",
+    "color": "#F97316",
+    "icon": "compass",
+    "order_index": 3,
+    "weight_pct": 20
+  },
+  {
+    "slug": "teoria-voo",
+    "name": "Teoria de Voo",
+    "color": "#8B5CF6",
+    "icon": "wing",
+    "order_index": 4,
+    "weight_pct": 20
+  },
+  {
+    "slug": "conhecimentos-tecnicos",
+    "name": "Conhecimentos Técnicos",
+    "color": "#EF4444",
+    "icon": "engine",
+    "order_index": 5,
+    "weight_pct": 20
+  }
+]

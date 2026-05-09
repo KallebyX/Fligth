@@ -1,0 +1,24 @@
+---
+slug: "decodificando-metar"
+title: "Decodificando o METAR"
+xp_reward: 12
+order_index: 1
+---
+
+O **METAR** é o relatório horário das condições meteorológicas em um aeródromo. Saber decodificá-lo rapidamente é essencial para o briefing de qualquer voo.
+
+Estrutura típica:
+
+```
+METAR SBGR 081300Z 09008KT 9999 BKN030 24/19 Q1016
+```
+
+- `SBGR` — código ICAO (Guarulhos).
+- `081300Z` — dia 8, 13:00 UTC.
+- `09008KT` — vento de 090° a 8 kt.
+- `9999` — visibilidade ≥ 10 km.
+- `BKN030` — nuvens fragmentadas a 3.000 ft.
+- `24/19` — temperatura 24 °C, ponto de orvalho 19 °C.
+- `Q1016` — QNH em hPa.
+
+Variações que caem em prova: **VRB** (vento variável), **CAVOK** (céu e visibilidade ok), **BR** (neblina/névoa úmida), **TSRA** (trovoada com chuva), **CB** (cumulonimbus). Sempre cruze o METAR com o **TAF** (previsão).

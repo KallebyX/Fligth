@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+    --primary: 199 89% 48%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 24 95% 53%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+    --border: 214 32% 91%;
+    --ring: 199 89% 48%;
+  }
+
+  body {
+    @apply bg-cloud text-ink antialiased font-sans;
+    font-feature-settings: "cv11", "ss01";
+  }
+
+  button {
+    @apply select-none;
+  }
+}
+
+@layer components {
+  .btn-pop {
+    @apply rounded-2xl font-bold uppercase tracking-wide transition-transform active:translate-y-[2px] active:shadow-none shadow-pop;
+  }
+
+  .card-pop {
+    @apply rounded-2xl bg-white shadow-pop border border-cloud-deep/40;
+  }
+}

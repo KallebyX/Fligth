@@ -1,0 +1,6 @@
+[
+  { "slug": "espaco-aereo",  "title": "Espaço Aéreo",          "order_index": 1 },
+  { "slug": "rbac-91",       "title": "RBAC 91 — Operações",    "order_index": 2 },
+  { "slug": "documentacao",  "title": "Documentação de Voo",   "order_index": 3 },
+  { "slug": "ats",           "title": "Serviços de Tráfego",   "order_index": 4 }
+]
