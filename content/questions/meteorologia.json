@@ -190,5 +190,53 @@
     "difficulty": 1,
     "source_ref": "FAA",
     "lesson_slug": "tipos-de-nuvens"
+  },
+  {
+    "stem": "Em uma frente fria, ao atravessá-la em voo, o piloto observa:",
+    "choice_a": "Vento constante e céu limpo",
+    "choice_b": "Mudança brusca de vento, queda de temperatura e instabilidade",
+    "choice_c": "Aumento gradual da pressão e estabilidade",
+    "choice_d": "Apenas formação de neblina",
+    "correct": "B",
+    "explanation_md": "Frente fria empurra ar quente para cima, gerando instabilidade, vento de mudança de direção (veering) e queda de temperatura.",
+    "difficulty": 2,
+    "source_ref": "Meteorologia Aeronáutica",
+    "lesson_slug": "tipos-de-nuvens"
+  },
+  {
+    "stem": "Inversão térmica em superfície favorece:",
+    "choice_a": "Forte turbulência",
+    "choice_b": "Formação de nevoeiro de radiação",
+    "choice_c": "Cumulonimbus de massa de ar",
+    "choice_d": "Tempestades severas",
+    "correct": "B",
+    "explanation_md": "Em noites claras, o solo perde calor; ar próximo esfria abaixo do ponto de orvalho → nevoeiro de radiação. Atmosfera estável, sem turbulência.",
+    "difficulty": 3,
+    "source_ref": "Meteorologia Aeronáutica",
+    "lesson_slug": "atmosfera-padrao"
+  },
+  {
+    "stem": "A unidade do QNH apresentada em METAR brasileiro é normalmente:",
+    "choice_a": "inHg",
+    "choice_b": "hPa (Q seguido do valor)",
+    "choice_c": "mmHg",
+    "choice_d": "Pa",
+    "correct": "B",
+    "explanation_md": "No Brasil o QNH é em hPa, prefixado por 'Q' no METAR (ex.: Q1018). EUA usam inHg com prefixo 'A' (A2992).",
+    "difficulty": 2,
+    "source_ref": "OACI Anexo 3",
+    "lesson_slug": "decodificando-metar"
+  },
+  {
+    "stem": "O efeito do gelo na asa em voo é:",
+    "choice_a": "Aumentar sustentação e reduzir arrasto",
+    "choice_b": "Reduzir sustentação, aumentar arrasto, aumentar peso e velocidade de estol",
+    "choice_c": "Não tem efeito significativo",
+    "choice_d": "Apenas afetar a coloração do perfil",
+    "correct": "B",
+    "explanation_md": "Acúmulo de gelo distorce o perfil aerodinâmico, reduzindo sustentação e CLmax, aumentando arrasto e peso, e elevando a velocidade de estol — combinação fatal.",
+    "difficulty": 2,
+    "source_ref": "FAA AC 91-74",
+    "lesson_slug": "tipos-de-nuvens"
   }
 ]

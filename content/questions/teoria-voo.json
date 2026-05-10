@@ -190,5 +190,53 @@
     "difficulty": 1,
     "source_ref": "Aerodinâmica",
     "lesson_slug": "estabilidade-eixos"
+  },
+  {
+    "stem": "O P-factor (assimetria de tração da hélice) é mais notável:",
+    "choice_a": "Em cruzeiro nivelado em alta velocidade",
+    "choice_b": "Em alto ângulo de ataque com potência alta (subida, decolagem)",
+    "choice_c": "Em descida planada",
+    "choice_d": "Em curvas com bank baixo",
+    "correct": "B",
+    "explanation_md": "Em AOA elevado, a pá descendente da hélice tem ângulo maior que a ascendente, gerando mais tração de um lado e tendência de guinada — corrigida com pedal direito.",
+    "difficulty": 4,
+    "source_ref": "FAA-H-8083-25",
+    "lesson_slug": "estabilidade-eixos"
+  },
+  {
+    "stem": "Em uma curva nivelada de 45°, o fator de carga aproximado é:",
+    "choice_a": "1,0 g",
+    "choice_b": "1,2 g",
+    "choice_c": "1,41 g",
+    "choice_d": "2,0 g",
+    "correct": "C",
+    "explanation_md": "n = 1/cos(bank). cos(45°) ≈ 0,707 → n ≈ 1,41. Em 60° o fator de carga é 2 g.",
+    "difficulty": 3,
+    "source_ref": "Aerodinâmica",
+    "lesson_slug": "stall-recuperacao"
+  },
+  {
+    "stem": "Sobre carga e balanceamento, exceder o limite traseiro de CG produz:",
+    "choice_a": "Aeronave mais estável e mais difícil de manobrar",
+    "choice_b": "Aeronave instável longitudinalmente, possivelmente impossível de recuperar de stall",
+    "choice_c": "Aeronave melhor em performance de subida",
+    "choice_d": "Sem efeito significativo",
+    "correct": "B",
+    "explanation_md": "CG muito traseiro reduz braço do estabilizador horizontal, diminui estabilidade e pode tornar o stall irrecuperável (parafuso plano).",
+    "difficulty": 3,
+    "source_ref": "FAA-H-8083-1",
+    "lesson_slug": "estabilidade-eixos"
+  },
+  {
+    "stem": "A velocidade VS0 representa:",
+    "choice_a": "Velocidade de manobra",
+    "choice_b": "Velocidade de estol em configuração de pouso (flaps + trem em baixo)",
+    "choice_c": "Velocidade nunca a exceder",
+    "choice_d": "Velocidade máxima de cruzeiro",
+    "correct": "B",
+    "explanation_md": "VS0 = stall em configuração de pouso. VS1 = estol em configuração 'limpa'. Importante para definir velocidades de aproximação.",
+    "difficulty": 2,
+    "source_ref": "POH",
+    "lesson_slug": "performance-decolagem"
   }
 ]

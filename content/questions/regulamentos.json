@@ -190,5 +190,53 @@
     "difficulty": 2,
     "source_ref": "RBAC 67",
     "lesson_slug": "documentacao-obrigatoria"
+  },
+  {
+    "stem": "Um piloto VFR não pode atravessar uma área restrita (R) sem:",
+    "choice_a": "Plano de voo IFR",
+    "choice_b": "Autorização do órgão controlador da área",
+    "choice_c": "Habilitação por instrumentos",
+    "choice_d": "Equipamento radar a bordo",
+    "correct": "B",
+    "explanation_md": "Áreas R exigem coordenação prévia com o órgão controlador (DECEA, COMAR, etc.). Sem autorização, é proibido entrar.",
+    "difficulty": 2,
+    "source_ref": "ICA 100-12 / DECEA",
+    "lesson_slug": "classes-de-espaco-aereo"
+  },
+  {
+    "stem": "Um voo VFR noturno entre aeródromos exige combustível mínimo para:",
+    "choice_a": "Destino + 30 minutos",
+    "choice_b": "Destino + alternativa + 45 minutos",
+    "choice_c": "Destino apenas",
+    "choice_d": "Destino + 60 minutos",
+    "correct": "B",
+    "explanation_md": "VFR noturno: destino + alternativa + 45 min de reserva (vs 30 min no diurno).",
+    "difficulty": 3,
+    "source_ref": "RBAC 91.151",
+    "lesson_slug": "rbac-91-fundamentos"
+  },
+  {
+    "stem": "Em uma TMA Classe C, antes de ingressar, o piloto VFR deve:",
+    "choice_a": "Apenas escutar a frequência ATIS",
+    "choice_b": "Solicitar e obter autorização do controle",
+    "choice_c": "Voar por instrumentos",
+    "choice_d": "Aguardar instruções do AFIS",
+    "correct": "B",
+    "explanation_md": "Classe C exige autorização ATC para entrada de voos VFR e IFR. ATIS apenas informa condições do aeródromo.",
+    "difficulty": 2,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "classes-de-espaco-aereo"
+  },
+  {
+    "stem": "Após perda de comunicação em voo VFR, o procedimento padrão é:",
+    "choice_a": "Pousar imediatamente em campo",
+    "choice_b": "Manter rota e altitude e tentar restabelecer comunicação; se persistir, prosseguir ao destino e pousar normalmente",
+    "choice_c": "Acionar transponder 7600 e seguir IFR",
+    "choice_d": "Voltar à origem sem avisar ninguém",
+    "correct": "B",
+    "explanation_md": "VFR sem rádio: mantenha plano, ative transponder 7600 e prossiga. Em terminal, faça aproximação visual e siga sinais luminosos da torre.",
+    "difficulty": 3,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "servicos-ats"
   }
 ]

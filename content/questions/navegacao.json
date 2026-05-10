@@ -190,5 +190,53 @@
     "difficulty": 1,
     "source_ref": "Navegação",
     "lesson_slug": "cartas-wac"
+  },
+  {
+    "stem": "ATIS (Automatic Terminal Information Service) fornece principalmente:",
+    "choice_a": "Autorização para decolar",
+    "choice_b": "Pista em uso, vento, QNH, TEMP e fenômenos no aeródromo",
+    "choice_c": "Rumo magnético da rota",
+    "choice_d": "Rotas alternativas",
+    "correct": "B",
+    "explanation_md": "ATIS é gravação cíclica com pista em uso, vento, visibilidade, nuvens, T/Td, QNH e NOTAM. Não dá autorização — esta vem da TWR.",
+    "difficulty": 1,
+    "source_ref": "ICA 100-37",
+    "lesson_slug": "plano-de-voo-vfr"
+  },
+  {
+    "stem": "Sobrevoando um VOR distante 60 NM com velocidade de solo 120 kt, o tempo até a estação é:",
+    "choice_a": "20 minutos",
+    "choice_b": "30 minutos",
+    "choice_c": "40 minutos",
+    "choice_d": "1 hora",
+    "correct": "B",
+    "explanation_md": "60 NM ÷ 120 kt = 0,5 h = 30 min.",
+    "difficulty": 2,
+    "source_ref": "Navegação",
+    "lesson_slug": "principios-vor"
+  },
+  {
+    "stem": "Em rota, ao usar o GPS, é boa prática:",
+    "choice_a": "Confiar exclusivamente no GPS",
+    "choice_b": "Cruzar a posição com cartas e auxílios convencionais",
+    "choice_c": "Desligar o GPS para preservar bateria",
+    "choice_d": "Usar GPS apenas em IFR",
+    "correct": "B",
+    "explanation_md": "GPS é precisíssimo, mas pode falhar (sinal, RAIM). Sempre cruze com carta + cronômetro + auxílios — defesa em profundidade.",
+    "difficulty": 2,
+    "source_ref": "FAA AIM",
+    "lesson_slug": "gps-rnav"
+  },
+  {
+    "stem": "Em uma carta WAC brasileira, a elevação de um aeródromo é mostrada em:",
+    "choice_a": "Metros",
+    "choice_b": "Pés acima do nível médio do mar (MSL)",
+    "choice_c": "Quilômetros",
+    "choice_d": "Pés acima do solo (AGL)",
+    "correct": "B",
+    "explanation_md": "Cartas aeronáuticas brasileiras seguem padrão ICAO: elevações em pés MSL.",
+    "difficulty": 1,
+    "source_ref": "DECEA / Cartas WAC",
+    "lesson_slug": "cartas-wac"
   }
 ]

@@ -58,7 +58,7 @@ content/                    # seed versionado em git
   subjects.json             # 5 matérias
   units/<subject>.json      # ~4 unidades por matéria
   lessons/<subject>/<unit>/*.mdx
-  questions/<subject>.json  # ~16-20 questões por matéria
+  questions/<subject>.json  # 20 questões por matéria (= 100 totais)
   badges.json
 
 scripts/seed.ts             # importa content/ → Supabase
@@ -90,7 +90,7 @@ cp .env.example .env.local
 
 ```bash
 npm install
-npm run seed            # popula 5 matérias, 16 lições MDX, 80 questões e badges
+npm run seed            # popula 5 matérias, 16 lições MDX, 100 questões e badges
 npm run dev             # http://localhost:3000
 ```
 
