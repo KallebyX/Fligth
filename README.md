@@ -90,7 +90,7 @@ cp .env.example .env.local
 
 ```bash
 npm install
-npm run seed            # popula 5 matérias, 16 lições MDX, 100 questões e badges
+npm run seed            # popula 5 matérias, 25 lições MDX, 100 questões e badges
 npm run dev             # http://localhost:3000
 ```
 
