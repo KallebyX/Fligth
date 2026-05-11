@@ -98,6 +98,21 @@ export type Database = {
         hearts_regen_at: string | null;
         streak_freezes: number;
         hearts_unlimited_until: string | null;
+        pro_until: string | null;
+        pro_plan: string | null;
+      }>;
+      subscriptions: Tbl<{
+        id: number;
+        user_id: string;
+        provider: "stripe" | "apple_iap" | "google_iap";
+        provider_ref: string;
+        product_sku: string;
+        status: "trialing" | "active" | "past_due" | "canceled" | "expired";
+        current_period_end: string | null;
+        cancel_at: string | null;
+        trial_end: string | null;
+        created_at: string;
+        updated_at: string;
       }>;
       leagues: Tbl<{ id: number; iso_week: string; division: string }>;
       league_members: Tbl<{ league_id: number; user_id: string; weekly_xp: number }>;
@@ -125,7 +140,14 @@ export type Database = {
         sku: string;
         name: string;
         description: string | null;
-        kind: "hearts_refill" | "hearts_unlimited" | "streak_freezes" | "remove_ads" | "donation";
+        kind:
+          | "hearts_refill"
+          | "hearts_unlimited"
+          | "streak_freezes"
+          | "remove_ads"
+          | "donation"
+          | "pro_subscription"
+          | "pro_lifetime";
         payload: Json;
         price_cents: number;
         currency: string;

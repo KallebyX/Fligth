@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HUD } from "@/components/hud/HUD";
 import { computeHearts } from "@/lib/hearts";
+import { computeProStatus } from "@/lib/pro";
 
 export default async function LearnLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -12,7 +13,7 @@ export default async function LearnLayout({ children }: { children: React.ReactN
 
   const { data: stats } = await supabase
     .from("user_stats")
-    .select("total_xp, current_streak, hearts, hearts_regen_at")
+    .select("total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan")
     .eq("user_id", user.id)
     .single();
 
@@ -28,12 +29,15 @@ export default async function LearnLayout({ children }: { children: React.ReactN
       .eq("user_id", user.id);
   }
 
+  const pro = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
+
   return (
     <>
       <HUD
         xp={stats?.total_xp ?? 0}
         streak={stats?.current_streak ?? 0}
         hearts={refreshed.hearts}
+        isPro={pro.isPro}
       />
       {children}
     </>

@@ -101,6 +101,99 @@ export async function POST(request: NextRequest) {
         break;
       }
 
+      case "customer.subscription.created":
+      case "customer.subscription.updated": {
+        const sub = event.data.object as Stripe.Subscription;
+        const userId = sub.metadata?.user_id ?? null;
+        if (!userId) {
+          // Try to recover via customer email
+          break;
+        }
+        const status = mapSubStatus(sub.status);
+        const item = sub.items.data[0];
+        const periodEnd =
+          item && typeof (item as { current_period_end?: number }).current_period_end === "number"
+            ? new Date((item as { current_period_end: number }).current_period_end * 1000).toISOString()
+            : null;
+        const cancelAt = sub.cancel_at
+          ? new Date(sub.cancel_at * 1000).toISOString()
+          : null;
+        const trialEnd = sub.trial_end
+          ? new Date(sub.trial_end * 1000).toISOString()
+          : null;
+
+        const productSku = sub.metadata?.product_sku ?? "pro_monthly";
+
+        // Upsert subscriptions row.
+        const existing = await supabase
+          .from("subscriptions")
+          .select("id")
+          .eq("provider_ref", sub.id)
+          .maybeSingle();
+        if (existing.data) {
+          await supabase
+            .from("subscriptions")
+            .update({
+              status,
+              current_period_end: periodEnd,
+              cancel_at: cancelAt,
+              trial_end: trialEnd,
+              updated_at: new Date().toISOString(),
+            })
+            .eq("id", existing.data.id);
+        } else {
+          await supabase.from("subscriptions").insert({
+            user_id: userId,
+            provider: "stripe",
+            provider_ref: sub.id,
+            product_sku: productSku,
+            status,
+            current_period_end: periodEnd,
+            cancel_at: cancelAt,
+            trial_end: trialEnd,
+          });
+        }
+
+        // Mirror to user_stats so the app can gate features cheaply.
+        if (status === "active" || status === "trialing") {
+          await supabase
+            .from("user_stats")
+            .update({
+              pro_until: periodEnd,
+              pro_plan: productSku === "pro_yearly" ? "yearly" : "monthly",
+            })
+            .eq("user_id", userId);
+        }
+        break;
+      }
+
+      case "customer.subscription.deleted": {
+        const sub = event.data.object as Stripe.Subscription;
+        const userId = sub.metadata?.user_id ?? null;
+        await supabase
+          .from("subscriptions")
+          .update({ status: "canceled", updated_at: new Date().toISOString() })
+          .eq("provider_ref", sub.id);
+        if (userId) {
+          // Don't strip Pro immediately — let the period end naturally via
+          // pro_until. We do nothing else here.
+        }
+        break;
+      }
+
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        const subId =
+          (invoice as { subscription?: string | Stripe.Subscription }).subscription;
+        if (typeof subId === "string") {
+          await supabase
+            .from("subscriptions")
+            .update({ status: "past_due", updated_at: new Date().toISOString() })
+            .eq("provider_ref", subId);
+        }
+        break;
+      }
+
       default:
         // No-op for unhandled types. Stripe will retry on 5xx so always 200 for known events.
         break;
@@ -111,4 +204,26 @@ export async function POST(request: NextRequest) {
   }
 
   return NextResponse.json({ received: true });
+}
+
+function mapSubStatus(
+  s: Stripe.Subscription.Status,
+): "trialing" | "active" | "past_due" | "canceled" | "expired" {
+  switch (s) {
+    case "trialing":
+      return "trialing";
+    case "active":
+      return "active";
+    case "past_due":
+    case "unpaid":
+      return "past_due";
+    case "canceled":
+      return "canceled";
+    case "incomplete":
+    case "incomplete_expired":
+    case "paused":
+      return "expired";
+    default:
+      return "expired";
+  }
 }

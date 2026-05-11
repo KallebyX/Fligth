@@ -3,6 +3,7 @@
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { nextReviewBoolean, type SrsState } from "@/lib/srs/sm2";
 import { computeHearts, loseHeart } from "@/lib/hearts";
+import { computeProStatus } from "@/lib/pro";
 
 export type SubmitAnswerInput = {
   questionId: number;
@@ -76,21 +77,27 @@ export async function submitAnswer(input: SubmitAnswerInput): Promise<SubmitAnsw
     due_at: srs.due_at,
   });
 
-  // 3. Hearts (only deduct in lesson context).
+  // 3. Hearts (only deduct in lesson context; Pro = unlimited).
   const { data: stats } = await supabase
     .from("user_stats")
-    .select("hearts, hearts_regen_at")
+    .select("hearts, hearts_regen_at, hearts_unlimited_until, pro_until, pro_plan")
     .eq("user_id", user.id)
     .single();
 
   let heartsLeft = stats?.hearts ?? 5;
 
   if (stats) {
+    const pro = computeProStatus(stats.pro_until, stats.pro_plan);
+    const unlimitedActive =
+      pro.isPro ||
+      (stats.hearts_unlimited_until &&
+        new Date(stats.hearts_unlimited_until).getTime() > Date.now());
+
     // First refresh from regen.
     const refreshed = computeHearts(stats);
     let next = refreshed;
 
-    if (input.context === "lesson" && !correct) {
+    if (input.context === "lesson" && !correct && !unlimitedActive) {
       next = loseHeart({
         hearts: refreshed.hearts,
         hearts_regen_at: refreshed.hearts_regen_at,

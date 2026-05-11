@@ -138,6 +138,33 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
       fulfilled.streak_freezes_total = next;
       break;
     }
+    case "pro_subscription": {
+      // The canonical period end is set by the Stripe / RC subscription
+      // webhook (invoice.period_end / RC expiration_at_ms). Here we set
+      // pro_until optimistically so the user gets Pro features immediately;
+      // the webhook overwrites with the authoritative value within seconds.
+      const interval = (product.payload as { interval?: string })?.interval ?? "month";
+      const trialDays = (product.payload as { trial_days?: number })?.trial_days ?? 0;
+      const baseMs = interval === "year" ? 365 * 24 * 3600_000 : 30 * 24 * 3600_000;
+      const until = new Date(Date.now() + baseMs + trialDays * 24 * 3600_000).toISOString();
+      await supabase
+        .from("user_stats")
+        .update({ pro_until: until, pro_plan: interval === "year" ? "yearly" : "monthly" })
+        .eq("user_id", userId);
+      fulfilled.pro_until = until;
+      fulfilled.pro_plan = interval === "year" ? "yearly" : "monthly";
+      break;
+    }
+    case "pro_lifetime": {
+      const far = new Date(Date.now() + 100 * 365 * 24 * 3600_000).toISOString();
+      await supabase
+        .from("user_stats")
+        .update({ pro_until: far, pro_plan: "lifetime" })
+        .eq("user_id", userId);
+      fulfilled.pro_until = far;
+      fulfilled.pro_plan = "lifetime";
+      break;
+    }
     case "remove_ads":
     case "donation":
       // No-op for now; ads aren't implemented and donations are gratitude only.
