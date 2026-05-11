@@ -1,7 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { LessonRunner } from "@/components/learn/LessonRunner";
-import { Markdown } from "@/components/ui/markdown";
+import { LessonShell } from "@/components/learn/LessonShell";
 import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
 
 export const dynamic = "force-dynamic";
@@ -17,10 +16,9 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  // Look up subject -> unit/lesson by slug.
   const { data: subject } = await supabase
     .from("subjects")
-    .select("id, name")
+    .select("id, name, color")
     .eq("slug", subjectSlug)
     .single();
   if (!subject) notFound();
@@ -32,6 +30,12 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     .eq("slug", lessonSlug)
     .single();
   if (!lesson) notFound();
+
+  const { data: unit } = await supabase
+    .from("units")
+    .select("title")
+    .eq("id", lesson.unit_id)
+    .single();
 
   // Pull up to 8 questions for this lesson (or fall back to subject questions).
   const { data: lessonQuestions } = await supabase
@@ -67,18 +71,15 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
   }
 
   return (
-    <>
-      {lesson.theory_md && (
-        <article className="container max-w-2xl py-6">
-          <h1 className="mb-4 text-3xl font-black tracking-tight md:text-4xl">{lesson.title}</h1>
-          <Markdown content={lesson.theory_md} />
-          <hr className="my-6 border-cloud-deep/50" />
-          <p className="text-sm font-bold uppercase tracking-wide text-ink/50">
-            Hora das questões — {playerQuestions.length} no total
-          </p>
-        </article>
-      )}
-      <LessonRunner lessonId={lesson.id} questions={playerQuestions} />
-    </>
+    <LessonShell
+      lessonId={lesson.id}
+      title={lesson.title}
+      theory={lesson.theory_md}
+      questionCount={playerQuestions.length}
+      questions={playerQuestions}
+      subjectName={subject.name}
+      subjectColor={subject.color}
+      unitTitle={unit?.title ?? ""}
+    />
   );
 }

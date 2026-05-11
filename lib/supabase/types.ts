@@ -97,6 +97,7 @@ export type Database = {
         hearts: number;
         hearts_regen_at: string | null;
         streak_freezes: number;
+        hearts_unlimited_until: string | null;
       }>;
       leagues: Tbl<{ id: number; iso_week: string; division: string }>;
       league_members: Tbl<{ league_id: number; user_id: string; weekly_xp: number }>;
@@ -118,6 +119,33 @@ export type Database = {
         total_correct: number | null;
         passed: boolean | null;
         answers: Json | null;
+      }>;
+      products: Tbl<{
+        id: number;
+        sku: string;
+        name: string;
+        description: string | null;
+        kind: "hearts_refill" | "hearts_unlimited" | "streak_freezes" | "remove_ads" | "donation";
+        payload: Json;
+        price_cents: number;
+        currency: string;
+        active: boolean;
+        order_index: number;
+      }>;
+      purchases: Tbl<{
+        id: number;
+        user_id: string;
+        product_id: number;
+        amount_cents: number;
+        currency: string;
+        provider: "stripe" | "apple_iap" | "google_iap";
+        provider_ref: string;
+        payment_method: string | null;
+        status: "pending" | "paid" | "failed" | "refunded";
+        fulfilled_at: string | null;
+        fulfilled_payload: Json | null;
+        created_at: string;
+        updated_at: string;
       }>;
     };
     Views: {

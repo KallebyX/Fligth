@@ -37,10 +37,15 @@ export default async function LearnPage({
   return (
     <main className="container py-6 pb-24">
       {params.out === "hearts" && (
-        <div className="mb-6 rounded-2xl border-2 border-alert bg-alert/10 p-4 text-center">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-alert bg-alert/10 p-4">
           <p className="text-sm font-bold text-alert">
-            Você ficou sem vidas. As vidas regeneram automaticamente — volte em 30 minutos.
+            Você ficou sem vidas — recupera 1 a cada 30 min.
           </p>
+          <Link href="/shop">
+            <Button size="sm" variant="danger">
+              Recarregar agora
+            </Button>
+          </Link>
         </div>
       )}
 

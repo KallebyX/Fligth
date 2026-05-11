@@ -57,16 +57,21 @@ export function QuestionPlayer({
   async function check() {
     if (!selected || submitting) return;
     setSubmitting(true);
-    const res = await onSubmit(question.id, selected);
-    setSubmitting(false);
-    setFeedback({
-      correct: res.correct,
-      correctChoice: res.correctChoice,
-      explanation: res.explanation,
-    });
-    setPhase("feedback");
-    sfx.play(res.correct ? "correct" : "wrong");
-    onHearts?.(res.hearts);
+    try {
+      const res = await onSubmit(question.id, selected);
+      setFeedback({
+        correct: res.correct,
+        correctChoice: res.correctChoice,
+        explanation: res.explanation,
+      });
+      setPhase("feedback");
+      sfx.play(res.correct ? "correct" : "wrong");
+      onHearts?.(res.hearts);
+    } catch {
+      // Parent (LessonRunner) shows a full-screen error UI; just stop the spinner.
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   function next() {

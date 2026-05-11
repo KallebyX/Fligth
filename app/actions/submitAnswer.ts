@@ -1,9 +1,8 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { nextReviewBoolean, type SrsState } from "@/lib/srs/sm2";
 import { computeHearts, loseHeart } from "@/lib/hearts";
-import { todayISO } from "@/lib/utils";
 
 export type SubmitAnswerInput = {
   questionId: number;
@@ -29,13 +28,20 @@ export async function submitAnswer(input: SubmitAnswerInput): Promise<SubmitAnsw
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "unauthenticated" };
 
-  // 1. Fetch the question with its correct answer (server-side only).
-  const { data: question, error: qErr } = await supabase
+  // 1. Fetch the question with its correct answer.
+  // The `questions` table has a deny-all RLS policy on SELECT (so the answer
+  // never leaks to clients via questions_public). Reading `correct` therefore
+  // must go through the service-role client server-side.
+  const service = createServiceClient();
+  const { data: question, error: qErr } = await service
     .from("questions")
     .select("id, correct, explanation_md")
     .eq("id", input.questionId)
     .single();
-  if (qErr || !question) return { ok: false, error: "question_not_found" };
+  if (qErr || !question) {
+    console.error("[submitAnswer] question lookup failed", { id: input.questionId, qErr });
+    return { ok: false, error: "question_not_found" };
+  }
 
   const correct = question.correct === input.choice;
 
@@ -107,7 +113,4 @@ export async function submitAnswer(input: SubmitAnswerInput): Promise<SubmitAnsw
     explanation: question.explanation_md,
     hearts: heartsLeft,
   };
-
-  // todayISO is unused here but reserved for analytics if added later.
-  void todayISO;
 }
