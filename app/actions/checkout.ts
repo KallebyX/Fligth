@@ -73,7 +73,14 @@ export async function startCheckout(sku: string): Promise<StartCheckoutResult> {
           },
         },
       ],
-      subscription_data: trialDays > 0 ? { trial_period_days: trialDays } : undefined,
+      // Stripe doesn't auto-copy session metadata onto the resulting
+      // Subscription, so we mirror the user_id / product_sku / product_id
+      // explicitly. The customer.subscription.* webhook handlers read
+      // sub.metadata.user_id and product_sku from here.
+      subscription_data: {
+        metadata: base.metadata,
+        ...(trialDays > 0 ? { trial_period_days: trialDays } : {}),
+      },
     });
   } else {
     session = await stripe.checkout.sessions.create({
