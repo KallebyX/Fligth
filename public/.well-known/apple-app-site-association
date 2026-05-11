@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["REPLACE_TEAM_ID.br.com.capitaolori.app"],
+        "components": [
+          { "/": "/learn*" },
+          { "/": "/review*" },
+          { "/": "/exam*" },
+          { "/": "/profile*" },
+          { "/": "/leagues*" }
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": ["REPLACE_TEAM_ID.br.com.capitaolori.app"]
+  }
+}

@@ -2,12 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>CAPACITOR_DEBUG</key>
+	<key>CAPACITOR_DEBUG</key>
 	<string>$(CAPACITOR_DEBUG)</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>pt-BR</string>
 	<key>CFBundleDisplayName</key>
-        <string>Capitão Lorí</string>
+	<string>Capitão Lorí</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -35,8 +35,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -47,5 +45,59 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>UIRequiresFullScreen</key>
+	<true/>
+
+	<!-- App Transport Security: HTTPS-only (no exceptions). -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+	</dict>
+
+	<!-- Universal Links / Associated Domains: configure also in Capabilities tab. -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>br.com.capitaolori.app</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>capitaolori</string>
+			</array>
+		</dict>
+	</array>
+
+	<!-- Privacy usage strings. Even if a permission isn't requested today, declaring -->
+	<!-- the strings here prevents review surprises if a future plugin starts asking. -->
+	<key>NSCameraUsageDescription</key>
+	<string>O Capitão Lorí não acessa sua câmera. Esta entrada existe apenas para conformidade.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>O Capitão Lorí não acessa seu microfone. Esta entrada existe apenas para conformidade.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>O Capitão Lorí não acessa suas fotos. Esta entrada existe apenas para conformidade.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>O Capitão Lorí não usa sua localização. Esta entrada existe apenas para conformidade.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>O Capitão Lorí não acessa seus contatos. Esta entrada existe apenas para conformidade.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>O Capitão Lorí não acessa seu calendário. Esta entrada existe apenas para conformidade.</string>
+
+	<!-- Disable file sharing and document browser by default. -->
+	<key>UIFileSharingEnabled</key>
+	<false/>
+	<key>LSSupportsOpeningDocumentsInPlace</key>
+	<false/>
+
+	<!-- Required for App Store: prevent App Tracking Transparency prompt mistakes. -->
+	<key>NSUserTrackingUsageDescription</key>
+	<string>O Capitão Lorí não rastreia você para fins publicitários. Esta entrada existe apenas para conformidade.</string>
+
+	<!-- ITSAppUsesNonExemptEncryption=false avoids the export compliance prompt in -->
+	<!-- App Store Connect, since we use only HTTPS/TLS (standard system encryption). -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>

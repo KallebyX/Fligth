@@ -126,13 +126,24 @@ export default function Landing() {
       </section>
 
       <footer className="border-t border-cloud-deep/40 bg-white/40">
-        <div className="container max-w-3xl py-8 text-center">
+        <div className="container max-w-3xl space-y-4 py-8 text-center">
           <p className="text-xs leading-relaxed text-ink/50">
             <strong>Capitão Lorí</strong> é um projeto de estudo independente.{" "}
             <strong>Não filiado, endossado ou patrocinado pela ANAC</strong>. Conteúdo educacional
             redigido a partir de fontes públicas (RBAC 91, ICA 100-12, MCA 100-1, AIP-Brasil) —
             sempre consulte os manuais e instruções oficiais da agência reguladora antes de operar.
           </p>
+          <nav className="flex flex-wrap justify-center gap-4 text-xs font-bold text-ink/70">
+            <Link href="/privacy" className="hover:text-sky">
+              Privacidade
+            </Link>
+            <Link href="/terms" className="hover:text-sky">
+              Termos de uso
+            </Link>
+            <Link href="/support" className="hover:text-sky">
+              Suporte
+            </Link>
+          </nav>
         </div>
       </footer>
     </main>
