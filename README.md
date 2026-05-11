@@ -157,16 +157,75 @@ curl -X POST https://seu-app.vercel.app/api/cron/leagues \
 - Tabela `questions` **bloqueia leitura direta** (RLS deny). Clientes leem a view `questions_public` que omite `correct` e `explanation_md`. A validação acontece sempre no servidor via Server Action `submitAnswer`.
 - Chave `service_role` **nunca** vai para o client; usada só pelo seed e pelo handler de cron.
 
+## 📱 Mobile (iOS + Android) com Capacitor
+
+O app é **PWA-first** (instala direto pelo navegador no celular) e está **embrulhado em Capacitor** para distribuição na App Store e na Google Play.
+
+### Pré-requisitos
+
+- **Android Studio** (https://developer.android.com/studio) + JDK 17.
+- **Xcode 15+** + Apple Developer account (somente macOS).
+- Node 20+, npm.
+
+### Comandos disponíveis
+
+```bash
+npm run icons              # regenera PNGs do mascote (public/icons/)
+npm run mobile:assets      # gera todos os ícones + splash de iOS e Android a partir de /assets
+npm run mobile:sync        # propaga código + plugins para android/ e ios/
+npm run mobile:open:ios    # abre Xcode (apenas macOS)
+npm run mobile:open:android # abre Android Studio
+npm run mobile:run:ios     # build + run em simulador iOS
+npm run mobile:run:android # build + run em emulador/device Android
+```
+
+### Como funciona
+
+`capacitor.config.ts` aponta `server.url` para a deploy de produção da Vercel (`https://fligth.vercel.app`). Os apps nativos abrem **um WebView que carrega o app online** — então Server Actions, autenticação Supabase, middleware e RLS funcionam exatamente como na web. Quando você atualiza o deploy, o app no celular já reflete na próxima abertura, **sem precisar republicar binário**.
+
+> **Modo dev:** para hot-reload contra `npm run dev`, faça `CAPACITOR_SERVER_URL=http://<IP-do-seu-Mac/PC>:3000 npm run mobile:sync && npm run mobile:run:ios`.
+
+### Publicação na App Store (iOS)
+
+1. `npm run mobile:assets` — gera ícones e splash em `ios/App/App/Assets.xcassets/`.
+2. `npm run mobile:open:ios` — abre o Xcode no projeto.
+3. Em **Signing & Capabilities**: defina `Team` (sua conta Apple Developer) e altere o `Bundle Identifier` (`br.com.capitaolori.app` ou o seu).
+4. **Product → Archive** → janela do Organizer → **Distribute App → App Store Connect**.
+5. Em https://appstoreconnect.apple.com, crie o app (mesmo bundle id), preencha metadata (screenshots, descrição, política de privacidade), envie para revisão.
+
+### Publicação na Google Play (Android)
+
+1. `npm run mobile:assets` — gera ícones em `android/app/src/main/res/`.
+2. Crie uma **keystore** de release:
+   ```bash
+   keytool -genkey -v -keystore android/app/upload-keystore.jks \
+     -alias upload -keyalg RSA -keysize 2048 -validity 10000
+   ```
+   *(o `.jks` já está no `.gitignore` — guarde a senha **fora** do repo.)*
+3. Em `android/app/build.gradle`, configure a `signingConfigs.release` (instruções: https://capacitorjs.com/docs/android/deploying-to-google-play).
+4. `npm run mobile:open:android` → **Build → Generate Signed Bundle / APK → Android App Bundle (.aab)**.
+5. Em https://play.google.com/console, crie o app, faça upload do `.aab`, preencha listing, defina países, envie para revisão.
+
+### Boas práticas pré-lançamento
+
+- Configure **Apple App Site Association** + **assetlinks.json** para deep links da app abrirem em vez do navegador.
+- Política de privacidade publicada (obrigatório nas duas lojas).
+- Screenshots em vários tamanhos — gere com [App Store Screenshot Studio](https://www.appstorescreenshot.com/) ou Figma.
+- Versione com `appVersion` em `android/app/build.gradle` e `MARKETING_VERSION` no Xcode antes de cada release.
+
 ## 🗺️ Roadmap pós-MVP
 
+- [x] PWA (manifest + service worker + ícones)
+- [x] Wrapper iOS/Android (Capacitor)
 - [ ] Streak freezes compráveis com XP
 - [ ] Cards de teoria entre questões na lição (intercalados)
 - [ ] Modo dark
 - [ ] Tradução EN/ES
-- [ ] Push notifications (Web Push) — lembrete de ofensiva
+- [ ] Push notifications (Web Push + APNs/FCM nativos) — lembrete de ofensiva
 - [ ] Áudio narrado das explicações (TTS)
 - [ ] Importador de CSV via /admin
+- [ ] Compras in-app (vidas/freezes) via StoreKit e Google Play Billing
 
 ## ⚖️ Licença e conteúdo
 
-Conteúdo redigido a partir de fontes públicas. Não há cópia de bancos comerciais. Use, edite e contribua.
+Capitão Lorí é um projeto independente de estudo. **Não filiado, endossado ou patrocinado pela ANAC.** Conteúdo redigido a partir de fontes públicas (RBAC, ICA, MCA, AIP-Brasil). Não há cópia de bancos comerciais. Sempre consulte os manuais oficiais antes de operar. Use, edite e contribua.
