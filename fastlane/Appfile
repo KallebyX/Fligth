@@ -1,0 +1,8 @@
+app_identifier("br.com.capitaolori.app")
+
+# Auth uses an App Store Connect API Key (P8) instead of an Apple ID password.
+# apple_id and itc_team_id stay unset on purpose.
+
+# Filled by the CI runner from APPLE_TEAM_ID secret (your Apple Developer
+# Program team — find at https://developer.apple.com/account → Membership).
+team_id(ENV["APPLE_TEAM_ID"])

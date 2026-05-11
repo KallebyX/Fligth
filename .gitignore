@@ -60,3 +60,19 @@ assets/.cache/
 # capacitor: don't commit huge generated keystores or builds
 android/app/*.jks
 android/app/*.keystore
+
+# fastlane local outputs + secrets
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/.env.local
+fastlane/.env.fastlane.local
+fastlane/*.p8
+*.ipa
+*.dSYM.zip
+*.dSYM/
+
+# Ruby bundler
+vendor/bundle
+.bundle/

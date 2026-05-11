@@ -1,0 +1,98 @@
+default_platform(:ios)
+
+XCODEPROJ = "./ios/App/App.xcodeproj"
+XCWORKSPACE = "./ios/App/App.xcworkspace"
+SCHEME = "App"
+EXPORT_METHOD = "app-store"
+OUTPUT_DIR = "./build"
+
+def asc_api_key
+  app_store_connect_api_key(
+    key_id: ENV.fetch("APP_STORE_CONNECT_KEY_ID"),
+    issuer_id: ENV.fetch("APP_STORE_CONNECT_ISSUER_ID"),
+    key_content: ENV.fetch("APP_STORE_CONNECT_KEY"),
+    is_key_content_base64: ENV["APP_STORE_CONNECT_KEY_IS_BASE64"] == "true",
+    duration: 1200,
+    in_house: false,
+  )
+end
+
+platform :ios do
+  before_all do
+    setup_ci if ENV["CI"]
+  end
+
+  desc "Sync Capacitor + install Pods"
+  lane :prepare do
+    sh("cd .. && npm run mobile:sync")
+    cocoapods(podfile: "./ios/App/Podfile", repo_update: true)
+  end
+
+  desc "Fetch / refresh App Store signing artifacts via match"
+  lane :certs do
+    api_key = asc_api_key
+    match(
+      type: "appstore",
+      api_key: api_key,
+      readonly: ENV["CI"] == "true",
+      git_url: ENV.fetch("MATCH_GIT_URL"),
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
+      keychain_name: ENV["MATCH_KEYCHAIN_NAME"] || "fastlane_tmp_keychain",
+      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || "",
+    )
+  end
+
+  desc "Bump CFBundleVersion to (latest TestFlight build + 1)"
+  lane :bump_build do
+    api_key = asc_api_key
+    next_build = (latest_testflight_build_number(api_key: api_key) || 0) + 1
+    increment_build_number(xcodeproj: XCODEPROJ, build_number: next_build.to_s)
+    UI.message("📦 build number → #{next_build}")
+  end
+
+  desc "Build .ipa and upload to TestFlight"
+  lane :beta do
+    prepare
+    certs
+    bump_build
+
+    build_app(
+      workspace: XCWORKSPACE,
+      scheme: SCHEME,
+      configuration: "Release",
+      export_method: EXPORT_METHOD,
+      clean: true,
+      output_directory: OUTPUT_DIR,
+      output_name: "Capitao_Lori.ipa",
+      include_symbols: true,
+      include_bitcode: false,
+    )
+
+    upload_to_testflight(
+      api_key: asc_api_key,
+      skip_waiting_for_build_processing: true,
+      changelog: ENV["TESTFLIGHT_CHANGELOG"] || "Build automated via GitHub Actions.",
+      distribute_external: false,
+    )
+  end
+
+  desc "(Manual) Submit current TestFlight build for App Store review"
+  lane :submit_for_review do
+    api_key = asc_api_key
+    upload_to_app_store(
+      api_key: api_key,
+      force: true,
+      precheck_include_in_app_purchases: false,
+      submit_for_review: true,
+      automatic_release: true,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: false,
+      },
+      release_notes: { "pt-BR" => "Lançamento inicial." },
+      metadata_path: "./fastlane/metadata",
+      skip_screenshots: true,
+      skip_binary_upload: true,
+    )
+  end
+end
