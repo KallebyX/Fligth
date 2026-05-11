@@ -1,0 +1,26 @@
+---
+slug: "altitude-densidade"
+title: "Altitude-Densidade"
+xp_reward: 12
+order_index: 2
+---
+
+A **altitude-densidade (DA)** é a altitude que a atmosfera padrão (ISA) "enxergaria" com a mesma densidade que a atmosfera real onde a aeronave está. Em dia quente e úmido, DA fica acima da altitude real → o ar é "mais alto" do que o altímetro indica.
+
+Cálculo prático:
+
+```
+DA = altitude-pressão + (120 × ISA-desvio)
+ISA-desvio = TEMP real − (15 − 2 × altitude/1000)
+```
+
+Exemplo: aeródromo a 3.000 ft, OAT 30 °C, QNH 1013.
+- ISA a 3.000 ft: 15 − 2×3 = 9 °C. Desvio: 30 − 9 = +21 °C.
+- DA = 3.000 + (120 × 21) = **5.520 ft**.
+
+Implicações em DA alta:
+- **Corrida de decolagem 25–50 % mais longa**.
+- **Subida mais fraca** (menos lift, menos tração do motor e da hélice).
+- **Velocidade verdadeira (TAS) maior** que IAS — pousos mais "rápidos" no solo.
+
+Antes de operar de aeródromos altos/quentes (Cuiabá, Brasília no verão, alto altiplano), **sempre cheque DA contra performance do POH**.

@@ -36,3 +36,27 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# capacitor / mobile build outputs
+android/.gradle/
+android/.idea/
+android/app/build/
+android/build/
+android/local.properties
+android/app/release/
+android/app/debug/
+android/captures/
+android/*.iml
+ios/App/Pods/
+ios/App/App.xcworkspace/xcuserdata/
+ios/App/App.xcodeproj/xcuserdata/
+ios/App/build/
+ios/DerivedData/
+.fastlane/
+
+# generated assets cache
+assets/.cache/
+
+# capacitor: don't commit huge generated keystores or builds
+android/app/*.jks
+android/app/*.keystore

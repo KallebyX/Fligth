@@ -1,0 +1,25 @@
+---
+slug: "triangulo-vento"
+title: "Triângulo do Vento e Deriva"
+xp_reward: 12
+order_index: 2
+---
+
+Em voo, a aeronave navega pelo ar — mas o ar se move em relação ao solo. O resultado é o clássico **triângulo do vento**, que combina três vetores:
+
+- **TAS** (true airspeed): velocidade da aeronave no ar.
+- **Vento**: velocidade e direção do ar em relação ao solo.
+- **Vetor solo (GS / track)**: trajetória real sobre o solo.
+
+Para chegar do ponto A ao ponto B em rota direta, o piloto **proa** num rumo (HDG) diferente do rumo de rota (TRK) para compensar o vento. A diferença é chamada **ângulo de deriva (drift angle)**.
+
+Cálculo aproximado (regra dos seis):
+- Componente de vento cruzado (XW) ≈ V × sen(θ).
+- Drift ≈ 60 × XW / TAS (em graus).
+
+Exemplo: TAS 100 kt, vento 270°/30 kt, rota verdadeira 360° (norte).
+- Ângulo entre vento e rota: 90°. XW = 30 × sen(90°) = 30 kt.
+- Drift ≈ 60 × 30 / 100 = **18° à direita** (vento empurra para leste).
+- HDG = 360° − 18° = **342°** para manter trajetória 360°.
+
+Use o **computador de voo (E6B)** ou um app para cálculos precisos — mas saiba a regra rápida para sanity-checks em rota.

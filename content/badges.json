@@ -1,0 +1,58 @@
+[
+  {
+    "slug": "primeira-licao",
+    "name": "Primeiro Voo",
+    "description": "Concluiu a primeira lição.",
+    "icon": "plane-takeoff",
+    "criterion": { "type": "first_lesson" }
+  },
+  {
+    "slug": "streak-3",
+    "name": "Em Rota",
+    "description": "Manteve uma ofensiva de 3 dias.",
+    "icon": "flame",
+    "criterion": { "type": "streak", "days": 3 }
+  },
+  {
+    "slug": "streak-7",
+    "name": "Cruzeiro",
+    "description": "7 dias consecutivos estudando.",
+    "icon": "flame",
+    "criterion": { "type": "streak", "days": 7 }
+  },
+  {
+    "slug": "streak-30",
+    "name": "Comandante",
+    "description": "Um mês inteiro de ofensiva.",
+    "icon": "trophy",
+    "criterion": { "type": "streak", "days": 30 }
+  },
+  {
+    "slug": "xp-500",
+    "name": "Tenente",
+    "description": "Acumulou 500 XP.",
+    "icon": "star",
+    "criterion": { "type": "total_xp", "xp": 500 }
+  },
+  {
+    "slug": "xp-2000",
+    "name": "Capitão",
+    "description": "Acumulou 2000 XP.",
+    "icon": "medal",
+    "criterion": { "type": "total_xp", "xp": 2000 }
+  },
+  {
+    "slug": "exam-passed",
+    "name": "ANAC Aprovado!",
+    "description": "Passou no simulado oficial com 70% em todas as matérias.",
+    "icon": "award",
+    "criterion": { "type": "exam_passed" }
+  },
+  {
+    "slug": "perfect-lesson",
+    "name": "Asa Limpa",
+    "description": "Concluiu uma lição sem errar uma única questão.",
+    "icon": "sparkles",
+    "criterion": { "type": "perfect_lesson" }
+  }
+]
