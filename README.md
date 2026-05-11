@@ -75,7 +75,7 @@ scripts/seed.ts             # importa content/ → Supabase
 3. Em **Authentication → Providers**, deixe Email habilitado.
 4. Em **Settings → API**, copie:
    - `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
-   - `anon public` → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `publishable` (ou legado `anon`) → `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
    - `service_role` → `SUPABASE_SERVICE_ROLE_KEY`
 
 ### 2. Configurar variáveis de ambiente
