@@ -57,6 +57,8 @@ platform :ios do
     certs
     bump_build
 
+    profile_name = ENV["sigh_br.com.capitaolori.app_appstore_profile-name"]
+
     build_app(
       project: XCODEPROJ,
       scheme: SCHEME,
@@ -67,6 +69,14 @@ platform :ios do
       output_name: "Capitao_Lori.ipa",
       include_symbols: true,
       include_bitcode: false,
+      xcargs: %Q(CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID']} PROVISIONING_PROFILE_SPECIFIER="#{profile_name}" CODE_SIGN_IDENTITY="Apple Distribution"),
+      export_options: {
+        method: EXPORT_METHOD,
+        signingStyle: "manual",
+        provisioningProfiles: {
+          "br.com.capitaolori.app" => profile_name,
+        },
+      },
     )
 
     upload_to_testflight(
