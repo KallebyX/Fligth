@@ -1,0 +1,12 @@
+# Defaults para a action `match` — lidos automaticamente ao invocar `fastlane match` direto.
+# Fastlane só vai usar essa config quando o lane do Fastfile não passar overrides.
+
+git_url(ENV["MATCH_GIT_URL"])
+storage_mode("git")
+type("appstore")
+app_identifier(["br.com.capitaolori.app"])
+team_id(ENV["APPLE_TEAM_ID"])
+
+# Importante: não desligue api_key aqui. A autenticação via App Store Connect
+# API Key é decidida no Fastfile (lane :certs), que passa api_key explicitamente.
+# Rode `bundle exec fastlane ios certs` (não `fastlane match appstore`).

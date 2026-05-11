@@ -28,17 +28,20 @@ platform :ios do
     cocoapods(podfile: "./ios/App/Podfile", repo_update: true)
   end
 
-  desc "Fetch / refresh App Store signing artifacts via match"
+  desc "Fetch / refresh App Store signing artifacts via match (uses API Key, never Apple ID password)"
   lane :certs do
     api_key = asc_api_key
     match(
       type: "appstore",
+      app_identifier: "br.com.capitaolori.app",
+      team_id: ENV["APPLE_TEAM_ID"],
       api_key: api_key,
       readonly: ENV["CI"] == "true",
       git_url: ENV.fetch("MATCH_GIT_URL"),
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
-      keychain_name: ENV["MATCH_KEYCHAIN_NAME"] || "fastlane_tmp_keychain",
+      keychain_name: ENV["CI"] == "true" ? (ENV["MATCH_KEYCHAIN_NAME"] || "fastlane_tmp_keychain") : "login.keychain",
       keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || "",
+      verbose: ENV["FASTLANE_VERBOSE"] == "true",
     )
   end
 
