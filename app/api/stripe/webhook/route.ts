@@ -62,25 +62,13 @@ export async function POST(request: NextRequest) {
             .eq("provider_ref", session.id);
         }
 
-        await fulfillPurchase(supabase, {
-          userId,
-          productId: Number(productId),
-          providerRef: session.id,
-        });
+        await fulfillPurchase(supabase, { providerRef: session.id });
         break;
       }
 
       case "checkout.session.async_payment_succeeded": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.user_id;
-        const productId = session.metadata?.product_id;
-        if (userId && productId) {
-          await fulfillPurchase(supabase, {
-            userId,
-            productId: Number(productId),
-            providerRef: session.id,
-          });
-        }
+        await fulfillPurchase(supabase, { providerRef: session.id });
         break;
       }
 

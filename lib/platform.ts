@@ -16,6 +16,14 @@ export function detectPlatform(): Platform {
   return "web";
 }
 
-// When true, hide Stripe checkout and show the in-app purchase placeholder.
-// Flip this on once StoreKit (iOS) and Play Billing (Android) plugins ship.
-export const NATIVE_IAP_ENABLED = false;
+export function isNative(): boolean {
+  const p = detectPlatform();
+  return p === "ios" || p === "android";
+}
+
+// Feature flag: ative em produção depois de subir builds com IAP configurado
+// em App Store Connect e Google Play. Em dev/sandbox, mantenha false para
+// não bloquear a loja web durante testes.
+export const NATIVE_IAP_ENABLED =
+  typeof process !== "undefined" &&
+  process.env.NEXT_PUBLIC_NATIVE_IAP_ENABLED === "true";

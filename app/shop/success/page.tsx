@@ -43,11 +43,7 @@ export default async function ShopSuccessPage({
   if (purchase && purchase.user_id === user.id) {
     if (purchase.status !== "paid") {
       try {
-        await fulfillPurchase(service, {
-          userId: purchase.user_id,
-          productId: purchase.product_id,
-          providerRef: sessionId,
-        });
+        await fulfillPurchase(service, { providerRef: sessionId });
       } catch {
         // Stripe webhook will retry. Leave status as is.
       }

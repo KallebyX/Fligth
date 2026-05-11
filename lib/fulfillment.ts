@@ -4,31 +4,103 @@ import { MAX_HEARTS } from "@/lib/hearts";
 
 type DB = SupabaseClient<Database, "public">;
 
-export type FulfillmentInput = {
-  userId: string;
-  productId: number;
+type Provider = "stripe" | "apple_iap" | "google_iap";
+
+type FulfillByProviderRef = {
   providerRef: string;
 };
 
-// Idempotent: rerunning the webhook for the same provider_ref is a no-op.
+type FulfillBySku = {
+  userId: string;
+  sku: string;
+  provider: Provider;
+  providerRef: string;
+  amountCents?: number;
+  currency?: string;
+  paymentMethod?: string | null;
+};
+
+export type FulfillmentInput = FulfillByProviderRef | FulfillBySku;
+
+function isBySku(input: FulfillmentInput): input is FulfillBySku {
+  return "sku" in input;
+}
+
+// Idempotent. Two entry points:
+//   - Stripe path: a `purchases` row already exists (created by startCheckout).
+//     Call with { providerRef } and we look up product_id from the row.
+//   - RevenueCat path: no row yet. Call with { userId, sku, provider,
+//     providerRef, ... } and we create-or-update the row by provider_ref.
 export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
-  // 1. Lock the purchase row.
-  const { data: purchase, error: pErr } = await supabase
-    .from("purchases")
-    .select("id, status, fulfilled_at, product_id, user_id")
-    .eq("provider_ref", input.providerRef)
-    .single();
-  if (pErr || !purchase) throw new Error(`purchase_not_found:${input.providerRef}`);
-  if (purchase.status === "paid" && purchase.fulfilled_at) {
-    return { alreadyFulfilled: true };
+  let purchaseId: number;
+  let productId: number;
+  let userId: string;
+
+  if (isBySku(input)) {
+    // Resolve product by sku
+    const { data: product, error: prodErr } = await supabase
+      .from("products")
+      .select("id")
+      .eq("sku", input.sku)
+      .single();
+    if (prodErr || !product) throw new Error(`product_not_found:${input.sku}`);
+
+    // Upsert the purchase row (idempotent on provider_ref).
+    const existing = await supabase
+      .from("purchases")
+      .select("id, status, fulfilled_at")
+      .eq("provider_ref", input.providerRef)
+      .maybeSingle();
+
+    if (existing.data?.status === "paid" && existing.data?.fulfilled_at) {
+      return { alreadyFulfilled: true };
+    }
+
+    if (existing.data) {
+      purchaseId = existing.data.id;
+    } else {
+      const { data: inserted, error: insErr } = await supabase
+        .from("purchases")
+        .insert({
+          user_id: input.userId,
+          product_id: product.id,
+          amount_cents: input.amountCents ?? 0,
+          currency: (input.currency ?? "brl").toLowerCase(),
+          provider: input.provider,
+          provider_ref: input.providerRef,
+          payment_method: input.paymentMethod ?? null,
+          status: "pending",
+        })
+        .select("id")
+        .single();
+      if (insErr || !inserted) throw new Error(`purchase_insert_failed:${insErr?.message}`);
+      purchaseId = inserted.id;
+    }
+
+    productId = product.id;
+    userId = input.userId;
+  } else {
+    // Stripe path: row created at checkout time.
+    const { data: purchase, error: pErr } = await supabase
+      .from("purchases")
+      .select("id, status, fulfilled_at, product_id, user_id")
+      .eq("provider_ref", input.providerRef)
+      .single();
+    if (pErr || !purchase) throw new Error(`purchase_not_found:${input.providerRef}`);
+    if (purchase.status === "paid" && purchase.fulfilled_at) {
+      return { alreadyFulfilled: true };
+    }
+    purchaseId = purchase.id;
+    productId = purchase.product_id;
+    userId = purchase.user_id;
   }
 
   const { data: product, error: prodErr } = await supabase
     .from("products")
     .select("kind, payload, sku")
-    .eq("id", purchase.product_id)
+    .eq("id", productId)
     .single();
-  if (prodErr || !product) throw new Error(`product_not_found:${purchase.product_id}`);
+  if (prodErr || !product) throw new Error(`product_not_found:${productId}`);
 
   const fulfilled: Record<string, unknown> = { sku: product.sku };
 
@@ -37,7 +109,7 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
       await supabase
         .from("user_stats")
         .update({ hearts: MAX_HEARTS, hearts_regen_at: null })
-        .eq("user_id", purchase.user_id);
+        .eq("user_id", userId);
       fulfilled.hearts_set_to = MAX_HEARTS;
       break;
     }
@@ -47,7 +119,7 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
       await supabase
         .from("user_stats")
         .update({ hearts_unlimited_until: until, hearts: MAX_HEARTS, hearts_regen_at: null })
-        .eq("user_id", purchase.user_id);
+        .eq("user_id", userId);
       fulfilled.unlimited_until = until;
       break;
     }
@@ -56,13 +128,13 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
       const { data: stats } = await supabase
         .from("user_stats")
         .select("streak_freezes")
-        .eq("user_id", purchase.user_id)
+        .eq("user_id", userId)
         .single();
       const next = (stats?.streak_freezes ?? 0) + count;
       await supabase
         .from("user_stats")
         .update({ streak_freezes: next })
-        .eq("user_id", purchase.user_id);
+        .eq("user_id", userId);
       fulfilled.streak_freezes_total = next;
       break;
     }
@@ -80,7 +152,7 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
       fulfilled_payload: fulfilled as Json,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", purchase.id);
+    .eq("id", purchaseId);
 
   return { alreadyFulfilled: false, fulfilled };
 }
