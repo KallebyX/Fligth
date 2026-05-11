@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Mascot } from "@/components/mascot/Mascot";
+import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
 import { useSfx } from "@/components/learn/useSfx";
 
@@ -87,30 +88,42 @@ export function QuestionPlayer({
           />
         </div>
 
-        <h2 className="mb-6 text-xl font-extrabold leading-snug md:text-2xl">{question.stem}</h2>
+        <motion.h2
+          key={`stem-${question.id}`}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="mb-6 text-xl font-extrabold leading-snug md:text-2xl"
+        >
+          {question.stem}
+        </motion.h2>
 
         <motion.div
           key={question.id}
-          animate={feedback?.correct === false ? { x: [-8, 8, -6, 6, 0] } : {}}
-          transition={{ duration: 0.4 }}
+          animate={feedback?.correct === false ? { x: [-10, 10, -8, 8, -4, 4, 0] } : {}}
+          transition={{ duration: 0.5 }}
           className="grid gap-3"
         >
-          {(["A", "B", "C", "D"] as ChoiceLetter[]).map((letter) => {
+          {(["A", "B", "C", "D"] as ChoiceLetter[]).map((letter, idx) => {
             const isSelected = selected === letter;
             const isCorrect = feedback?.correctChoice === letter;
             const isWrong = phase === "feedback" && isSelected && !feedback?.correct;
             const showCorrect = phase === "feedback" && isCorrect;
 
             return (
-              <button
-                key={letter}
+              <motion.button
+                key={`${question.id}-${letter}`}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.25, delay: idx * 0.05 }}
+                whileTap={phase === "answering" ? { scale: 0.97 } : {}}
                 disabled={phase === "feedback"}
                 onClick={() => setSelected(letter)}
                 className={cn(
                   "flex items-start gap-4 rounded-2xl border-2 p-4 text-left transition-colors",
                   "bg-white",
                   isSelected && phase === "answering" && "border-sky bg-sky/5",
-                  !isSelected && phase === "answering" && "border-cloud-deep hover:bg-cloud",
+                  !isSelected && phase === "answering" && "border-cloud-deep hover:bg-cloud hover:-translate-y-px",
                   showCorrect && "border-grass bg-grass/10",
                   isWrong && "border-alert bg-alert/10",
                   phase === "feedback" && !showCorrect && !isWrong && "border-cloud-deep/40 opacity-60",
@@ -118,7 +131,7 @@ export function QuestionPlayer({
               >
                 <span
                   className={cn(
-                    "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-extrabold",
+                    "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-extrabold transition-colors",
                     showCorrect
                       ? "bg-grass text-white"
                       : isWrong
@@ -131,7 +144,7 @@ export function QuestionPlayer({
                   {letter}
                 </span>
                 <span className="text-base">{question.choices[letter]}</span>
-              </button>
+              </motion.button>
             );
           })}
         </motion.div>
@@ -161,7 +174,7 @@ export function QuestionPlayer({
                     {feedback.correct ? "Mandou bem!" : `A resposta certa era ${feedback.correctChoice}.`}
                   </p>
                   {feedback.explanation && (
-                    <p className="mt-1 text-sm text-ink/80">{feedback.explanation}</p>
+                    <Markdown content={feedback.explanation} className="mt-1 text-sm text-ink/80" />
                   )}
                 </div>
               </div>

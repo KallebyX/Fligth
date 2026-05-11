@@ -83,7 +83,8 @@ export function ExamRunner() {
     return (
       <main className="container flex min-h-screen flex-col items-center justify-center gap-6 py-12 text-center">
         <Mascot state="happy" size={140} />
-        <h1 className="text-3xl font-black md:text-4xl">Simulado oficial ANAC</h1>
+        <h1 className="text-3xl font-black md:text-4xl">Simulado no formato da banca</h1>
+        <p className="text-sm text-ink/60">Mesma estrutura da prova teórica de Piloto Privado da ANAC.</p>
         <Card className="max-w-lg space-y-3 text-left">
           <p>
             <strong>100 questões</strong> distribuídas em 5 matérias × 20.

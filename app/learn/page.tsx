@@ -21,7 +21,7 @@ export default async function LearnPage({
 
   // Load subjects + units + lessons + this user's progress.
   const [{ data: subjects }, { data: units }, { data: lessons }, { data: progress }] = await Promise.all([
-    supabase.from("subjects").select("id, slug, name, color, order_index").order("order_index"),
+    supabase.from("subjects").select("id, slug, name, color, icon, order_index").order("order_index"),
     supabase.from("units").select("id, subject_id, slug, title, order_index").order("order_index"),
     supabase
       .from("lessons")
@@ -45,7 +45,10 @@ export default async function LearnPage({
       )}
 
       <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-black md:text-3xl">Trilhas ANAC</h1>
+        <div>
+          <h1 className="text-2xl font-black md:text-3xl">Suas trilhas</h1>
+          <p className="text-sm text-ink/60">5 matérias da prova teórica de Piloto Privado.</p>
+        </div>
         <div className="flex gap-2">
           <Link href="/review">
             <Button variant="outline" size="sm">
@@ -54,7 +57,7 @@ export default async function LearnPage({
           </Link>
           <Link href="/exam">
             <Button variant="warn" size="sm">
-              Simulado oficial
+              Simulado completo
             </Button>
           </Link>
         </div>
@@ -91,6 +94,7 @@ export default async function LearnPage({
               subjectSlug={subject.slug}
               subjectName={subject.name}
               subjectColor={subject.color}
+              subjectIcon={subject.icon}
               nodes={nodes}
             />
           );

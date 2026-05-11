@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LessonRunner } from "@/components/learn/LessonRunner";
+import { Markdown } from "@/components/ui/markdown";
 import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
 
 export const dynamic = "force-dynamic";
@@ -69,10 +70,8 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     <>
       {lesson.theory_md && (
         <article className="container max-w-2xl py-6">
-          <h1 className="mb-3 text-2xl font-black">{lesson.title}</h1>
-          <div className="whitespace-pre-line text-base leading-relaxed text-ink/80">
-            {lesson.theory_md}
-          </div>
+          <h1 className="mb-4 text-3xl font-black tracking-tight md:text-4xl">{lesson.title}</h1>
+          <Markdown content={lesson.theory_md} />
           <hr className="my-6 border-cloud-deep/50" />
           <p className="text-sm font-bold uppercase tracking-wide text-ink/50">
             Hora das questões — {playerQuestions.length} no total

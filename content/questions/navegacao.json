@@ -238,5 +238,41 @@
     "difficulty": 1,
     "source_ref": "DECEA / Cartas WAC",
     "lesson_slug": "cartas-wac"
+  },
+  {
+    "stem": "Em um voo com vento de cauda 20 kt, distância de 90 NM e TAS 90 kt, o tempo estimado é:",
+    "choice_a": "1 h 00 min",
+    "choice_b": "49 min",
+    "choice_c": "1 h 30 min",
+    "choice_d": "1 h 12 min",
+    "correct": "B",
+    "explanation_md": "Vento de cauda soma à TAS: GS = 90 + 20 = 110 kt. Tempo = 90/110 h ≈ 49 min.",
+    "difficulty": 3,
+    "source_ref": "Navegação Aérea",
+    "lesson_slug": "triangulo-vento"
+  },
+  {
+    "stem": "O NDB (Non-Directional Beacon) é sintonizado por receptor:",
+    "choice_a": "VHF",
+    "choice_b": "MF/LF (frequência média/baixa)",
+    "choice_c": "UHF",
+    "choice_d": "GPS",
+    "correct": "B",
+    "explanation_md": "NDB opera em MF/LF (190–1750 kHz). O instrumento na cabine é o ADF (Automatic Direction Finder).",
+    "difficulty": 3,
+    "source_ref": "FAA-H-8083-15",
+    "lesson_slug": "principios-vor"
+  },
+  {
+    "stem": "TAS (True Airspeed) é tipicamente maior que IAS (Indicated Airspeed) em altitude porque:",
+    "choice_a": "O instrumento erra mais alto",
+    "choice_b": "Ar é menos denso e exige maior velocidade real para mesma pressão dinâmica",
+    "choice_c": "Os ventos de altitude empurram a aeronave",
+    "choice_d": "O GPS reporta velocidade verdadeira",
+    "correct": "B",
+    "explanation_md": "Regra prática: TAS ≈ IAS + 2 % por 1.000 ft. Em altitude o ar é menos denso, então o pitot mede menos pressão para a mesma velocidade real.",
+    "difficulty": 3,
+    "source_ref": "FAA-H-8083-25",
+    "lesson_slug": "triangulo-vento"
   }
 ]

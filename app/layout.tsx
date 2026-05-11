@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
+import { PwaRegister } from "@/components/pwa-register";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -9,9 +10,9 @@ const nunito = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Capitão Lorí — Duolingo da ANAC para Piloto Privado",
+  title: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
   description:
-    "Estude para a prova teórica da ANAC com lições curtas, ofensiva diária, simulado oficial e muita aviação. Voa com a gente.",
+    "Estude para a prova teórica de Piloto Privado com lições curtas, ofensiva diária, simulado no formato da banca e muita aviação. Não filiado à ANAC.",
   applicationName: "Capitão Lorí",
   keywords: [
     "ANAC",
@@ -29,19 +30,39 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Capitão Lorí",
-    title: "Capitão Lorí — Duolingo da ANAC para Piloto Privado",
+    title: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
     description:
-      "Lições curtas, ofensiva diária, repetição espaçada e simulado oficial (100q · 3h · 70 % por matéria). Aprovação com hábito.",
+      "Lições curtas, ofensiva diária, repetição espaçada e simulado no formato da banca (100q · 3h · 70 % por matéria). Aprovação com hábito.",
     locale: "pt_BR",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Capitão Lorí — Duolingo da ANAC",
+    title: "Capitão Lorí — Estudo para Piloto Privado",
     description:
-      "5 trilhas oficiais ANAC, 25 lições, 100 questões e simulado ao estilo da banca. Estude 5 min/dia.",
+      "5 trilhas, 25 lições, 100 questões e simulado no formato da banca. Estude 5 min/dia. Não filiado à ANAC.",
   },
   robots: { index: true, follow: true },
+  manifest: "/manifest.webmanifest",
+  icons: {
+    icon: [
+      { url: "/icons/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/favicon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Capitão Lorí",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
   themeColor: "#0EA5E9",
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({
@@ -49,7 +70,10 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR" className={nunito.variable}>
-      <body className="min-h-screen bg-cloud font-sans text-ink antialiased">{children}</body>
+      <body className="min-h-screen bg-cloud font-sans text-ink antialiased">
+        {children}
+        <PwaRegister />
+      </body>
     </html>
   );
 }

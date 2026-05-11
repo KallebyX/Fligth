@@ -238,5 +238,41 @@
     "difficulty": 2,
     "source_ref": "FAA-H-8083-25",
     "lesson_slug": "instrumentos-pitot-estatico"
+  },
+  {
+    "stem": "AVGAS 100LL é tipicamente colorida em:",
+    "choice_a": "Vermelho",
+    "choice_b": "Verde",
+    "choice_c": "Azul",
+    "choice_d": "Amarelo-pálido",
+    "correct": "C",
+    "explanation_md": "AVGAS 100LL = azul claro. Jet A1 = amarelo-pálido. AVGAS 80 = vermelho (descontinuada). Conferir a cor é parte do pré-voo.",
+    "difficulty": 2,
+    "source_ref": "FAA-H-8083-25",
+    "lesson_slug": "sistema-combustivel"
+  },
+  {
+    "stem": "Em uma falha de motor em cruzeiro, a primeira ação do piloto deve ser:",
+    "choice_a": "Saltar de paraquedas",
+    "choice_b": "Mirar a melhor velocidade de planeio (best glide) e procurar local de pouso",
+    "choice_c": "Reduzir mistura",
+    "choice_d": "Soltar os flaps",
+    "correct": "B",
+    "explanation_md": "Best glide é a velocidade que maximiza alcance no planeio. Estabilizada essa velocidade, escolha local de pouso e só depois faça troubleshooting (mixture, mags, fuel).",
+    "difficulty": 2,
+    "source_ref": "POH típico",
+    "lesson_slug": "ciclo-otto"
+  },
+  {
+    "stem": "A bússola magnética sofre erro de aceleração quando se voa para:",
+    "choice_a": "Norte ou sul, em rumos magnéticos",
+    "choice_b": "Leste ou oeste, ao acelerar/desacelerar",
+    "choice_c": "Apenas em curvas pronunciadas",
+    "choice_d": "Apenas em IFR",
+    "correct": "B",
+    "explanation_md": "Mnemônica ANDS (Accelerate North, Decelerate South) — em rumos E/W. Já em curvas, o erro de virada (UNOS) aparece em rumos N/S.",
+    "difficulty": 4,
+    "source_ref": "FAA-H-8083-25",
+    "lesson_slug": "instrumentos-pitot-estatico"
   }
 ]

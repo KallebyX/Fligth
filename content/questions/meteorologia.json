@@ -238,5 +238,41 @@
     "difficulty": 2,
     "source_ref": "FAA AC 91-74",
     "lesson_slug": "tipos-de-nuvens"
+  },
+  {
+    "stem": "No METAR 'SBGR 121800Z VRB02KT...', 'VRB02KT' significa:",
+    "choice_a": "Vento variável de 2 nós",
+    "choice_b": "Vento de 020° a 2 kt",
+    "choice_c": "Visibilidade reduzida 200 m",
+    "choice_d": "Sem vento",
+    "correct": "A",
+    "explanation_md": "'VRB' = variable. Usado quando direção não é constante (geralmente em vento ≤ 3 kt).",
+    "difficulty": 2,
+    "source_ref": "OACI Anexo 3",
+    "lesson_slug": "decodificando-metar"
+  },
+  {
+    "stem": "Em altitude-pressão de 3.000 ft e OAT de 28 °C, qual é aproximadamente o desvio em relação a ISA?",
+    "choice_a": "ISA padrão",
+    "choice_b": "ISA + 19",
+    "choice_c": "ISA - 9",
+    "choice_d": "ISA + 28",
+    "correct": "B",
+    "explanation_md": "ISA a 3.000 ft = 15 - 2×3 = 9 °C. Desvio = 28 - 9 = +19 °C → ISA+19. Performance vai degradar significativamente.",
+    "difficulty": 3,
+    "source_ref": "ISA",
+    "lesson_slug": "altitude-densidade"
+  },
+  {
+    "stem": "Sigla TS em mensagens meteorológicas representa:",
+    "choice_a": "Tempo seco",
+    "choice_b": "Tempestade / trovoada",
+    "choice_c": "Turbulência severa",
+    "choice_d": "Tempestade de areia",
+    "correct": "B",
+    "explanation_md": "TS = Thunderstorm (trovoada). TSRA = trovoada com chuva. SH = pancadas. SQ = linha de instabilidade.",
+    "difficulty": 1,
+    "source_ref": "OACI Anexo 3",
+    "lesson_slug": "decodificando-metar"
   }
 ]

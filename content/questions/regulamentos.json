@@ -238,5 +238,41 @@
     "difficulty": 3,
     "source_ref": "ICA 100-12",
     "lesson_slug": "servicos-ats"
+  },
+  {
+    "stem": "O código de transponder 7700 é usado para sinalizar:",
+    "choice_a": "Perda de comunicação",
+    "choice_b": "Sequestro de aeronave",
+    "choice_c": "Emergência geral",
+    "choice_d": "Voo VFR de rotina",
+    "correct": "C",
+    "explanation_md": "7700 = emergência geral. 7600 = perda de comunicação (radio failure). 7500 = sequestro. 1200 = VFR padrão (EUA); no Brasil normalmente 7000 ou autorização ATC.",
+    "difficulty": 2,
+    "source_ref": "ICA 100-12 / DECEA",
+    "lesson_slug": "servicos-ats"
+  },
+  {
+    "stem": "Para um voo VFR diurno acima de FL100 (10.000 ft), a visibilidade mínima exigida é:",
+    "choice_a": "5 km",
+    "choice_b": "8 km",
+    "choice_c": "1.500 m",
+    "choice_d": "10 km",
+    "correct": "B",
+    "explanation_md": "Acima de FL100, mínimo VFR é 8 km de visibilidade, com 1.500 m horizontal e 1.000 ft vertical de nuvens.",
+    "difficulty": 3,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "vfr-minimos"
+  },
+  {
+    "stem": "Quem tem prioridade de passagem entre duas aeronaves na mesma altura, em rotas convergentes?",
+    "choice_a": "A aeronave maior",
+    "choice_b": "A aeronave à direita",
+    "choice_c": "A aeronave mais rápida",
+    "choice_d": "A primeira a transmitir intenção",
+    "correct": "B",
+    "explanation_md": "Regra de tráfego: à direita tem prioridade. Aeronave à esquerda deve desviar, normalmente para a direita.",
+    "difficulty": 2,
+    "source_ref": "RBAC 91.113",
+    "lesson_slug": "rbac-91-fundamentos"
   }
 ]

@@ -238,5 +238,41 @@
     "difficulty": 2,
     "source_ref": "POH",
     "lesson_slug": "performance-decolagem"
+  },
+  {
+    "stem": "A velocidade VA (manobra) é importante porque acima dela:",
+    "choice_a": "A aeronave não voa",
+    "choice_b": "Comandos abruptos podem causar dano estrutural",
+    "choice_c": "O estol é impossível",
+    "choice_d": "Os flaps abrem sozinhos",
+    "correct": "B",
+    "explanation_md": "Acima de VA, uma deflexão total de comando pode exceder o fator de carga limite. Em turbulência forte, reduza para VA.",
+    "difficulty": 3,
+    "source_ref": "POH",
+    "lesson_slug": "performance-decolagem"
+  },
+  {
+    "stem": "Em uma curva, a perda de altitude geralmente indica:",
+    "choice_a": "Sustentação excessiva",
+    "choice_b": "Pitch insuficiente — falta carregar levemente o profundor",
+    "choice_c": "Vento de proa",
+    "choice_d": "Falha do motor",
+    "correct": "B",
+    "explanation_md": "Em curva, parte da sustentação vai para o lado (centripeta). Para manter altitude, é preciso aumentar o ângulo de ataque puxando levemente o manche.",
+    "difficulty": 2,
+    "source_ref": "Aerodinâmica aplicada",
+    "lesson_slug": "curvas-coordenadas"
+  },
+  {
+    "stem": "Ground effect é mais marcado a uma altura aproximadamente igual a:",
+    "choice_a": "10 metros",
+    "choice_b": "Uma envergadura da aeronave",
+    "choice_c": "100 ft AGL",
+    "choice_d": "1.000 ft AGL",
+    "correct": "B",
+    "explanation_md": "O efeito-solo é mais forte abaixo de aproximadamente uma envergadura. Reduz vórtices de ponta e arrasto induzido.",
+    "difficulty": 3,
+    "source_ref": "Aerodinâmica",
+    "lesson_slug": "performance-decolagem"
   }
 ]
