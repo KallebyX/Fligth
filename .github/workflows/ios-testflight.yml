@@ -36,8 +36,6 @@ jobs:
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       MATCH_GIT_URL: ${{ secrets.MATCH_GIT_URL }}
       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-      MATCH_KEYCHAIN_NAME: "build_keychain"
-      MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
       TESTFLIGHT_CHANGELOG: ${{ github.event.inputs.changelog }}
       LANG: en_US.UTF-8
       LC_ALL: en_US.UTF-8
