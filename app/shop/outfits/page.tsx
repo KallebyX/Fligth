@@ -4,11 +4,12 @@ import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { RoulettePanel } from "@/components/shop/RoulettePanel";
 import { JackpotPanel } from "@/components/shop/JackpotPanel";
 import { OutfitCard, type ShopOutfit } from "@/components/shop/OutfitCard";
+import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
 import { loadOutfits } from "@/lib/outfits/catalog";
 import { rouletteAvailableAt } from "@/lib/outfits/roulette";
 import { jackpotAvailableAt } from "@/lib/outfits/jackpot";
-import { ChevronLeft, Sparkles } from "lucide-react";
+import { ChevronLeft, Gem, Shirt, Sparkles } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -68,15 +69,49 @@ export default async function OutfitShopPage() {
         Voltar à loja
       </Link>
 
-      <header>
-        <h1 className="flex items-center gap-2 text-3xl font-black">
-          <Sparkles size={28} className="text-sky" />
-          Outfits do Capitão
-        </h1>
-        <p className="text-sm text-ink/60">
-          Ganhe na roleta diária, aposte no jackpot ou compre direto com gems.
-        </p>
-      </header>
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sky to-grass text-white shadow-pop">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-white/15"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-10 -left-8 h-32 w-32 rounded-full bg-white/10"
+        />
+        <div className="relative grid items-center gap-3 px-5 py-6 sm:grid-cols-[auto,1fr]">
+          <div className="flex justify-center">
+            <div className="rounded-full bg-white/15 p-1.5 ring-4 ring-white/25">
+              <Mascot
+                state="celebrate"
+                size={108}
+                outfit={equipped ?? "aviator-classic"}
+              />
+            </div>
+          </div>
+          <div>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest">
+              <Sparkles size={12} />
+              Outfits do Capitão
+            </span>
+            <h1 className="mt-2 text-2xl font-black leading-tight md:text-3xl">
+              Estile o Lorí
+            </h1>
+            <p className="mt-1 text-sm leading-snug opacity-95">
+              Roleta grátis todo dia, jackpot com gems ou compra direta.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2 text-xs font-extrabold uppercase tracking-wider">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 text-sky-deep shadow-pop">
+                <Gem size={14} className="text-sky" />
+                {gems} gems
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1">
+                <Shirt size={14} />
+                {ownedSet.size} no armário
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <section className="space-y-4">
         <RoulettePanel initialNextSpinAt={rouletteState.nextAt} />
@@ -111,9 +146,12 @@ export default async function OutfitShopPage() {
           {ownedSet.size} outfit{ownedSet.size === 1 ? "" : "s"} no inventário.
         </CardDesc>
         {wardrobe.length === 0 ? (
-          <p className="mt-3 text-sm text-ink/60">
-            Comece pela roleta diária para ganhar seu primeiro outfit.
-          </p>
+          <div className="mt-4 flex flex-col items-center gap-2 text-center">
+            <Mascot state="sad" size={96} />
+            <p className="text-sm text-ink/60">
+              Comece pela roleta diária para ganhar seu primeiro outfit.
+            </p>
+          </div>
         ) : (
           <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
             {wardrobe.map((o) => (
