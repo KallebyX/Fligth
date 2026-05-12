@@ -3,14 +3,48 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { Mascot } from "@/components/mascot/Mascot";
 import { MockExamTimer } from "@/components/exam/MockExamTimer";
 import { startExam, submitExam } from "@/app/actions/exam";
 import { cn } from "@/lib/utils";
 import { impact } from "@/lib/haptics";
 import { useSfx } from "@/components/learn/useSfx";
-import { ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  EyeOff,
+  Hourglass,
+  LayoutGrid,
+  ListChecks,
+  Loader2,
+  Percent,
+} from "lucide-react";
+
+function RuleRow({
+  icon,
+  tint,
+  label,
+  desc,
+}: {
+  icon: React.ReactNode;
+  tint: string;
+  label: string;
+  desc: string;
+}) {
+  return (
+    <li className="flex items-start gap-3">
+      <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${tint}`}>
+        {icon}
+      </span>
+      <span>
+        <span className="block text-sm font-extrabold text-ink">{label}</span>
+        <span className="block text-xs text-ink/65">{desc}</span>
+      </span>
+    </li>
+  );
+}
 
 const EXAM_DURATION_MS = 3 * 60 * 60 * 1000; // 3h
 const STORAGE_KEY = "lori.exam.session";
@@ -85,26 +119,89 @@ export function ExamRunner() {
 
   if (!session) {
     return (
-      <main className="container flex min-h-screen flex-col items-center justify-center gap-6 py-12 text-center">
-        <Mascot state="happy" size={140} />
-        <h1 className="text-3xl font-black md:text-4xl">Simulado no formato da banca</h1>
-        <p className="text-sm text-ink/60">Mesma estrutura da prova teórica de Piloto Privado da ANAC.</p>
-        <Card className="max-w-lg space-y-3 text-left">
-          <p>
-            <strong>100 questões</strong> distribuídas em 5 matérias × 20.
-          </p>
-          <p>
-            <strong>3 horas</strong> de duração.
-          </p>
-          <p>
-            <strong>Aprovação:</strong> mínimo 70% em CADA matéria — exatamente como na prova real.
-          </p>
-          <p className="text-sm text-ink/60">
-            Sem feedback durante a prova. Você pode navegar entre as questões livremente.
-          </p>
+      <main className="container max-w-2xl space-y-6 py-8">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-sun to-alert text-white shadow-pop">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-12 -top-12 h-44 w-44 rounded-full bg-white/15"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -bottom-12 -left-10 h-36 w-36 rounded-full bg-white/10"
+          />
+          <div className="relative grid items-center gap-3 px-5 py-6 sm:grid-cols-[auto,1fr]">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-white/15 p-2 ring-4 ring-white/30">
+                <Mascot state="celebrate" size={128} />
+              </div>
+            </div>
+            <div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-[10px] font-bold uppercase tracking-widest">
+                <ClipboardCheck size={12} />
+                Simulado
+              </span>
+              <h1 className="mt-2 text-2xl font-black leading-tight md:text-3xl">
+                Encare a banca da ANAC
+              </h1>
+              <p className="mt-1 text-sm leading-snug opacity-95">
+                Mesma estrutura da prova teórica de Piloto Privado.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardTitle>Como funciona</CardTitle>
+          <CardDesc className="mt-1">
+            Cinco matérias × vinte questões = 100, no mesmo formato da prova.
+          </CardDesc>
+
+          <ul className="mt-4 space-y-3">
+            <RuleRow
+              icon={<ListChecks size={18} />}
+              tint="bg-sky/15 text-sky-deep"
+              label="100 questões"
+              desc="20 por matéria — Regulamentos, Meteo, Navegação, Teoria de voo, Conhecimentos técnicos."
+            />
+            <RuleRow
+              icon={<Hourglass size={18} />}
+              tint="bg-sun/15 text-sun"
+              label="3 horas"
+              desc="Timer fixo. Auto-submete ao final do tempo."
+            />
+            <RuleRow
+              icon={<Percent size={18} />}
+              tint="bg-grass/15 text-grass-deep"
+              label="≥ 70 % em cada matéria"
+              desc="Não basta a média — uma reprovação por matéria já reprova o todo."
+            />
+            <RuleRow
+              icon={<EyeOff size={18} />}
+              tint="bg-ink/10 text-ink"
+              label="Sem feedback durante"
+              desc="Você navega livremente; o resultado sai só ao finalizar."
+            />
+          </ul>
         </Card>
-        <Button size="lg" onClick={handleStart} disabled={starting} variant="warn">
-          {starting ? "Carregando..." : "Iniciar simulado"}
+
+        <Button
+          size="lg"
+          onClick={handleStart}
+          disabled={starting}
+          variant="warn"
+          className="w-full"
+        >
+          {starting ? (
+            <>
+              <Loader2 className="animate-spin" size={18} />
+              Carregando questões…
+            </>
+          ) : (
+            <>
+              <ClipboardCheck size={18} />
+              Iniciar simulado
+            </>
+          )}
         </Button>
       </main>
     );
