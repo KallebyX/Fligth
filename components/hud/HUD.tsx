@@ -64,35 +64,33 @@ export async function HUD({
 
   return (
     <header className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 backdrop-blur">
-      <div className="container flex h-14 items-center justify-between">
-        <Link href="/learn" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-sky">
-          <span aria-hidden>✈</span>
-          <span>Capitão Lorí</span>
+      <div className="container flex h-14 items-center justify-between gap-2 px-3 sm:px-4">
+        <Link
+          href="/learn"
+          className="flex shrink-0 items-center gap-1.5 text-lg font-extrabold tracking-tight text-sky"
+        >
+          <span aria-hidden className="text-xl">✈</span>
+          <span className="hidden sm:inline">Capitão Lorí</span>
+          <span className="sm:hidden">Lorí</span>
           {isPro && (
-            <span className="flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-gold">
+            <span className="flex items-center gap-0.5 rounded-full bg-gold/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-gold">
               <Crown size={10} />
               Pro
             </span>
           )}
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
           <StreakBadge days={streak} />
           <GemsBadge gems={gems} />
           <XPBar xp={xp} />
-          {isPro ? (
-            <Link href="/pro" className="hidden text-xs font-extrabold text-gold sm:inline">
-              Pro
+          {!isPro && <HeartsBar hearts={hearts} />}
+          {!isPro && (
+            <Link
+              href="/pro"
+              className="hidden rounded-full bg-gold/15 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-gold sm:inline-flex"
+            >
+              Upgrade
             </Link>
-          ) : (
-            <>
-              <HeartsBar hearts={hearts} />
-              <Link
-                href="/pro"
-                className="hidden rounded-full bg-gold/15 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-gold sm:inline-flex"
-              >
-                Upgrade
-              </Link>
-            </>
           )}
           <NotificationsBell initialUnread={unread} initialItems={items} />
         </div>
