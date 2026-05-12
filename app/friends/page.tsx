@@ -59,11 +59,16 @@ export default async function FriendsPage(props: {
 
   return (
     <main className="container max-w-2xl space-y-5 py-6">
-      <header>
-        <h1 className="text-3xl font-black">Amigos</h1>
-        <p className="text-sm text-ink/60">
-          Encontre outros pilotos, siga e compita pelos primeiros lugares da liga.
-        </p>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-black">Amigos</h1>
+          <p className="text-sm text-ink/60">
+            Encontre outros pilotos, siga e compita pelos primeiros lugares da liga.
+          </p>
+        </div>
+        <Link href="/friends/feed">
+          <Button variant="outline" size="sm">Ver feed</Button>
+        </Link>
       </header>
 
       <Card>
