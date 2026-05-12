@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HUD } from "@/components/hud/HUD";
+import { AppShell } from "@/components/nav/AppShell";
 import { computeHearts } from "@/lib/hearts";
 
 export default async function FriendsLayout({
@@ -25,7 +26,7 @@ export default async function FriendsLayout({
     : { hearts: 5, hearts_regen_at: null, changed: false };
 
   return (
-    <>
+    <AppShell>
       <HUD
         xp={stats?.total_xp ?? 0}
         streak={stats?.current_streak ?? 0}
@@ -33,6 +34,6 @@ export default async function FriendsLayout({
         gems={stats?.gems ?? 0}
       />
       {children}
-    </>
+    </AppShell>
   );
 }

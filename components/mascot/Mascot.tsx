@@ -6,19 +6,18 @@ import { MascotOutfit } from "@/components/mascot/outfits";
 export type MascotState = "idle" | "happy" | "sad" | "celebrate" | "sleeping";
 
 const animations: Record<MascotState, TargetAndTransition> = {
-  idle: { y: [0, -4, 0], transition: { duration: 1.6, repeat: Infinity, ease: "easeInOut" } },
-  happy: { rotate: [0, -8, 8, -4, 0], transition: { duration: 0.8 } },
+  idle: {
+    y: [0, -4, 0],
+    transition: { duration: 1.8, repeat: Infinity, ease: "easeInOut" },
+  },
+  happy: { rotate: [0, -6, 6, -3, 0], transition: { duration: 0.8 } },
   sad: { y: [0, 2, 0], transition: { duration: 0.6 } },
-  celebrate: { scale: [1, 1.15, 1], rotate: [0, 12, -12, 0], transition: { duration: 0.9 } },
+  celebrate: {
+    scale: [1, 1.12, 1],
+    rotate: [0, 10, -10, 0],
+    transition: { duration: 0.9 },
+  },
   sleeping: { rotate: 0 },
-};
-
-const eyeColors: Record<MascotState, string> = {
-  idle: "#0F172A",
-  happy: "#0F172A",
-  sad: "#0F172A",
-  celebrate: "#0F172A",
-  sleeping: "transparent",
 };
 
 export function Mascot({
@@ -30,54 +29,112 @@ export function Mascot({
   size?: number;
   outfit?: string | null;
 }) {
+  const isHappy = state === "happy" || state === "celebrate";
+  const isSad = state === "sad";
+  const isSleeping = state === "sleeping";
+
+  // Default outfit so users without an equipped slug still get the cap+goggles.
+  const renderedOutfit = outfit ?? "aviator-classic";
+
   return (
     <motion.svg
       width={size}
       height={size}
-      viewBox="0 0 120 120"
+      viewBox="0 0 120 140"
       animate={animations[state]}
       aria-label={`Capitão Lorí ${state}`}
     >
-      {/* body */}
-      <ellipse cx="60" cy="72" rx="38" ry="34" fill="#10B981" />
-      {/* belly */}
-      <ellipse cx="60" cy="80" rx="22" ry="20" fill="#FDE68A" />
-      {/* head */}
-      <circle cx="60" cy="42" r="28" fill="#10B981" />
-      {/* aviator cap */}
-      <path d="M32 38 Q60 14 88 38 L86 46 Q60 34 34 46 Z" fill="#0F172A" />
-      <rect x="34" y="40" width="52" height="6" fill="#FBBF24" />
-      {/* goggles */}
-      <circle cx="48" cy="42" r="8" fill="#0F172A" />
-      <circle cx="72" cy="42" r="8" fill="#0F172A" />
-      <circle cx="48" cy="42" r="6" fill="#A7F3D0" opacity="0.4" />
-      <circle cx="72" cy="42" r="6" fill="#A7F3D0" opacity="0.4" />
-      {/* eyes (when not sleeping) */}
-      {state !== "sleeping" && (
+      {/* Wings (behind body) */}
+      <path
+        d="M22 86 Q10 96 22 116 Q32 110 30 96 Z"
+        fill="#047857"
+      />
+      <path
+        d="M98 86 Q110 96 98 116 Q88 110 90 96 Z"
+        fill="#047857"
+      />
+
+      {/* Body */}
+      <ellipse cx="60" cy="98" rx="34" ry="34" fill="#10B981" />
+      {/* Belly */}
+      <ellipse cx="60" cy="104" rx="22" ry="22" fill="#FDE68A" />
+
+      {/* Feet */}
+      <ellipse cx="46" cy="132" rx="6" ry="4" fill="#F97316" />
+      <ellipse cx="74" cy="132" rx="6" ry="4" fill="#F97316" />
+
+      {/* Head */}
+      <circle cx="60" cy="50" r="34" fill="#10B981" />
+
+      {/* Cheek blush */}
+      {isHappy && (
         <>
-          <circle cx="48" cy="42" r="2" fill={eyeColors[state]} />
-          <circle cx="72" cy="42" r="2" fill={eyeColors[state]} />
+          <circle cx="38" cy="62" r="4" fill="#FCA5A5" opacity="0.55" />
+          <circle cx="82" cy="62" r="4" fill="#FCA5A5" opacity="0.55" />
         </>
       )}
-      {state === "sleeping" && (
+
+      {/* Eye sclera */}
+      <circle cx="48" cy="46" r="9" fill="#FFFFFF" />
+      <circle cx="72" cy="46" r="9" fill="#FFFFFF" />
+
+      {/* Pupils — closed for sad/sleeping, looking-up for celebrate, default forward */}
+      {isSleeping ? (
         <>
-          <path d="M44 42 L52 42" stroke="#0F172A" strokeWidth="2" />
-          <path d="M68 42 L76 42" stroke="#0F172A" strokeWidth="2" />
+          <path d="M42 46 Q48 50 54 46" stroke="#0F172A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          <path d="M66 46 Q72 50 78 46" stroke="#0F172A" strokeWidth="2.5" fill="none" strokeLinecap="round" />
         </>
-      )}
-      {/* beak */}
-      {state === "happy" || state === "celebrate" ? (
-        <path d="M52 56 Q60 70 68 56 Q60 60 52 56 Z" fill="#F97316" />
-      ) : state === "sad" ? (
-        <path d="M52 60 Q60 52 68 60" stroke="#F97316" strokeWidth="3" fill="none" />
+      ) : isSad ? (
+        <>
+          <circle cx="48" cy="48" r="3.5" fill="#0F172A" />
+          <circle cx="72" cy="48" r="3.5" fill="#0F172A" />
+        </>
       ) : (
-        <path d="M54 56 L66 56 L60 64 Z" fill="#F97316" />
+        <>
+          <circle cx="48" cy="46" r="3.5" fill="#0F172A" />
+          <circle cx="72" cy="46" r="3.5" fill="#0F172A" />
+          {/* Highlights */}
+          <circle cx="49.5" cy="44.5" r="1.3" fill="#FFFFFF" />
+          <circle cx="73.5" cy="44.5" r="1.3" fill="#FFFFFF" />
+        </>
       )}
-      {/* wings */}
-      <path d="M22 70 Q12 80 24 96" stroke="#047857" strokeWidth="6" fill="none" strokeLinecap="round" />
-      <path d="M98 70 Q108 80 96 96" stroke="#047857" strokeWidth="6" fill="none" strokeLinecap="round" />
-      {/* outfit overlay (painted on top so it can replace cap/goggles) */}
-      <MascotOutfit slug={outfit} />
+
+      {/* Beak */}
+      {isHappy ? (
+        <>
+          {/* Open beak / smile */}
+          <path
+            d="M52 60 Q60 76 68 60 Q60 64 52 60 Z"
+            fill="#F97316"
+            stroke="#9A3412"
+            strokeWidth="1"
+          />
+          <path
+            d="M55 64 Q60 70 65 64"
+            stroke="#9A3412"
+            strokeWidth="1"
+            fill="none"
+            strokeLinecap="round"
+          />
+        </>
+      ) : isSad ? (
+        <path
+          d="M54 64 L66 64 L60 60 Z"
+          fill="#F97316"
+          stroke="#9A3412"
+          strokeWidth="1"
+        />
+      ) : (
+        <path
+          d="M53 60 L67 60 L60 70 Z"
+          fill="#F97316"
+          stroke="#9A3412"
+          strokeWidth="1"
+        />
+      )}
+
+      {/* Outfit overlay paints over hair area / scarf — never the face */}
+      <MascotOutfit slug={renderedOutfit} />
     </motion.svg>
   );
 }

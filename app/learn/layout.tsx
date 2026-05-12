@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HUD } from "@/components/hud/HUD";
+import { AppShell } from "@/components/nav/AppShell";
 import { computeHearts } from "@/lib/hearts";
 import { computeProStatus } from "@/lib/pro";
 
@@ -32,7 +33,7 @@ export default async function LearnLayout({ children }: { children: React.ReactN
   const pro = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
 
   return (
-    <>
+    <AppShell>
       <HUD
         xp={stats?.total_xp ?? 0}
         streak={stats?.current_streak ?? 0}
@@ -41,6 +42,6 @@ export default async function LearnLayout({ children }: { children: React.ReactN
         isPro={pro.isPro}
       />
       {children}
-    </>
+    </AppShell>
   );
 }
