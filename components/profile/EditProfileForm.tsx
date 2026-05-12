@@ -99,7 +99,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
     <div className="space-y-5">
       <Card>
         <CardTitle>Seu @</CardTitle>
-        <CardDesc>Como amigos te encontram. Só pode ser alterado por enquanto.</CardDesc>
+        <CardDesc>É como os amigos te encontram na busca.</CardDesc>
         <div className="mt-3 flex gap-2">
           <div className="relative flex-1">
             <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink/40">
@@ -114,19 +114,33 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
               }
               maxLength={20}
               placeholder="seu_at"
-              className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-3 text-base font-medium outline-none focus:border-sky"
+              className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-3 text-base font-medium outline-none transition-colors focus:border-sky"
             />
           </div>
-          <Button onClick={saveUsername} disabled={savingUsername || !username}>
-            {savingUsername ? <Loader2 size={16} className="animate-spin" /> : "Salvar"}
+          <Button
+            onClick={saveUsername}
+            disabled={savingUsername || !username}
+          >
+            {savingUsername ? (
+              <Loader2 size={16} className="animate-spin" />
+            ) : (
+              "Salvar"
+            )}
           </Button>
         </div>
         {usernameError && (
-          <p className="mt-2 text-sm font-bold text-alert">{usernameError}</p>
+          <p className="mt-2 rounded-xl bg-alert/10 px-3 py-1.5 text-sm font-bold text-alert">
+            {usernameError}
+          </p>
         )}
         {usernameSaved && (
-          <p className="mt-2 text-sm font-bold text-grass">Username atualizado ✓</p>
+          <p className="mt-2 rounded-xl bg-grass/10 px-3 py-1.5 text-sm font-bold text-grass-deep">
+            ✓ @ atualizado
+          </p>
         )}
+        <p className="mt-2 text-[11px] text-ink/50">
+          3–20 caracteres. Letras minúsculas, números e _ apenas.
+        </p>
       </Card>
 
       <Card>
