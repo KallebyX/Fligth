@@ -3,7 +3,8 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { StatGrid } from "@/components/profile/StatGrid";
 import { FollowButton } from "@/components/profile/FollowButton";
 import { Button } from "@/components/ui/button";
-import { CalendarDays, Pencil } from "lucide-react";
+import { CalendarDays, Pencil, Trophy } from "lucide-react";
+import { getDivision } from "@/lib/leagues/divisions";
 
 const PROFILE_COLOR_TO_BG: Record<string, string> = {
   sky: "bg-sky",
@@ -12,19 +13,6 @@ const PROFILE_COLOR_TO_BG: Record<string, string> = {
   alert: "bg-alert",
   gold: "bg-gold",
   ink: "bg-ink",
-};
-
-const LEAGUE_LABELS: Record<string, string> = {
-  bronze: "Bronze",
-  prata: "Prata",
-  ouro: "Ouro",
-  diamante: "Diamante",
-  safira: "Safira",
-  rubi: "Rubi",
-  esmeralda: "Esmeralda",
-  ametista: "Ametista",
-  perola: "Pérola",
-  obsidiana: "Obsidiana",
 };
 
 export type PublicProfileData = {
@@ -62,6 +50,7 @@ export function PublicProfile({
   followsViewer,
 }: PublicProfileProps) {
   const bgClass = PROFILE_COLOR_TO_BG[profile.profile_color] ?? "bg-sky";
+  const division = getDivision(profile.current_league);
   const joined = new Date(profile.joined_at).toLocaleDateString("pt-BR", {
     month: "long",
     year: "numeric",
@@ -69,9 +58,30 @@ export function PublicProfile({
 
   return (
     <div className="space-y-6">
-      <div className={`overflow-hidden rounded-3xl ${bgClass} text-white shadow-pop`}>
-        <div className="flex flex-col items-center gap-3 px-5 py-7 text-center">
-          <Mascot state="happy" size={112} outfit={profile.equipped_outfit_slug} />
+      <div
+        className={`relative overflow-hidden rounded-3xl ${bgClass} text-white shadow-pop`}
+      >
+        {/* Soft decorative blobs */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/15"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-10 -left-10 h-32 w-32 rounded-full bg-white/10"
+        />
+
+        <div className="relative flex flex-col items-center gap-3 px-5 py-7 text-center">
+          {profile.country_code && (
+            <span className="absolute right-4 top-4 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-wider">
+              {profile.country_code}
+            </span>
+          )}
+
+          <div className="rounded-full bg-white/15 p-2 ring-4 ring-white/30">
+            <Mascot state="happy" size={132} outfit={profile.equipped_outfit_slug} />
+          </div>
+
           <div>
             <h1 className="text-2xl font-black md:text-3xl">
               {profile.display_name ?? profile.username}
@@ -80,38 +90,47 @@ export function PublicProfile({
               @{profile.username}
             </p>
           </div>
+
           {profile.bio && (
-            <p className="max-w-md text-sm leading-snug opacity-95">{profile.bio}</p>
+            <p className="max-w-md whitespace-pre-wrap text-sm leading-snug opacity-95">
+              {profile.bio}
+            </p>
           )}
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-bold uppercase tracking-wider opacity-80">
-            {profile.country_code && <span>{profile.country_code}</span>}
-            <span className="flex items-center gap-1">
-              <CalendarDays size={14} />
-              entrou em {joined}
+
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-2 text-xs font-bold uppercase tracking-wider">
+            <span
+              className="inline-flex items-center gap-1 rounded-full bg-white/95 px-3 py-1 shadow-pop"
+              style={{ color: division.color }}
+            >
+              <Trophy size={14} />
+              Liga {division.name}
             </span>
-            <span>{LEAGUE_LABELS[profile.current_league] ?? profile.current_league}</span>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 opacity-90">
+              <CalendarDays size={14} />
+              Entrou {joined}
+            </span>
           </div>
 
-          <div className="mt-2 flex w-full max-w-md items-center justify-center gap-6 text-center">
+          <div className="mt-3 flex w-full max-w-md items-center justify-center gap-6 text-center">
             <div>
-              <p className="text-xl font-black">{followers}</p>
+              <p className="text-2xl font-black tabular-nums">{followers}</p>
               <p className="text-[10px] font-bold uppercase tracking-wider opacity-80">
                 Seguidores
               </p>
             </div>
             <div className="h-8 w-px bg-white/30" />
             <div>
-              <p className="text-xl font-black">{following}</p>
+              <p className="text-2xl font-black tabular-nums">{following}</p>
               <p className="text-[10px] font-bold uppercase tracking-wider opacity-80">
                 Seguindo
               </p>
             </div>
           </div>
 
-          <div className="mt-2">
+          <div className="mt-3">
             {isSelf ? (
               <Link href="/profile/edit">
-                <Button size="md" variant="outline" className="bg-white/95">
+                <Button size="md" variant="outline" className="bg-white text-ink">
                   <Pencil size={16} />
                   Editar perfil
                 </Button>

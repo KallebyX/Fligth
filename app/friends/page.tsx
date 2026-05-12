@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Users, UserPlus, Sparkles } from "lucide-react";
+import { Users, UserPlus, Sparkles, Newspaper } from "lucide-react";
 import { UserSearch } from "@/components/friends/UserSearch";
 import { UserCard } from "@/components/friends/UserCard";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
 import { suggestedUsers, type DiscoverUser } from "@/app/actions/discover";
 import { cn } from "@/lib/utils";
@@ -67,7 +68,10 @@ export default async function FriendsPage(props: {
           </p>
         </div>
         <Link href="/friends/feed">
-          <Button variant="outline" size="sm">Ver feed</Button>
+          <Button variant="outline" size="sm">
+            <Newspaper size={14} />
+            Feed
+          </Button>
         </Link>
       </header>
 
@@ -86,21 +90,30 @@ export default async function FriendsPage(props: {
       </div>
 
       {users.length === 0 ? (
-        <Card>
+        <Card className="text-center">
+          <div className="mx-auto mb-2 flex h-28 w-28 items-center justify-center">
+            <Mascot
+              state={tab === "followers" ? "sad" : "happy"}
+              size={104}
+            />
+          </div>
           <CardTitle>
-            {tab === "following" && "Você ainda não segue ninguém"}
-            {tab === "followers" && "Você ainda não tem seguidores"}
-            {tab === "suggestions" && "Nenhuma sugestão por aqui"}
+            {tab === "following" && "Sem ninguém na sua tripulação ainda"}
+            {tab === "followers" && "Ainda sem seguidores"}
+            {tab === "suggestions" && "Sem sugestões agora"}
           </CardTitle>
           <CardDesc className="mt-2">
-            {tab === "following" && "Use a busca acima ou veja sugestões para começar."}
-            {tab === "followers" && "Convide amigos para te seguirem e crescerem juntos."}
-            {tab === "suggestions" && "Complete mais lições para entrar em uma liga ativa."}
+            {tab === "following" && "Use a busca acima ou veja as sugestões — siga 3 pilotos pra liberar o feed."}
+            {tab === "followers" && "Compartilhe seu perfil pra começar a juntar a tripulação."}
+            {tab === "suggestions" && "Complete algumas lições pra entrar numa liga ativa."}
           </CardDesc>
           {tab !== "suggestions" && (
-            <div className="mt-3">
+            <div className="mt-4 flex justify-center">
               <Link href="/friends?tab=suggestions">
-                <Button variant="outline" size="md">Ver sugestões</Button>
+                <Button variant="outline" size="md">
+                  <Sparkles size={16} />
+                  Ver sugestões
+                </Button>
               </Link>
             </div>
           )}

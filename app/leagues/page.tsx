@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardTitle, CardDesc } from "@/components/ui/card";
 import { isoWeek } from "@/lib/utils";
+import { Mascot } from "@/components/mascot/Mascot";
 import { Podium, type PodiumEntry } from "@/components/leagues/Podium";
 import { LeaderboardRow } from "@/components/leagues/LeaderboardRow";
 import { ResetTimer } from "@/components/leagues/ResetTimer";
@@ -121,20 +122,31 @@ export default async function LeaguesPage() {
       <LevelUpDialog promo={promo} />
 
       <div
-        className="rounded-3xl px-5 py-5 text-white shadow-pop"
+        className="relative overflow-hidden rounded-3xl px-5 py-5 text-white shadow-pop"
         style={{ backgroundColor: division.color }}
       >
-        <div className="flex items-center justify-between">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-8 -left-8 h-32 w-32 rounded-full bg-white/10"
+        />
+
+        <div className="relative flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-              <Trophy size={24} />
+            <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 ring-2 ring-white/25">
+              <Trophy size={26} />
             </span>
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">
+              <p className="text-[10px] font-bold uppercase tracking-widest opacity-85">
                 Liga atual · semana {week}
               </p>
-              <h1 className="text-2xl font-black md:text-3xl">{division.name}</h1>
-              <p className="mt-0.5 text-[11px] uppercase tracking-wider opacity-80">
+              <h1 className="text-2xl font-black leading-tight md:text-3xl">
+                {division.name}
+              </h1>
+              <p className="mt-0.5 text-[11px] uppercase tracking-wider opacity-85">
                 Tier {division.tier} de {DIVISIONS.length}
               </p>
             </div>
@@ -142,13 +154,32 @@ export default async function LeaguesPage() {
           <ResetTimer />
         </div>
 
-        <div className="mt-4 flex items-center justify-between rounded-2xl bg-white/10 px-3 py-2 text-[11px] font-bold">
-          <span className="inline-flex items-center gap-1">
+        {myRank >= 0 && (
+          <div className="relative mt-4 flex items-center justify-between rounded-2xl bg-white/95 px-4 py-3 text-ink shadow-pop">
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink/55">
+                Sua posição
+              </p>
+              <p className="text-xl font-black tabular-nums">#{myRank + 1}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-ink/55">
+                XP semanal
+              </p>
+              <p className="text-xl font-black tabular-nums text-gold">
+                {board[myRank].weekly_xp}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <div className="relative mt-4 grid gap-2 sm:grid-cols-2">
+          <span className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/15 px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider">
             <ChevronUp size={14} className="text-grass" />
             Top {PROMOTE_TOP} sobem
             {!isTopTier && ` → ${getDivision(DIVISIONS[division.tier].slug).name}`}
           </span>
-          <span className="inline-flex items-center gap-1 opacity-90">
+          <span className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-white/15 px-3 py-2 text-[11px] font-extrabold uppercase tracking-wider opacity-95">
             <ChevronDown size={14} className="text-alert" />
             Últimos {RELEGATE_BOTTOM} descem
             {!isBottomTier &&
@@ -158,11 +189,14 @@ export default async function LeaguesPage() {
       </div>
 
       {board.length === 0 ? (
-        <Card>
-          <CardTitle>Sua liga está vazia</CardTitle>
+        <Card className="text-center">
+          <div className="mx-auto mb-2 flex h-28 w-28 items-center justify-center">
+            <Mascot state="happy" size={104} />
+          </div>
+          <CardTitle>Sua liga ainda está vazia</CardTitle>
           <CardDesc className="mt-2">
-            Comece uma lição para entrar no ranking. Quem ganhar mais XP até{" "}
-            <strong>segunda-feira</strong> sobe!
+            Comece uma lição pra entrar no ranking. Quem ganhar mais XP até{" "}
+            <strong>segunda-feira 03:00 UTC</strong> sobe!
           </CardDesc>
         </Card>
       ) : (
