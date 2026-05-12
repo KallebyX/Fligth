@@ -9,7 +9,7 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { spinJackpotAction } from "@/app/actions/outfits";
 import { impact, notify } from "@/lib/haptics";
 import { useSfx } from "@/components/learn/useSfx";
-import { JACKPOT_COST_GEMS } from "@/lib/outfits/jackpot";
+import { JACKPOT_COST_GEMS } from "@/lib/outfits/constants";
 import {
   OutfitRevealDialog,
   type RevealPayload,

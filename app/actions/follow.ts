@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { notifyUser } from "@/lib/notifications";
 
 export type FollowResult =
   | { ok: true; following: boolean }
@@ -18,8 +19,23 @@ export async function followUser(targetId: string): Promise<FollowResult> {
   const { error } = await supabase
     .from("follows")
     .insert({ follower_id: user.id, followed_id: targetId });
-  if (error && !/duplicate key/i.test(error.message)) {
+  const isDuplicate = error && /duplicate key/i.test(error.message);
+  if (error && !isDuplicate) {
     return { ok: false, error: error.message };
+  }
+
+  // Only notify on a fresh follow — re-clicking on an existing follow is a no-op.
+  if (!isDuplicate) {
+    const { data: follower } = await supabase
+      .from("profiles")
+      .select("username, display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+    await notifyUser(targetId, "followed_you", {
+      follower_id: user.id,
+      follower_username: follower?.username ?? null,
+      follower_display_name: follower?.display_name ?? null,
+    });
   }
 
   revalidatePath(`/profile/[username]`, "page");

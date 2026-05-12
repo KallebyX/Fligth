@@ -2,10 +2,11 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { Gem, Check, Loader2, Lock } from "lucide-react";
+import { CreditCard, Gem, Check, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { purchaseOutfitWithGems, equipOutfit } from "@/app/actions/outfits";
+import { startCheckout } from "@/app/actions/checkout";
 import { impact, notify } from "@/lib/haptics";
 import { cn } from "@/lib/utils";
 
@@ -51,6 +52,7 @@ export function OutfitCard({
 
   const canBuyGems = outfit.price_gems != null && outfit.price_gems > 0;
   const canAfford = outfit.price_gems != null && userGems >= outfit.price_gems;
+  const canBuyCash = outfit.price_cents != null && outfit.price_cents > 0;
 
   function buyGems() {
     if (!canBuyGems || pending) return;
@@ -88,6 +90,33 @@ export function OutfitCard({
     });
   }
 
+  function buyCash() {
+    if (!canBuyCash || pending) return;
+    setError(null);
+    void impact("medium");
+    start(async () => {
+      const res = await startCheckout(`outfit-${outfit.slug}`);
+      if (!res.ok) {
+        void notify("error");
+        setError(
+          res.error === "product_not_found"
+            ? "Esse outfit ainda não está disponível pra compra com cartão."
+            : "Não foi possível abrir o checkout.",
+        );
+        return;
+      }
+      // Redirect to Stripe Checkout.
+      window.location.href = res.url;
+    });
+  }
+
+  const priceCashLabel = canBuyCash
+    ? (outfit.price_cents! / 100).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      })
+    : null;
+
   return (
     <div
       className={cn(
@@ -114,7 +143,7 @@ export function OutfitCard({
         </p>
       )}
 
-      <div className="mt-3 space-y-1">
+      <div className="mt-3 space-y-2">
         {equipped ? (
           <Button variant="outline" size="sm" disabled className="w-full">
             <Check size={14} />
@@ -129,23 +158,45 @@ export function OutfitCard({
           >
             {pending ? <Loader2 size={14} className="animate-spin" /> : "Equipar"}
           </Button>
-        ) : canBuyGems ? (
-          <Button
-            size="sm"
-            variant={canAfford ? "primary" : "outline"}
-            disabled={!canAfford || pending}
-            className="w-full"
-            onClick={buyGems}
-          >
-            {pending ? (
-              <Loader2 size={14} className="animate-spin" />
-            ) : (
-              <>
-                <Gem size={14} />
-                {outfit.price_gems}
-              </>
+        ) : canBuyGems || canBuyCash ? (
+          <>
+            {canBuyGems && (
+              <Button
+                size="sm"
+                variant={canAfford ? "primary" : "outline"}
+                disabled={!canAfford || pending}
+                className="w-full"
+                onClick={buyGems}
+              >
+                {pending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <>
+                    <Gem size={14} />
+                    {outfit.price_gems}
+                  </>
+                )}
+              </Button>
             )}
-          </Button>
+            {canBuyCash && (
+              <Button
+                size="sm"
+                variant={canBuyGems ? "outline" : "primary"}
+                disabled={pending}
+                className="w-full"
+                onClick={buyCash}
+              >
+                {pending ? (
+                  <Loader2 size={14} className="animate-spin" />
+                ) : (
+                  <>
+                    <CreditCard size={14} />
+                    {priceCashLabel}
+                  </>
+                )}
+              </Button>
+            )}
+          </>
         ) : (
           <Button variant="outline" size="sm" disabled className="w-full">
             <Lock size={14} />

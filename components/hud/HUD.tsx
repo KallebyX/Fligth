@@ -3,9 +3,51 @@ import { HeartsBar } from "./HeartsBar";
 import { XPBar } from "./XPBar";
 import { StreakBadge } from "./StreakBadge";
 import { GemsBadge } from "./GemsBadge";
+import { NotificationsBell } from "./NotificationsBell";
 import { Crown } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/types";
+import type { NotificationItem } from "@/app/actions/notifications";
 
-export function HUD({
+async function loadNotifications(): Promise<{
+  items: NotificationItem[];
+  unread: number;
+}> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { items: [], unread: 0 };
+
+    const [{ data: rows }, { count }] = await Promise.all([
+      supabase
+        .from("notifications")
+        .select("id, kind, payload, read_at, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .is("read_at", null),
+    ]);
+
+    const items: NotificationItem[] = (rows ?? []).map((r) => ({
+      id: r.id,
+      kind: r.kind as NotificationItem["kind"],
+      payload: ((r.payload as Json | null) ?? {}) as Record<string, unknown>,
+      read_at: r.read_at,
+      created_at: r.created_at,
+    }));
+    return { items, unread: count ?? 0 };
+  } catch {
+    return { items: [], unread: 0 };
+  }
+}
+
+export async function HUD({
   xp,
   streak,
   hearts,
@@ -18,6 +60,8 @@ export function HUD({
   gems?: number;
   isPro?: boolean;
 }) {
+  const { items, unread } = await loadNotifications();
+
   return (
     <header className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 backdrop-blur">
       <div className="container flex h-14 items-center justify-between">
@@ -50,6 +94,7 @@ export function HUD({
               </Link>
             </>
           )}
+          <NotificationsBell initialUnread={unread} initialItems={items} />
         </div>
       </div>
     </header>

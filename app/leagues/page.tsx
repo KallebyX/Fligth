@@ -5,6 +5,7 @@ import { isoWeek } from "@/lib/utils";
 import { Podium, type PodiumEntry } from "@/components/leagues/Podium";
 import { LeaderboardRow } from "@/components/leagues/LeaderboardRow";
 import { ResetTimer } from "@/components/leagues/ResetTimer";
+import { LevelUpDialog, type Promotion } from "@/components/leagues/LevelUpDialog";
 import {
   DIVISIONS,
   PROMOTE_TOP,
@@ -27,6 +28,35 @@ export default async function LeaguesPage() {
     .select("current_league")
     .eq("id", user.id)
     .single();
+
+  const { data: recentPromo } = await supabase
+    .from("user_activities")
+    .select("id, payload, created_at")
+    .eq("user_id", user.id)
+    .eq("kind", "league_promoted")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const promo: Promotion | null = recentPromo
+    ? (() => {
+        const p = (recentPromo.payload ?? {}) as Record<string, unknown>;
+        return {
+          id: recentPromo.id,
+          from: (p.from as string) ?? null,
+          to: (p.to as string) ?? "bronze",
+          rank: (p.rank as number) ?? null,
+          gems: (p.gems as number) ?? null,
+          outfit:
+            p.outfit && typeof p.outfit === "object"
+              ? {
+                  slug: (p.outfit as { slug?: string }).slug ?? "",
+                  name: (p.outfit as { name?: string }).name ?? "",
+                }
+              : null,
+        } satisfies Promotion;
+      })()
+    : null;
 
   const division = getDivision(profile?.current_league ?? "bronze");
   const week = isoWeek();
@@ -88,6 +118,8 @@ export default async function LeaguesPage() {
 
   return (
     <main className="container max-w-2xl space-y-5 py-6">
+      <LevelUpDialog promo={promo} />
+
       <div
         className="rounded-3xl px-5 py-5 text-white shadow-pop"
         style={{ backgroundColor: division.color }}

@@ -4,6 +4,12 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { recordActivity } from "@/lib/activities";
 import { getDropPool, pickWeighted, type Outfit } from "@/lib/outfits/catalog";
+import {
+  ROULETTE_COOLDOWN_MS,
+  ROULETTE_DUPLICATE_GEMS,
+} from "@/lib/outfits/constants";
+
+export { ROULETTE_COOLDOWN_MS, ROULETTE_DUPLICATE_GEMS };
 
 export type SpinError =
   | "unauthenticated"
@@ -21,8 +27,6 @@ export type SpinResult =
     }
   | { ok: false; error: SpinError; nextSpinAt?: string };
 
-export const ROULETTE_COOLDOWN_MS = 24 * 60 * 60 * 1000;
-export const ROULETTE_DUPLICATE_GEMS = 20;
 export const ROULETTE_RARITIES = ["common", "rare"] as const;
 
 export async function spinRoulette(userId: string): Promise<SpinResult> {

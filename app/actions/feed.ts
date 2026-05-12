@@ -95,6 +95,28 @@ type RawRow = {
   user_id: string;
 };
 
+// Single-item hydrate used by the realtime channel when a new INSERT arrives.
+// Returns null silently if the row is no longer visible to the viewer (e.g.
+// the producing profile flipped to private between INSERT and our SELECT).
+export async function getActivityById(id: number): Promise<FeedItem | null> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return null;
+
+  const { data: row } = await supabase
+    .from("user_activities")
+    .select("id, kind, payload, created_at, user_id")
+    .eq("id", id)
+    .maybeSingle();
+  if (!row) return null;
+
+  const res = await hydrate([row as RawRow]);
+  if (!res.ok || res.items.length === 0) return null;
+  return res.items[0];
+}
+
 async function hydrate(rows: RawRow[]): Promise<FeedResult> {
   if (rows.length === 0) {
     return { ok: true, items: [], nextCursor: null };

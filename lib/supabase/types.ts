@@ -160,7 +160,8 @@ export type Database = {
           | "remove_ads"
           | "donation"
           | "pro_subscription"
-          | "pro_lifetime";
+          | "pro_lifetime"
+          | "mascot_outfit";
         payload: Json;
         price_cents: number;
         currency: string;
@@ -186,6 +187,15 @@ export type Database = {
       follows: Tbl<{
         follower_id: string;
         followed_id: string;
+        created_at: string;
+      }>;
+      // 0010_notifications
+      notifications: Tbl<{
+        id: number;
+        user_id: string;
+        kind: "followed_you" | "outfit_unlocked" | "league_promoted";
+        payload: Json;
+        read_at: string | null;
         created_at: string;
       }>;
       // 0008_outfits

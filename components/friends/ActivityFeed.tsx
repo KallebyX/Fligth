@@ -4,10 +4,12 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { ActivityItem } from "@/components/friends/ActivityItem";
 import {
+  getActivityById,
   getDiscoverFeed,
   getFollowingFeed,
   type FeedItem,
 } from "@/app/actions/feed";
+import { createClient } from "@/lib/supabase/client";
 
 type Source = "following" | "discover";
 
@@ -41,6 +43,37 @@ export function ActivityFeed({
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, [done, pending, cursor]);
+
+  // Live updates: subscribe to user_activities INSERTs. RLS filters to only
+  // visible rows (own + followed). Discover tab sees the same firehose but
+  // then drops events that wouldn't pass the discover view filter — for
+  // simplicity, hydrate first and let getActivityById handle visibility.
+  useEffect(() => {
+    const supabase = createClient();
+    const channel = supabase
+      .channel(`uacts:${source}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "user_activities" },
+        async (payload) => {
+          const row = payload.new as { id?: number };
+          if (typeof row.id !== "number") return;
+          try {
+            const fresh = await getActivityById(row.id);
+            if (!fresh) return;
+            setItems((prev) =>
+              prev.some((p) => p.id === fresh.id) ? prev : [fresh, ...prev],
+            );
+          } catch {
+            // Realtime is bonus; failures are not user-facing.
+          }
+        },
+      )
+      .subscribe();
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [source]);
 
   function loadMore() {
     if (done || pending) return;

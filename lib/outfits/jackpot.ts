@@ -4,10 +4,14 @@
 import { createServiceClient } from "@/lib/supabase/server";
 import { recordActivity } from "@/lib/activities";
 import { getDropPool, pickWeighted, type Outfit } from "@/lib/outfits/catalog";
+import {
+  JACKPOT_COOLDOWN_MS,
+  JACKPOT_COST_GEMS,
+  JACKPOT_DUPLICATE_GEMS,
+} from "@/lib/outfits/constants";
 
-export const JACKPOT_COST_GEMS = 50;
-export const JACKPOT_COOLDOWN_MS = 60 * 60 * 1000;
-export const JACKPOT_DUPLICATE_GEMS = 25;
+export { JACKPOT_COOLDOWN_MS, JACKPOT_COST_GEMS, JACKPOT_DUPLICATE_GEMS };
+
 export const JACKPOT_RARITIES = ["epic", "legendary"] as const;
 
 export type JackpotError =
