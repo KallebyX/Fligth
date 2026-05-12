@@ -6,6 +6,7 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
 import { Award, Flame, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SoundHapticToggles } from "@/components/settings/SoundHapticToggles";
 
 export const dynamic = "force-dynamic";
 
@@ -84,6 +85,14 @@ export default async function ProfilePage() {
             })}
           </div>
         )}
+      </Card>
+
+      <Card>
+        <CardTitle>Preferências</CardTitle>
+        <CardDesc>Ajuste sons e vibração — fica salvo neste dispositivo.</CardDesc>
+        <div className="mt-3">
+          <SoundHapticToggles />
+        </div>
       </Card>
 
       <Card>

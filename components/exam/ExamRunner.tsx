@@ -8,6 +8,9 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { MockExamTimer } from "@/components/exam/MockExamTimer";
 import { startExam, submitExam } from "@/app/actions/exam";
 import { cn } from "@/lib/utils";
+import { impact } from "@/lib/haptics";
+import { useSfx } from "@/components/learn/useSfx";
+import { ChevronLeft, ChevronRight, LayoutGrid } from "lucide-react";
 
 const EXAM_DURATION_MS = 3 * 60 * 60 * 1000; // 3h
 const STORAGE_KEY = "lori.exam.session";
@@ -29,6 +32,7 @@ type Session = {
 
 export function ExamRunner() {
   const router = useRouter();
+  const sfx = useSfx();
   const [session, setSession] = useState<Session | null>(null);
   const [index, setIndex] = useState(0);
   const [submitting, setSubmitting] = useState(false);
@@ -114,14 +118,30 @@ export function ExamRunner() {
     setSession((s) =>
       s ? { ...s, answers: { ...s.answers, [current.id]: choice } } : s,
     );
+    sfx.play("tap");
+    void impact("light");
+  }
+
+  function goPrev() {
+    setIndex((i) => Math.max(0, i - 1));
+    void impact("light");
+  }
+
+  function goNext() {
+    setIndex((i) => Math.min(session ? session.questions.length - 1 : i, i + 1));
+    void impact("light");
   }
 
   return (
-    <main className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 border-b border-cloud-deep/40 bg-white/90 backdrop-blur">
-        <div className="container flex h-14 items-center justify-between">
+    <main className="flex min-h-[100dvh] flex-col">
+      <header className="sticky top-0 z-30 border-b border-cloud-deep/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+        <div className="container flex h-14 max-w-2xl items-center justify-between px-4">
           <span className="text-sm font-extrabold">
-            {index + 1} / {session.questions.length} — {answered} respondidas
+            <span className="text-ink">{index + 1}</span>
+            <span className="text-ink/40"> / {session.questions.length}</span>
+            <span className="ml-2 hidden text-xs font-bold uppercase tracking-wide text-ink/50 sm:inline">
+              · {answered} respondidas
+            </span>
           </span>
           <MockExamTimer
             startedAt={session.startedAt}
@@ -131,97 +151,109 @@ export function ExamRunner() {
         </div>
       </header>
 
-      <div className="container max-w-2xl flex-1 py-6">
+      <div className="container max-w-2xl flex-1 px-4 pb-44 pt-5">
         <p className="text-xs font-bold uppercase tracking-wide text-sky">{current.subject_name}</p>
-        <h2 className="mb-6 mt-1 text-xl font-extrabold leading-snug md:text-2xl">{current.stem}</h2>
+        <h2 className="mb-6 mt-1 text-[22px] font-extrabold leading-snug md:text-2xl">{current.stem}</h2>
 
-        <div className="grid gap-3">
+        <div className="grid gap-3 select-none">
           {(["A", "B", "C", "D"] as const).map((letter) => {
             const isSelected = session.answers[current.id] === letter;
             return (
               <button
                 key={letter}
                 onClick={() => selectChoice(letter)}
+                style={{ WebkitTapHighlightColor: "transparent" }}
                 className={cn(
-                  "flex items-start gap-4 rounded-2xl border-2 p-4 text-left transition-colors",
+                  "flex min-h-[64px] items-center gap-4 rounded-2xl border-2 p-4 text-left touch-manipulation transition-colors active:scale-[0.99]",
                   isSelected ? "border-sky bg-sky/10" : "border-cloud-deep bg-white hover:bg-cloud",
                 )}
               >
                 <span
                   className={cn(
-                    "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-extrabold",
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-extrabold",
                     isSelected ? "bg-sky text-white" : "bg-cloud text-ink/70",
                   )}
                 >
                   {letter}
                 </span>
-                <span>{current.choices[letter]}</span>
+                <span className="text-base leading-snug md:text-[17px]">{current.choices[letter]}</span>
               </button>
             );
           })}
         </div>
       </div>
 
-      <footer className="border-t border-cloud-deep/40 bg-white px-4 py-4">
+      <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-cloud-deep/40 bg-white/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-white/85">
         <div className="container flex max-w-2xl items-center gap-2">
           <Button
             variant="outline"
             size="md"
-            onClick={() => setIndex((i) => Math.max(0, i - 1))}
+            onClick={goPrev}
             disabled={index === 0}
+            aria-label="Questão anterior"
           >
-            Voltar
+            <ChevronLeft size={18} />
           </Button>
-          <Button variant="ghost" size="md" onClick={() => setShowNav((v) => !v)}>
-            Mapa
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={() => setShowNav((v) => !v)}
+            aria-label="Mapa de questões"
+          >
+            <LayoutGrid size={16} />
+            <span className="ml-1 hidden sm:inline">Mapa</span>
           </Button>
           {index + 1 < session.questions.length ? (
             <Button
               size="md"
-              className="ml-auto"
-              onClick={() => setIndex((i) => i + 1)}
+              className="ml-auto flex-1 sm:flex-none"
+              onClick={goNext}
             >
               Próxima
+              <ChevronRight size={18} />
             </Button>
           ) : (
             <Button
               size="md"
               variant="warn"
-              className="ml-auto"
+              className="ml-auto flex-1 sm:flex-none"
               onClick={handleSubmit}
               disabled={submitting}
             >
-              {submitting ? "Enviando..." : "Finalizar simulado"}
+              {submitting ? "Enviando..." : "Finalizar"}
             </Button>
           )}
         </div>
 
         {showNav && (
-          <div className="container mt-4 max-w-2xl">
-            <div className="grid grid-cols-10 gap-1.5">
-              {session.questions.map((q, i) => {
-                const a = session.answers[q.id];
-                return (
-                  <button
-                    key={q.id}
-                    onClick={() => {
-                      setIndex(i);
-                      setShowNav(false);
-                    }}
-                    className={cn(
-                      "h-8 rounded text-xs font-bold",
-                      i === index
-                        ? "bg-sky text-white"
-                        : a
-                          ? "bg-grass/30 text-grass-deep"
-                          : "bg-cloud text-ink/60",
-                    )}
-                    aria-label={`Questão ${i + 1}`}
-                  >
-                    {i + 1}
-                  </button>
-                );
-              })}
+          <div className="container mt-3 max-w-2xl">
+            <div className="max-h-[40vh] overflow-y-auto rounded-2xl bg-cloud/60 p-2">
+              <div className="grid grid-cols-10 gap-1.5">
+                {session.questions.map((q, i) => {
+                  const a = session.answers[q.id];
+                  return (
+                    <button
+                      key={q.id}
+                      onClick={() => {
+                        setIndex(i);
+                        setShowNav(false);
+                        void impact("light");
+                      }}
+                      className={cn(
+                        "h-9 rounded-lg text-xs font-bold touch-manipulation",
+                        i === index
+                          ? "bg-sky text-white"
+                          : a
+                            ? "bg-grass/30 text-grass-deep"
+                            : "bg-white text-ink/60",
+                      )}
+                      aria-label={`Questão ${i + 1}${a ? " (respondida)" : ""}`}
+                    >
+                      {i + 1}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
         )}
