@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { awardXP, XP_LESSON_COMPLETE_BONUS, XP_PER_CORRECT_LESSON } from "@/lib/xp";
 import { bumpStreak } from "@/lib/streak";
 import { evaluateBadges } from "@/lib/badges";
+import { recordActivity, STREAK_MILESTONES } from "@/lib/activities";
 import { todayISO } from "@/lib/utils";
 
 export type CompleteLessonInput = {
@@ -73,16 +74,37 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
         })
         .eq("user_id", user.id);
       newStreak = r.current_streak;
+      if (STREAK_MILESTONES.has(r.current_streak)) {
+        await recordActivity(user.id, "streak_milestone", {
+          streak: r.current_streak,
+        });
+      }
     }
   }
 
   const perfect = input.correctCount === input.totalCount;
 
-  // 4. Badges
+  // 4. Lesson title (for the feed item).
+  const { data: lessonRow } = await supabase
+    .from("lessons")
+    .select("title, subject_id")
+    .eq("id", input.lessonId)
+    .single();
+
+  // 5. Badges
   await evaluateBadges(supabase, {
     userId: user.id,
     event: "lesson_completed",
     data: { perfect },
+  });
+
+  // 6. Activity feed
+  await recordActivity(user.id, "lesson_completed", {
+    lesson_id: input.lessonId,
+    lesson_title: lessonRow?.title,
+    subject_id: lessonRow?.subject_id,
+    xp: xpAwarded,
+    perfect,
   });
 
   revalidatePath("/learn");

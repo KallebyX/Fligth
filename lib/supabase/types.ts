@@ -29,6 +29,13 @@ export type Database = {
         role: string;
         daily_goal_xp: number;
         created_at: string;
+        // 0006_social additions
+        display_name: string | null;
+        bio: string | null;
+        country_code: string | null;
+        profile_color: string;
+        profile_public: boolean;
+        joined_at: string;
       }>;
       subjects: Tbl<{
         id: number;
@@ -169,6 +176,26 @@ export type Database = {
         created_at: string;
         updated_at: string;
       }>;
+      // 0006_social
+      follows: Tbl<{
+        follower_id: string;
+        followed_id: string;
+        created_at: string;
+      }>;
+      user_activities: Tbl<{
+        id: number;
+        user_id: string;
+        kind:
+          | "lesson_completed"
+          | "badge_earned"
+          | "league_promoted"
+          | "exam_passed"
+          | "streak_milestone"
+          | "outfit_unlocked"
+          | "jackpot_win";
+        payload: Json;
+        created_at: string;
+      }>;
     };
     Views: {
       questions_public: View<{
@@ -181,6 +208,13 @@ export type Database = {
         choice_c: string;
         choice_d: string;
         difficulty: number;
+      }>;
+      public_activities_v: View<{
+        id: number;
+        user_id: string;
+        kind: string;
+        payload: Json;
+        created_at: string;
       }>;
     };
     Functions: Record<string, never>;
