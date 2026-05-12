@@ -9,8 +9,17 @@ import {
   type DivisionSlug,
 } from "@/lib/leagues/divisions";
 import { recordActivity } from "@/lib/activities";
+import { getDropPool, pickWeighted } from "@/lib/outfits/catalog";
 
 type DB = ReturnType<typeof createServiceClient>;
+
+// Gems awarded per finishing position inside a closed weekly league.
+function rewardForRank(rank: number): number {
+  if (rank === 1) return 50;
+  if (rank <= 3) return 30;
+  if (rank <= PROMOTE_TOP) return 10;
+  return 0;
+}
 
 export { DIVISIONS, PROMOTE_TOP, RELEGATE_BOTTOM };
 export type Division = DivisionSlug;
@@ -57,16 +66,58 @@ export async function promoteWeek(
     const target = nextDivision(division.slug);
     const downgrade = prevDivision(division.slug);
 
-    for (let rank = 0; rank < promoted.length; rank++) {
-      const uid = promoted[rank].user_id;
+    const rarePool = await getDropPool(["rare"]);
+
+    for (let i = 0; i < promoted.length; i++) {
+      const uid = promoted[i].user_id;
+      const rank = i + 1;
       await supabase
         .from("profiles")
         .update({ current_league: target })
         .eq("id", uid);
+
+      const gems = rewardForRank(rank);
+      let awardedOutfit: { slug: string; name: string } | null = null;
+
+      if (rank === 1 && rarePool.length > 0) {
+        const drop = pickWeighted(rarePool);
+        if (drop) {
+          const { data: existing } = await supabase
+            .from("user_outfits")
+            .select("outfit_slug")
+            .eq("user_id", uid)
+            .eq("outfit_slug", drop.slug)
+            .maybeSingle();
+          if (!existing) {
+            await supabase.from("user_outfits").insert({
+              user_id: uid,
+              outfit_slug: drop.slug,
+              acquired_via: "league_reward",
+            });
+            awardedOutfit = { slug: drop.slug, name: drop.name };
+          }
+        }
+      }
+
+      if (gems > 0) {
+        const { data: stats } = await supabase
+          .from("user_stats")
+          .select("gems")
+          .eq("user_id", uid)
+          .single();
+        const balance = (stats?.gems ?? 0) + gems;
+        await supabase
+          .from("user_stats")
+          .update({ gems: balance })
+          .eq("user_id", uid);
+      }
+
       await recordActivity(uid, "league_promoted", {
         from: division.slug,
         to: target,
-        rank: rank + 1,
+        rank,
+        gems,
+        outfit: awardedOutfit,
       });
     }
 

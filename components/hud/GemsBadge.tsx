@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Gem } from "lucide-react";
 
-export function GemsBadge({ gems, href = "/shop" }: { gems: number; href?: string }) {
+export function GemsBadge({ gems, href = "/shop/outfits" }: { gems: number; href?: string }) {
   return (
     <Link
       href={href}

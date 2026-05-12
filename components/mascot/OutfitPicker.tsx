@@ -116,7 +116,7 @@ export function OutfitPicker({
       })}
 
       <Link
-        href="/shop"
+        href="/shop/outfits"
         className="card-pop flex flex-col items-center justify-center gap-2 border-2 border-dashed border-cloud-deep p-3 text-center text-ink/70 hover:bg-cloud"
       >
         <ShoppingBag size={32} />

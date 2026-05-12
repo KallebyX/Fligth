@@ -56,6 +56,19 @@ export default async function ShopPage({
         </div>
       )}
 
+      <Link
+        href="/shop/outfits"
+        className="mt-6 flex items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-sky/15 to-grass/15 p-4 shadow-pop hover:from-sky/25 hover:to-grass/25"
+      >
+        <span>
+          <p className="text-sm font-extrabold text-ink">Outfits do Capitão Lorí</p>
+          <p className="text-xs text-ink/60">
+            Roleta diária grátis · jackpot · compra com gems
+          </p>
+        </span>
+        <span className="text-sm font-extrabold text-sky">Ir →</span>
+      </Link>
+
       <div className="mt-6"><NativeBuyNotice /></div>
 
       <div className="mt-2 grid gap-4 md:grid-cols-2">
