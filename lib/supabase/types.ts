@@ -36,6 +36,8 @@ export type Database = {
         profile_color: string;
         profile_public: boolean;
         joined_at: string;
+        // 0008_outfits
+        equipped_outfit_slug: string | null;
       }>;
       subjects: Tbl<{
         id: number;
@@ -107,6 +109,10 @@ export type Database = {
         hearts_unlimited_until: string | null;
         pro_until: string | null;
         pro_plan: string | null;
+        // 0008_outfits
+        gems: number;
+        last_spin_at: string | null;
+        last_jackpot_at: string | null;
       }>;
       subscriptions: Tbl<{
         id: number;
@@ -181,6 +187,32 @@ export type Database = {
         follower_id: string;
         followed_id: string;
         created_at: string;
+      }>;
+      // 0008_outfits
+      mascot_outfits: Tbl<{
+        slug: string;
+        name: string;
+        description: string | null;
+        tier: "free" | "prize" | "paid";
+        rarity: "common" | "rare" | "epic" | "legendary";
+        price_gems: number | null;
+        price_cents: number | null;
+        stripe_price_id: string | null;
+        asset_key: string;
+        drop_weight: number;
+        created_at: string;
+      }>;
+      user_outfits: Tbl<{
+        user_id: string;
+        outfit_slug: string;
+        acquired_via:
+          | "starter"
+          | "roulette"
+          | "jackpot"
+          | "league_reward"
+          | "purchase"
+          | "pro_unlock";
+        acquired_at: string;
       }>;
       user_activities: Tbl<{
         id: number;

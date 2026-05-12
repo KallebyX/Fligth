@@ -23,7 +23,7 @@ export default async function PublicProfilePage(props: {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, username, display_name, bio, country_code, profile_color, profile_public, current_league, mascot_outfit, joined_at",
+      "id, username, display_name, bio, country_code, profile_color, profile_public, current_league, mascot_outfit, equipped_outfit_slug, joined_at",
     )
     .eq("username", username.toLowerCase())
     .maybeSingle();
@@ -109,6 +109,7 @@ export default async function PublicProfilePage(props: {
     profile_color: profile.profile_color,
     current_league: profile.current_league,
     mascot_outfit: profile.mascot_outfit,
+    equipped_outfit_slug: profile.equipped_outfit_slug ?? null,
     joined_at: profile.joined_at,
     total_xp: stats?.total_xp ?? 0,
     current_streak: stats?.current_streak ?? 0,

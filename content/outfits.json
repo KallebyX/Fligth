@@ -1,0 +1,78 @@
+[
+  {
+    "slug": "aviator-classic",
+    "name": "Clássico",
+    "description": "O capacete de aviador padrão do Capitão Lorí.",
+    "tier": "free",
+    "rarity": "common",
+    "asset_key": "aviator-classic",
+    "drop_weight": 0
+  },
+  {
+    "slug": "sunset-shades",
+    "name": "Pôr-do-Sol",
+    "description": "Óculos espelhados laranjas, perfeitos para um voo ao crepúsculo.",
+    "tier": "prize",
+    "rarity": "common",
+    "asset_key": "sunset-shades",
+    "drop_weight": 40,
+    "price_gems": 60
+  },
+  {
+    "slug": "neon-scarf",
+    "name": "Cachecol Neon",
+    "description": "Um cachecol verde fluorescente que cintila na pista.",
+    "tier": "prize",
+    "rarity": "common",
+    "asset_key": "neon-scarf",
+    "drop_weight": 35,
+    "price_gems": 60
+  },
+  {
+    "slug": "thunderbolt",
+    "name": "Raio",
+    "description": "Faixa elétrica para os mais rápidos.",
+    "tier": "prize",
+    "rarity": "rare",
+    "asset_key": "thunderbolt",
+    "drop_weight": 12,
+    "price_gems": 150
+  },
+  {
+    "slug": "azure-helmet",
+    "name": "Capacete Azure",
+    "description": "Um capacete safira para voos noturnos.",
+    "tier": "prize",
+    "rarity": "rare",
+    "asset_key": "azure-helmet",
+    "drop_weight": 10,
+    "price_gems": 150
+  },
+  {
+    "slug": "red-baron",
+    "name": "Barão Vermelho",
+    "description": "Lenço vermelho-sangue do clássico das clássicas.",
+    "tier": "paid",
+    "rarity": "epic",
+    "asset_key": "red-baron",
+    "price_cents": 990,
+    "price_gems": 350
+  },
+  {
+    "slug": "diamante-jacket",
+    "name": "Jaqueta Diamante",
+    "description": "Reservado para quem chega na Diamante.",
+    "tier": "prize",
+    "rarity": "legendary",
+    "asset_key": "diamante-jacket",
+    "drop_weight": 1
+  },
+  {
+    "slug": "pro-gold",
+    "name": "Pro Dourado",
+    "description": "Liberado automaticamente para assinantes Pro.",
+    "tier": "paid",
+    "rarity": "legendary",
+    "asset_key": "pro-gold"
+  }
+]

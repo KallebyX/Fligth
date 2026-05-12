@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, type TargetAndTransition } from "framer-motion";
+import { MascotOutfit } from "@/components/mascot/outfits";
 
 export type MascotState = "idle" | "happy" | "sad" | "celebrate" | "sleeping";
 
@@ -20,7 +21,15 @@ const eyeColors: Record<MascotState, string> = {
   sleeping: "transparent",
 };
 
-export function Mascot({ state = "idle", size = 96 }: { state?: MascotState; size?: number }) {
+export function Mascot({
+  state = "idle",
+  size = 96,
+  outfit,
+}: {
+  state?: MascotState;
+  size?: number;
+  outfit?: string | null;
+}) {
   return (
     <motion.svg
       width={size}
@@ -67,6 +76,8 @@ export function Mascot({ state = "idle", size = 96 }: { state?: MascotState; siz
       {/* wings */}
       <path d="M22 70 Q12 80 24 96" stroke="#047857" strokeWidth="6" fill="none" strokeLinecap="round" />
       <path d="M98 70 Q108 80 96 96" stroke="#047857" strokeWidth="6" fill="none" strokeLinecap="round" />
+      {/* outfit overlay (painted on top so it can replace cap/goggles) */}
+      <MascotOutfit slug={outfit} />
     </motion.svg>
   );
 }

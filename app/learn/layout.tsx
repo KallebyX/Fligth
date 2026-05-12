@@ -13,7 +13,7 @@ export default async function LearnLayout({ children }: { children: React.ReactN
 
   const { data: stats } = await supabase
     .from("user_stats")
-    .select("total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan")
+    .select("total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan, gems")
     .eq("user_id", user.id)
     .single();
 
@@ -37,6 +37,7 @@ export default async function LearnLayout({ children }: { children: React.ReactN
         xp={stats?.total_xp ?? 0}
         streak={stats?.current_streak ?? 0}
         hearts={refreshed.hearts}
+        gems={stats?.gems ?? 0}
         isPro={pro.isPro}
       />
       {children}

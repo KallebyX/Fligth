@@ -36,6 +36,7 @@ export type PublicProfileData = {
   profile_color: string;
   current_league: string;
   mascot_outfit: string;
+  equipped_outfit_slug: string | null;
   joined_at: string;
   total_xp: number;
   current_streak: number;
@@ -70,7 +71,7 @@ export function PublicProfile({
     <div className="space-y-6">
       <div className={`overflow-hidden rounded-3xl ${bgClass} text-white shadow-pop`}>
         <div className="flex flex-col items-center gap-3 px-5 py-7 text-center">
-          <Mascot state="happy" size={112} />
+          <Mascot state="happy" size={112} outfit={profile.equipped_outfit_slug} />
           <div>
             <h1 className="text-2xl font-black md:text-3xl">
               {profile.display_name ?? profile.username}

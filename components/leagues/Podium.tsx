@@ -8,6 +8,7 @@ export type PodiumEntry = {
   username: string | null;
   display_name: string | null;
   weekly_xp: number;
+  outfit: string | null;
 };
 
 export function Podium({
@@ -53,6 +54,7 @@ export function Podium({
               <Mascot
                 state={isFirst ? "celebrate" : "happy"}
                 size={sizes[idx]}
+                outfit={entry.outfit}
               />
               <span
                 className={cn(

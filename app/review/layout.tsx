@@ -13,7 +13,7 @@ export default async function ReviewLayout({ children }: { children: React.React
 
   const { data: stats } = await supabase
     .from("user_stats")
-    .select("total_xp, current_streak, hearts, hearts_regen_at")
+    .select("total_xp, current_streak, hearts, hearts_regen_at, gems")
     .eq("user_id", user.id)
     .single();
 
@@ -23,7 +23,12 @@ export default async function ReviewLayout({ children }: { children: React.React
 
   return (
     <>
-      <HUD xp={stats?.total_xp ?? 0} streak={stats?.current_streak ?? 0} hearts={refreshed.hearts} />
+      <HUD
+        xp={stats?.total_xp ?? 0}
+        streak={stats?.current_streak ?? 0}
+        hearts={refreshed.hearts}
+        gems={stats?.gems ?? 0}
+      />
       {children}
     </>
   );

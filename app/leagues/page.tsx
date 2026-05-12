@@ -43,6 +43,7 @@ export default async function LeaguesPage() {
     weekly_xp: number;
     username: string | null;
     display_name: string | null;
+    outfit: string | null;
   }[] = [];
 
   if (league) {
@@ -56,7 +57,7 @@ export default async function LeaguesPage() {
     const ids = (members ?? []).map((m) => m.user_id);
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, username, display_name")
+      .select("id, username, display_name, equipped_outfit_slug")
       .in("id", ids);
     const map = new Map((profiles ?? []).map((p) => [p.id, p]));
 
@@ -67,6 +68,7 @@ export default async function LeaguesPage() {
         weekly_xp: m.weekly_xp,
         username: p?.username ?? null,
         display_name: p?.display_name ?? null,
+        outfit: p?.equipped_outfit_slug ?? null,
       };
     });
   }
@@ -76,6 +78,7 @@ export default async function LeaguesPage() {
     username: b.username,
     display_name: b.display_name,
     weekly_xp: b.weekly_xp,
+    outfit: b.outfit,
   }));
 
   const rest = board.slice(3);

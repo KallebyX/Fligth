@@ -2,17 +2,20 @@ import Link from "next/link";
 import { HeartsBar } from "./HeartsBar";
 import { XPBar } from "./XPBar";
 import { StreakBadge } from "./StreakBadge";
+import { GemsBadge } from "./GemsBadge";
 import { Crown } from "lucide-react";
 
 export function HUD({
   xp,
   streak,
   hearts,
+  gems = 0,
   isPro = false,
 }: {
   xp: number;
   streak: number;
   hearts: number;
+  gems?: number;
   isPro?: boolean;
 }) {
   return (
@@ -30,6 +33,7 @@ export function HUD({
         </Link>
         <div className="flex items-center gap-3">
           <StreakBadge days={streak} />
+          <GemsBadge gems={gems} />
           <XPBar xp={xp} />
           {isPro ? (
             <Link href="/pro" className="hidden text-xs font-extrabold text-gold sm:inline">
