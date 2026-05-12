@@ -274,5 +274,65 @@
     "difficulty": 1,
     "source_ref": "OACI Anexo 3",
     "lesson_slug": "decodificando-metar"
+  },
+  {
+    "stem": "Decodifique o trecho de METAR: `27015G25KT 250V300`.",
+    "choice_a": "Vento de 270° a 15 nós com rajadas de 25 nós, variando entre 250° e 300°",
+    "choice_b": "Vento de 27 nós com rajadas de 15 nós em direção 250°",
+    "choice_c": "Vento variável entre 250° e 300° a 15 km/h",
+    "choice_d": "Vento de 27 km/h, rajadas de 25 km/h",
+    "correct": "A",
+    "explanation_md": "**27015G25KT** = direção 270°, intensidade 15 kt, **G**ust (rajada) 25 kt. **250V300** = direção variável entre 250° e 300° (reportada quando varia ≥ 60°).",
+    "difficulty": 3,
+    "source_ref": "AIP-BRASIL / MCA 105-2",
+    "lesson_slug": "decodificando-metar"
+  },
+  {
+    "stem": "A pressão padrão ao nível do mar usada em aviação é:",
+    "choice_a": "29,92 inHg / 1013,25 hPa",
+    "choice_b": "29,92 hPa / 1013,25 inHg",
+    "choice_c": "1.000 hPa exatos",
+    "choice_d": "Varia com o aeródromo, não há padrão",
+    "correct": "A",
+    "explanation_md": "Atmosfera padrão ICAO ao nível do mar: **29,92 inHg = 1013,25 hPa = 1013,25 mb**. Temperatura padrão: 15 °C, decrescendo 2 °C a cada 1.000 ft até a tropopausa.",
+    "difficulty": 1,
+    "source_ref": "ICAO Annex 8 / MCA 105-2",
+    "lesson_slug": "atmosfera-padrao"
+  },
+  {
+    "stem": "Você decola de um aeródromo com elevação 3.000 ft, temperatura 35 °C e pressão 29,82 inHg. A altitude-densidade está:",
+    "choice_a": "Bem abaixo da pressão — performance melhor",
+    "choice_b": "Bem acima da pressão — performance pior",
+    "choice_c": "Igual à pressão — sem efeito",
+    "choice_d": "Igual à elevação, pressão e temperatura não importam",
+    "correct": "B",
+    "explanation_md": "Calor + baixa pressão = ar **menos denso**. A altitude-densidade fica **bem acima** da altitude-pressão, reduzindo sustentação, tração e potência. Decolagem mais longa, subida mais lenta.",
+    "difficulty": 3,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "altitude-densidade"
+  },
+  {
+    "stem": "Qual tipo de nuvem está associado a turbulência severa, granizo e tesoura de vento?",
+    "choice_a": "Cirrus",
+    "choice_b": "Stratus",
+    "choice_c": "Cumulonimbus (CB)",
+    "choice_d": "Altocumulus",
+    "correct": "C",
+    "explanation_md": "**Cumulonimbus** é a nuvem de tempestade: forte corrente ascendente/descendente, granizo, raios, microbursts. **Evitar lateralmente em ≥ 20 NM** de CBs ativas. Cirrus e Stratus são placas estáveis; Altocumulus em geral é não-precipitante.",
+    "difficulty": 2,
+    "source_ref": "MCA 105-2",
+    "lesson_slug": "tipos-de-nuvens"
+  },
+  {
+    "stem": "A pista é 09. O vento informado é 13020KT. Quanto é a componente de proa (headwind) e cruzada (crosswind)?",
+    "choice_a": "Headwind ≈ 15 kt, crosswind ≈ 13 kt",
+    "choice_b": "Headwind ≈ 17 kt, crosswind ≈ 10 kt",
+    "choice_c": "Headwind ≈ 20 kt, crosswind ≈ 0 kt",
+    "choice_d": "Headwind ≈ 10 kt, crosswind ≈ 17 kt",
+    "correct": "A",
+    "explanation_md": "A pista 09 aponta para 090°. O vento vem de 130°, então o ângulo entre vento e pista é **130° − 90° = 40°**. Headwind = 20·cos(40°) ≈ **15 kt**. Crosswind = 20·sen(40°) ≈ **13 kt**. Para a prova vale decorar: 30° ≈ ½ crosswind, 60° ≈ ⅓ headwind.",
+    "difficulty": 4,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "vento-componentes"
   }
 ]

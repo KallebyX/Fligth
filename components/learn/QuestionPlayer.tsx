@@ -8,6 +8,7 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
 import { useSfx } from "@/components/learn/useSfx";
+import { impact, notify } from "@/lib/haptics";
 
 export type ChoiceLetter = "A" | "B" | "C" | "D";
 
@@ -66,12 +67,19 @@ export function QuestionPlayer({
       });
       setPhase("feedback");
       sfx.play(res.correct ? "correct" : "wrong");
+      void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
       // Parent (LessonRunner) shows a full-screen error UI; just stop the spinner.
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function pick(letter: ChoiceLetter) {
+    setSelected(letter);
+    sfx.play("tap");
+    void impact("light");
   }
 
   function next() {
@@ -84,21 +92,30 @@ export function QuestionPlayer({
   const progressPct = Math.round(((index + 1) / total) * 100);
 
   return (
-    <div className="flex min-h-[80vh] flex-col">
-      <div className="container max-w-2xl flex-1 py-6">
-        <div className="mb-4 h-2 w-full overflow-hidden rounded-full bg-cloud-deep/30">
-          <div
-            className="h-full bg-grass transition-all duration-500"
-            style={{ width: `${progressPct}%` }}
-          />
+    <div className="flex min-h-[100dvh] flex-col">
+      {/* Sticky progress + counter */}
+      <div className="sticky top-0 z-10 bg-cloud/95 backdrop-blur supports-[backdrop-filter]:bg-cloud/70">
+        <div className="container max-w-2xl px-4 pb-2 pt-3">
+          <div className="mb-1 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-ink/60">
+            <span>Questão {index + 1} de {total}</span>
+            <span>{progressPct}%</span>
+          </div>
+          <div className="h-2 w-full overflow-hidden rounded-full bg-cloud-deep/30">
+            <div
+              className="h-full bg-grass transition-all duration-500"
+              style={{ width: `${progressPct}%` }}
+            />
+          </div>
         </div>
+      </div>
 
+      <div className="container max-w-2xl flex-1 px-4 pb-40 pt-4">
         <motion.h2
           key={`stem-${question.id}`}
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.25 }}
-          className="mb-6 text-xl font-extrabold leading-snug md:text-2xl"
+          className="mb-6 text-[22px] font-extrabold leading-snug md:text-2xl"
         >
           {question.stem}
         </motion.h2>
@@ -107,7 +124,7 @@ export function QuestionPlayer({
           key={question.id}
           animate={feedback?.correct === false ? { x: [-10, 10, -8, 8, -4, 4, 0] } : {}}
           transition={{ duration: 0.5 }}
-          className="grid gap-3"
+          className="grid gap-3 select-none"
         >
           {(["A", "B", "C", "D"] as ChoiceLetter[]).map((letter, idx) => {
             const isSelected = selected === letter;
@@ -123,10 +140,11 @@ export function QuestionPlayer({
                 transition={{ duration: 0.25, delay: idx * 0.05 }}
                 whileTap={phase === "answering" ? { scale: 0.97 } : {}}
                 disabled={phase === "feedback"}
-                onClick={() => setSelected(letter)}
+                onClick={() => pick(letter)}
+                style={{ WebkitTapHighlightColor: "transparent" }}
                 className={cn(
-                  "flex items-start gap-4 rounded-2xl border-2 p-4 text-left transition-colors",
-                  "bg-white",
+                  "flex min-h-[64px] items-center gap-4 rounded-2xl border-2 p-4 text-left touch-manipulation transition-colors",
+                  "bg-white active:scale-[0.99]",
                   isSelected && phase === "answering" && "border-sky bg-sky/5",
                   !isSelected && phase === "answering" && "border-cloud-deep hover:bg-cloud hover:-translate-y-px",
                   showCorrect && "border-grass bg-grass/10",
@@ -136,7 +154,7 @@ export function QuestionPlayer({
               >
                 <span
                   className={cn(
-                    "mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full font-extrabold transition-colors",
+                    "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-extrabold transition-colors",
                     showCorrect
                       ? "bg-grass text-white"
                       : isWrong
@@ -148,7 +166,7 @@ export function QuestionPlayer({
                 >
                   {letter}
                 </span>
-                <span className="text-base">{question.choices[letter]}</span>
+                <span className="text-base leading-snug md:text-[17px]">{question.choices[letter]}</span>
               </motion.button>
             );
           })}
@@ -162,10 +180,10 @@ export function QuestionPlayer({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
             className={cn(
-              "border-t-2 px-4 py-5",
+              "fixed inset-x-0 bottom-0 z-20 border-t-2 px-4 pt-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))]",
               feedback.correct
-                ? "border-grass bg-grass/10"
-                : "border-alert bg-alert/10",
+                ? "border-grass bg-grass/10 backdrop-blur"
+                : "border-alert bg-alert/10 backdrop-blur",
             )}
           >
             <div className="container max-w-2xl">
@@ -192,7 +210,7 @@ export function QuestionPlayer({
       </AnimatePresence>
 
       {phase === "answering" && (
-        <div className="border-t border-cloud-deep/40 bg-white px-4 py-4">
+        <div className="fixed inset-x-0 bottom-0 z-20 border-t border-cloud-deep/40 bg-white/95 px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-white/80">
           <div className="container max-w-2xl">
             <Button
               size="lg"
