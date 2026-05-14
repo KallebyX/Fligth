@@ -55,6 +55,13 @@ const ITEMS: Item[] = [
 export function AppNav() {
   const pathname = usePathname() ?? "/";
 
+  // Hide the bottom tab bar (and the side nav) while a lesson is running —
+  // it sits above the player's Verificar/Continuar bar on mobile and steals
+  // taps. Pattern: /learn/<subject>/<lesson>.
+  if (/^\/learn\/[^/]+\/[^/]+/.test(pathname)) {
+    return null;
+  }
+
   return (
     <>
       {/* Mobile bottom tab bar */}
