@@ -1,37 +1,53 @@
 import type { createServiceClient } from "@/lib/supabase/server";
 import { isoWeek } from "@/lib/utils";
+import {
+  DIVISIONS,
+  PROMOTE_TOP,
+  RELEGATE_BOTTOM,
+  nextDivision,
+  prevDivision,
+  type DivisionSlug,
+} from "@/lib/leagues/divisions";
+import { recordActivity } from "@/lib/activities";
+import { getDropPool, pickWeighted } from "@/lib/outfits/catalog";
 
 type DB = ReturnType<typeof createServiceClient>;
 
-export const DIVISIONS = ["bronze", "prata", "ouro", "diamante"] as const;
-export type Division = (typeof DIVISIONS)[number];
-
-export const PROMOTE_TOP = 10;
-export const RELEGATE_BOTTOM = 5;
-
-function nextDivision(d: Division): Division {
-  const i = DIVISIONS.indexOf(d);
-  return DIVISIONS[Math.min(i + 1, DIVISIONS.length - 1)];
+// Gems awarded per finishing position inside a closed weekly league.
+function rewardForRank(rank: number): number {
+  if (rank === 1) return 50;
+  if (rank <= 3) return 30;
+  if (rank <= PROMOTE_TOP) return 10;
+  return 0;
 }
 
-function prevDivision(d: Division): Division {
-  const i = DIVISIONS.indexOf(d);
-  return DIVISIONS[Math.max(i - 1, 0)];
-}
+export { DIVISIONS, PROMOTE_TOP, RELEGATE_BOTTOM };
+export type Division = DivisionSlug;
 
 // Closes the previous ISO week's leagues and promotes/relegates members.
-// Idempotent w.r.t. `next_week` (uses upserts and skips existing memberships).
-export async function promoteWeek(supabase: DB, opts: { previousWeek?: string } = {}) {
+// Emits a `league_promoted` activity for each promoted user so the social
+// feed picks it up. Idempotent: re-running for the same previousWeek is
+// safe because we only update profiles (no double-insert of memberships).
+export async function promoteWeek(
+  supabase: DB,
+  opts: { previousWeek?: string } = {},
+) {
   const previousWeek =
     opts.previousWeek ?? isoWeek(new Date(Date.now() - 7 * 24 * 3600 * 1000));
   const nextWeek = isoWeek();
+
+  const summary: Array<{
+    division: DivisionSlug;
+    promoted: number;
+    relegated: number;
+  }> = [];
 
   for (const division of DIVISIONS) {
     const { data: league } = await supabase
       .from("leagues")
       .select("id")
       .eq("iso_week", previousWeek)
-      .eq("division", division)
+      .eq("division", division.slug)
       .maybeSingle();
     if (!league) continue;
 
@@ -42,21 +58,85 @@ export async function promoteWeek(supabase: DB, opts: { previousWeek?: string } 
       .order("weekly_xp", { ascending: false });
     if (!members || members.length === 0) continue;
 
-    const promoted = members.slice(0, PROMOTE_TOP).map((m) => m.user_id);
-    const relegated = members.slice(-RELEGATE_BOTTOM).map((m) => m.user_id);
+    const promoted = members.slice(0, PROMOTE_TOP);
+    // Bottom slice; for very small leagues, ignore overlap with top.
+    const bottomStart = Math.max(PROMOTE_TOP, members.length - RELEGATE_BOTTOM);
+    const relegated = members.slice(bottomStart);
 
-    for (const uid of promoted) {
-      await supabase.from("profiles").update({ current_league: nextDivision(division) }).eq("id", uid);
+    const target = nextDivision(division.slug);
+    const downgrade = prevDivision(division.slug);
+
+    const rarePool = await getDropPool(["rare"]);
+
+    for (let i = 0; i < promoted.length; i++) {
+      const uid = promoted[i].user_id;
+      const rank = i + 1;
+      await supabase
+        .from("profiles")
+        .update({ current_league: target })
+        .eq("id", uid);
+
+      const gems = rewardForRank(rank);
+      let awardedOutfit: { slug: string; name: string } | null = null;
+
+      if (rank === 1 && rarePool.length > 0) {
+        const drop = pickWeighted(rarePool);
+        if (drop) {
+          const { data: existing } = await supabase
+            .from("user_outfits")
+            .select("outfit_slug")
+            .eq("user_id", uid)
+            .eq("outfit_slug", drop.slug)
+            .maybeSingle();
+          if (!existing) {
+            await supabase.from("user_outfits").insert({
+              user_id: uid,
+              outfit_slug: drop.slug,
+              acquired_via: "league_reward",
+            });
+            awardedOutfit = { slug: drop.slug, name: drop.name };
+          }
+        }
+      }
+
+      if (gems > 0) {
+        const { data: stats } = await supabase
+          .from("user_stats")
+          .select("gems")
+          .eq("user_id", uid)
+          .single();
+        const balance = (stats?.gems ?? 0) + gems;
+        await supabase
+          .from("user_stats")
+          .update({ gems: balance })
+          .eq("user_id", uid);
+      }
+
+      await recordActivity(uid, "league_promoted", {
+        from: division.slug,
+        to: target,
+        rank,
+        gems,
+        outfit: awardedOutfit,
+      });
     }
-    for (const uid of relegated) {
-      // Avoid double-mutating users that overlap (small leagues).
-      if (!promoted.includes(uid)) {
-        await supabase.from("profiles").update({ current_league: prevDivision(division) }).eq("id", uid);
+
+    if (downgrade !== division.slug) {
+      for (const m of relegated) {
+        await supabase
+          .from("profiles")
+          .update({ current_league: downgrade })
+          .eq("id", m.user_id);
       }
     }
+
+    summary.push({
+      division: division.slug,
+      promoted: promoted.length,
+      relegated: downgrade !== division.slug ? relegated.length : 0,
+    });
   }
 
-  // Reset weekly XP by simply not migrating it: weekly_xp lives per-(league,user).
-  // The fresh `nextWeek` league is created lazily on first XP award.
-  return { previousWeek, nextWeek };
+  // Fresh weekly league rows are created lazily on first XP award next week.
+  return { previousWeek, nextWeek, summary };
 }

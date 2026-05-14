@@ -274,5 +274,65 @@
     "difficulty": 3,
     "source_ref": "Aerodinâmica",
     "lesson_slug": "performance-decolagem"
+  },
+  {
+    "stem": "As quatro forças que atuam em voo reto e nivelado são:",
+    "choice_a": "Sustentação, peso, tração, arrasto",
+    "choice_b": "Sustentação, gravidade, vento, atrito",
+    "choice_c": "Empuxo, peso, atrito, deriva",
+    "choice_d": "Sustentação, peso, empuxo, vento relativo",
+    "correct": "A",
+    "explanation_md": "**Lift, Weight, Thrust, Drag** — em equilíbrio dinâmico: Lift = Weight (no eixo vertical), Thrust = Drag (no eixo longitudinal). Em qualquer outra atitude, as somas vetoriais ainda fecham a equação.",
+    "difficulty": 1,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "quatro-forcas"
+  },
+  {
+    "stem": "O ângulo de ataque no qual o stall sempre ocorre é chamado:",
+    "choice_a": "Ângulo crítico — não muda com peso ou velocidade",
+    "choice_b": "Ângulo crítico — varia com o peso",
+    "choice_c": "Ângulo de derivação — varia com a temperatura",
+    "choice_d": "Ângulo de incidência — fixado pelo construtor",
+    "correct": "A",
+    "explanation_md": "O **ângulo crítico** (≈ 16-18° na maioria dos perfis) é uma propriedade aerodinâmica do aerofólio. **A aeronave pode estolar em qualquer atitude e qualquer velocidade** se o AoA crítico for ultrapassado — turn stall, accelerated stall, etc.",
+    "difficulty": 2,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "stall-recuperacao"
+  },
+  {
+    "stem": "Em uma curva coordenada de 30° de inclinação, o fator de carga (load factor) é aproximadamente:",
+    "choice_a": "1,0 G",
+    "choice_b": "1,15 G",
+    "choice_c": "1,41 G",
+    "choice_d": "2,0 G",
+    "correct": "B",
+    "explanation_md": "Load factor = 1 / cos(φ). Para 30°: 1/cos(30°) ≈ **1,15 G**. Para 45°: 1,41 G. Para 60°: 2,0 G. Aumenta a Vs (velocidade de stall) por √(load factor).",
+    "difficulty": 3,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "curvas-coordenadas"
+  },
+  {
+    "stem": "Estabilidade longitudinal estática positiva significa que, ao receber uma perturbação em arfagem, a aeronave:",
+    "choice_a": "Mantém indefinidamente o novo ângulo",
+    "choice_b": "Tende a retornar à atitude original",
+    "choice_c": "Diverge da atitude original",
+    "choice_d": "Oscila com amplitude crescente",
+    "correct": "B",
+    "explanation_md": "Estabilidade estática **positiva** = tendência inicial de retorno. Já a estabilidade **dinâmica** descreve a evolução da oscilação no tempo: amortecida (positiva), constante (neutra) ou crescente (negativa).",
+    "difficulty": 3,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "estabilidade-eixos"
+  },
+  {
+    "stem": "Performance de decolagem piora com:",
+    "choice_a": "Alta umidade, baixa pressão e alta temperatura",
+    "choice_b": "Baixa umidade, alta pressão e baixa temperatura",
+    "choice_c": "Vento de cauda e pista descendente",
+    "choice_d": "Alternativas A e C estão corretas",
+    "correct": "D",
+    "explanation_md": "Tudo que aumenta a **altitude-densidade** piora a performance: calor, baixa pressão, alta umidade (vapor d'água desloca ar seco). Vento de cauda e pista descendente também aumentam a corrida de decolagem.",
+    "difficulty": 3,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "performance-decolagem"
   }
 ]

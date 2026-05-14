@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { scoreExam, type ExamAnswers, type ExamQuestion } from "@/lib/exam/scoring";
 import { evaluateBadges } from "@/lib/badges";
+import { recordActivity } from "@/lib/activities";
 
 const QUESTIONS_PER_SUBJECT = 20;
 
@@ -147,6 +148,13 @@ export async function submitExam(input: {
     event: "exam_finished",
     data: { examPassed: result.passed },
   });
+
+  if (result.passed) {
+    await recordActivity(user.id, "exam_passed", {
+      attempt_id: input.attemptId,
+      total_correct: result.total_correct,
+    });
+  }
 
   revalidatePath("/profile");
   return { ok: true, passed: result.passed, attemptId: input.attemptId };

@@ -67,7 +67,7 @@ export default function Landing() {
             transition={{ delay: 0.6 }}
             className="text-xs text-ink/50"
           >
-            5 trilhas · 25 lições · 100 questões · simulado de 3 horas
+            5 trilhas · 27 lições · 140 questões · simulado de 3 horas
           </motion.p>
         </div>
       </section>
@@ -80,7 +80,7 @@ export default function Landing() {
           <Feature
             icon={<Flame className="text-sun" size={28} />}
             title="Ofensiva diária"
-            body="Conta dias seguidos estudando. Estudos mostram que streaks aumentam conclusão em 60 %."
+            body="Conta dias seguidos estudando. Streaks aumentam conclusão em até 60 %."
           />
           <Feature
             icon={<Heart className="text-alert" size={28} />}
@@ -94,8 +94,8 @@ export default function Landing() {
           />
           <Feature
             icon={<Trophy className="text-gold" size={28} />}
-            title="Ligas semanais"
-            body="Bronze, prata, ouro e diamante. Top 10 sobem, bottom 5 caem. Competição amigável."
+            title="10 ligas semanais"
+            body="Do Bronze ao Diamante. Top 10 sobem, bottom 5 caem. Competição amigável e premiada."
           />
           <Feature
             icon={<Plane className="text-grass" size={28} />}
@@ -104,8 +104,8 @@ export default function Landing() {
           />
           <Feature
             icon={<Star className="text-gold" size={28} />}
-            title="Conquistas"
-            body="Primeira lição, streak de 30 dias, aprovação no simulado, lição perfeita. Tem motivo pra voltar amanhã."
+            title="Conquistas e outfits"
+            body="Badges, gems pra gastar na loja, outfits para customizar o Capitão Lorí. Motivo pra voltar amanhã."
           />
         </div>
       </section>

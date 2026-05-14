@@ -57,31 +57,60 @@ export default async function ProPage({
   const proStatus = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
 
   return (
-    <main className="container max-w-3xl py-10 pb-24">
-      <Link href="/learn" className="text-sm font-bold text-ink/60 hover:text-ink">
+    <main className="container max-w-3xl space-y-8 py-8">
+      <Link
+        href="/learn"
+        className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink"
+      >
         ← Voltar
       </Link>
 
-      <section className="mt-4 text-center">
-        <Mascot state="celebrate" size={140} />
-        <h1 className="mt-2 text-4xl font-black md:text-5xl">
-          <span className="text-sky">Capitão Lorí</span> <span className="text-gold">Pro</span>
-        </h1>
-        <p className="mt-2 text-base text-ink/70">Aprovação séria. Sem fricção, sem vidas acabando no meio do estudo.</p>
-        {proStatus.isPro && (
-          <p className="mt-3 inline-block rounded-full bg-grass/15 px-4 py-1 text-sm font-extrabold text-grass-deep">
-            Você já é Pro {proStatus.plan === "lifetime" ? "vitalício" : `(${proStatus.plan})`}.
-          </p>
-        )}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-gold to-sun text-white shadow-pop">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-14 -top-14 h-48 w-48 rounded-full bg-white/15"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-12 -left-10 h-36 w-36 rounded-full bg-white/10"
+        />
+        <div className="relative grid items-center gap-3 px-5 py-7 text-center sm:grid-cols-[auto,1fr] sm:text-left">
+          <div className="flex justify-center">
+            <div className="rounded-full bg-white/20 p-2 ring-4 ring-white/30">
+              <Mascot state="celebrate" size={132} outfit="pro-gold" />
+            </div>
+          </div>
+          <div>
+            <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+              <Crown size={12} />
+              Capitão Lorí Pro
+            </span>
+            <h1 className="mt-2 text-3xl font-black leading-tight md:text-4xl">
+              Aprovação séria,
+              <br />
+              sem fricção.
+            </h1>
+            <p className="mt-2 text-sm leading-snug opacity-95">
+              Vidas ilimitadas, simulados extras e o outfit Pro Dourado pro
+              Capitão Lorí.
+            </p>
+            {proStatus.isPro && (
+              <p className="mt-3 inline-block rounded-full bg-white/95 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-grass-deep">
+                ✓ Você já é Pro{" "}
+                {proStatus.plan === "lifetime" ? "vitalício" : `(${proStatus.plan})`}
+              </p>
+            )}
+          </div>
+        </div>
       </section>
 
       {params.canceled && (
-        <div className="mt-6 rounded-2xl border-2 border-cloud-deep bg-cloud p-3 text-sm text-ink/70">
+        <div className="rounded-2xl border-2 border-cloud-deep bg-cloud p-3 text-sm text-ink/70">
           Compra cancelada — sem cobrança.
         </div>
       )}
 
-      <section className="mt-8 grid gap-3 md:grid-cols-2">
+      <section className="grid gap-3 md:grid-cols-2">
         {FEATURES.map((f) => (
           <div key={f.title} className="card-pop flex items-start gap-3 p-4">
             <div className="rounded-2xl bg-gold/15 p-2 text-gold">
@@ -95,7 +124,7 @@ export default async function ProPage({
         ))}
       </section>
 
-      <section className="mt-10 grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 md:grid-cols-3">
         {list.map((p) => {
           const isLifetime = p.kind === "pro_lifetime";
           const interval = (p.payload as { interval?: string })?.interval;
@@ -156,9 +185,10 @@ export default async function ProPage({
         })}
       </section>
 
-      <p className="mt-8 text-center text-xs text-ink/50">
-        Aceita cartão, Apple Pay, Google Pay e PIX. Cancele a qualquer momento — você mantém o
-        acesso até o fim do período pago. Reembolso integral em até 7 dias.
+      <p className="pt-2 text-center text-xs text-ink/50">
+        Aceita cartão, Apple Pay, Google Pay e PIX. Cancele a qualquer momento —
+        você mantém o acesso até o fim do período pago. Reembolso integral em
+        até 7 dias.
       </p>
     </main>
   );

@@ -7,6 +7,7 @@ import { Card, CardTitle, CardDesc } from "@/components/ui/card";
 import { Mascot } from "@/components/mascot/Mascot";
 import { todayISO } from "@/lib/utils";
 import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
+import { GraduationCap, RotateCw, ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -38,18 +39,66 @@ export default async function ReviewPage() {
 
   if (dueIds.length === 0) {
     return (
-      <main className="container flex min-h-[80vh] flex-col items-center justify-center gap-6 py-12 text-center">
-        <Mascot state="happy" size={140} />
-        <h1 className="text-2xl font-black md:text-3xl">Sem revisões hoje!</h1>
-        <Card className="max-w-md text-left">
-          <CardTitle className="mb-2">Como funciona</CardTitle>
-          <CardDesc>
-            Cada questão errada volta no momento certo (1, 3, 7 dias e além) usando o algoritmo
-            SM-2. Continue completando lições e novas revisões aparecerão aqui automaticamente.
+      <main className="container max-w-2xl space-y-5 py-8">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-grass to-sky text-white shadow-pop">
+          <div
+            aria-hidden
+            className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/15"
+          />
+          <div className="relative grid items-center gap-3 px-5 py-7 text-center sm:grid-cols-[auto,1fr] sm:text-left">
+            <div className="flex justify-center">
+              <div className="rounded-full bg-white/15 p-2 ring-4 ring-white/30">
+                <Mascot state="celebrate" size={120} />
+              </div>
+            </div>
+            <div>
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/20 px-3 py-1 text-[10px] font-bold uppercase tracking-widest">
+                <ShieldCheck size={12} />
+                Tudo em dia
+              </span>
+              <h1 className="mt-2 text-2xl font-black leading-tight md:text-3xl">
+                Sem revisões hoje!
+              </h1>
+              <p className="mt-1 text-sm leading-snug opacity-95">
+                Volte amanhã ou complete novas lições — questões erradas voltam
+                automaticamente.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <Card>
+          <CardTitle>Como o SRS funciona</CardTitle>
+          <CardDesc className="mt-1">
+            Cada questão errada volta no momento certo. Algoritmo SM-2.
           </CardDesc>
+          <ol className="mt-4 space-y-3 text-sm text-ink/80">
+            <li className="flex items-start gap-3">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky/15 text-sky-deep font-extrabold">
+                1
+              </span>
+              Acertou de primeira? Volta em 6 dias.
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky/15 text-sky-deep font-extrabold">
+                2
+              </span>
+              Errou? Volta amanhã pra você fixar.
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sky/15 text-sky-deep font-extrabold">
+                3
+              </span>
+              Acertou de novo? Intervalo cresce (14d, 1m, 3m…).
+            </li>
+          </ol>
         </Card>
+
         <Link href="/learn">
-          <Button size="lg">Voltar às trilhas</Button>
+          <Button size="lg" className="w-full">
+            <GraduationCap size={18} />
+            Voltar às trilhas
+          </Button>
         </Link>
       </main>
     );
@@ -69,12 +118,23 @@ export default async function ReviewPage() {
   }));
 
   return (
-    <main className="pb-24">
-      <div className="container max-w-2xl py-6">
-        <h1 className="text-2xl font-black md:text-3xl">Revisão de hoje</h1>
-        <p className="text-sm text-ink/70">
-          {playerQuestions.length} questões aguardando — sem perder vidas, fique calmo.
-        </p>
+    <main>
+      <div className="container max-w-2xl py-5">
+        <div className="card-pop flex items-center gap-3 p-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sky/15 text-sky-deep">
+            <RotateCw size={20} />
+          </span>
+          <div className="flex-1">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-ink/55">
+              Revisão de hoje
+            </p>
+            <p className="text-base font-extrabold leading-tight">
+              {playerQuestions.length}{" "}
+              {playerQuestions.length === 1 ? "questão pendente" : "questões pendentes"}
+            </p>
+            <p className="text-xs text-ink/60">Sem perder vidas — só pra fixar.</p>
+          </div>
+        </div>
       </div>
       <ReviewRunner questions={playerQuestions} />
     </main>

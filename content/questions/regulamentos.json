@@ -274,5 +274,65 @@
     "difficulty": 2,
     "source_ref": "RBAC 91.113",
     "lesson_slug": "rbac-91-fundamentos"
+  },
+  {
+    "stem": "Em Classe E, abaixo de 10.000 ft AMSL, qual o mínimo de visibilidade em voo VFR?",
+    "choice_a": "1.500 m",
+    "choice_b": "5 km",
+    "choice_c": "8 km",
+    "choice_d": "10 km",
+    "correct": "B",
+    "explanation_md": "Classe E abaixo de 10.000 ft AMSL exige **5 km** de visibilidade, 1.500 m horizontal e 1.000 ft vertical de afastamento de nuvens. Acima de 10.000 ft, sobe para 8 km.",
+    "difficulty": 3,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "vfr-minimos"
+  },
+  {
+    "stem": "Você pretende decolar VFR mas a previsão indica vento de 30 kt direto na pista. O RBAC 91 limita o crosswind?",
+    "choice_a": "Sim — máximo 15 kt para qualquer aeronave",
+    "choice_b": "Não — quem decide é o piloto em comando dentro dos limites do manual da aeronave (POH)",
+    "choice_c": "Sim — máximo de 25 kt",
+    "choice_d": "Não — depende apenas do controle de tráfego aéreo",
+    "correct": "B",
+    "explanation_md": "RBAC 91 deixa ao **piloto em comando** decidir, respeitando os limites de demonstrado/crosswind do POH/AFM. Vento direto na pista (headwind) não é crosswind, mas ainda deve respeitar limites operacionais.",
+    "difficulty": 3,
+    "source_ref": "RBAC 91.3 / 91.13",
+    "lesson_slug": "rbac-91-fundamentos"
+  },
+  {
+    "stem": "Quais documentos de **bordo** são obrigatórios durante o voo de uma aeronave privada brasileira?",
+    "choice_a": "CA, CM, CV, CVA e Apólice RETA",
+    "choice_b": "Apenas CA e licença do piloto",
+    "choice_c": "CM, CV, CIAVA e RG do piloto",
+    "choice_d": "CA, CV, CVA, Apólice RETA e o manual do fabricante",
+    "correct": "A",
+    "explanation_md": "A bordo: **CA** (Certificado de Aeronavegabilidade), **CM** (Certificado de Matrícula), **CV** (Caderneta de Voo da aeronave), **CVA** (Certificado de Verificação de Aeronavegabilidade) e a **Apólice RETA** (seguro obrigatório). O manual do fabricante (POH) também deve estar a bordo, mas a lista clássica de prova é essa.",
+    "difficulty": 3,
+    "source_ref": "RBAC 91.203",
+    "lesson_slug": "documentacao-obrigatoria"
+  },
+  {
+    "stem": "Um plano de voo VFR foi apresentado para um voo entre dois aeródromos. Qual antecedência mínima em relação à hora estimada de partida (EOBT)?",
+    "choice_a": "10 minutos",
+    "choice_b": "30 minutos",
+    "choice_c": "45 minutos",
+    "choice_d": "1 hora",
+    "correct": "C",
+    "explanation_md": "ICA 100-11 estabelece que o plano de voo seja apresentado com no mínimo **45 minutos** antes da EOBT, salvo exceções acordadas com o órgão ATS.",
+    "difficulty": 2,
+    "source_ref": "ICA 100-11",
+    "lesson_slug": "plano-de-voo-vfr"
+  },
+  {
+    "stem": "Em Classe D, qual serviço o ATC presta para aeronaves VFR?",
+    "choice_a": "Separação completa entre VFR e IFR",
+    "choice_b": "Apenas informação de tráfego entre VFR e IFR",
+    "choice_c": "Nenhum serviço — Classe D é não controlada",
+    "choice_d": "Separação entre VFR e VFR, mas não com IFR",
+    "correct": "B",
+    "explanation_md": "Em Classe D, o ATC **separa IFR de IFR** e fornece **informação de tráfego** entre IFR e VFR e entre VFR e VFR (sem separação obrigatória). Em Classe C, há separação entre IFR e VFR.",
+    "difficulty": 4,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "servicos-ats"
   }
 ]

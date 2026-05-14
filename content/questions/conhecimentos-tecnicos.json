@@ -274,5 +274,65 @@
     "difficulty": 4,
     "source_ref": "FAA-H-8083-25",
     "lesson_slug": "instrumentos-pitot-estatico"
+  },
+  {
+    "stem": "Em um motor de quatro tempos (ciclo Otto), a ordem correta dos tempos é:",
+    "choice_a": "Admissão → Compressão → Escape → Expansão",
+    "choice_b": "Admissão → Compressão → Expansão → Escape",
+    "choice_c": "Compressão → Admissão → Escape → Expansão",
+    "choice_d": "Expansão → Compressão → Admissão → Escape",
+    "correct": "B",
+    "explanation_md": "Sequência clássica: **Admissão** (válvula de admissão abre, mistura entra) → **Compressão** (ambas fechadas, pistão sobe) → **Expansão/Combustão** (ignição, pistão é empurrado) → **Escape** (válvula de escape abre, gases saem).",
+    "difficulty": 1,
+    "source_ref": "MCA 58-1",
+    "lesson_slug": "ciclo-otto"
+  },
+  {
+    "stem": "O magneto é usado em motores aeronáuticos porque:",
+    "choice_a": "É mais leve que a bateria",
+    "choice_b": "Não depende da bateria nem do alternador — o motor mantém ignição mesmo sem sistema elétrico",
+    "choice_c": "Reduz o consumo de combustível",
+    "choice_d": "Permite operar com gasolina automotiva",
+    "correct": "B",
+    "explanation_md": "Magnetos geram a corrente de ignição por **rotação do motor**, totalmente independentes do sistema elétrico da aeronave. Se a bateria pifa, o motor continua rodando. Por segurança, todo motor aeronáutico tem **dois magnetos** (esquerdo e direito) e duas velas por cilindro.",
+    "difficulty": 2,
+    "source_ref": "MCA 58-1",
+    "lesson_slug": "sistema-eletrico"
+  },
+  {
+    "stem": "Se o sistema **pitot** entupir em voo, mas o **estático** continuar funcionando, qual instrumento dá indicação errada?",
+    "choice_a": "Altímetro",
+    "choice_b": "Climb (variômetro)",
+    "choice_c": "Velocímetro (ASI)",
+    "choice_d": "Todos os três",
+    "correct": "C",
+    "explanation_md": "Só o **velocímetro** depende da pressão dinâmica (total − estática), então o pitot entupido o trava ou faz agir como altímetro. Altímetro e variômetro usam apenas a pressão **estática**, e seguirão indicando normalmente.",
+    "difficulty": 3,
+    "source_ref": "MCA 58-1",
+    "lesson_slug": "instrumentos-pitot-estatico"
+  },
+  {
+    "stem": "Uma hélice de **passo variável** permite ao piloto:",
+    "choice_a": "Manter RPM constante mudando a carga sobre o motor",
+    "choice_b": "Aumentar a potência máxima do motor",
+    "choice_c": "Reduzir o peso da aeronave",
+    "choice_d": "Substituir o uso do acelerador",
+    "correct": "A",
+    "explanation_md": "A hélice de passo variável (constant-speed) ajusta o ângulo das pás para manter a **RPM selecionada** apesar da variação de carga — em subida o passo diminui (motor 'enxerga' menos resistência) e em cruzeiro aumenta. Acelerador (throttle) controla pressão de admissão (MAP).",
+    "difficulty": 3,
+    "source_ref": "MCA 58-1",
+    "lesson_slug": "helice-passo"
+  },
+  {
+    "stem": "Antes da decolagem, o piloto verifica os tanques e encontra um pequeno volume de água no fundo. Qual é o procedimento correto?",
+    "choice_a": "Decolar normalmente — pouca água é tolerada",
+    "choice_b": "Drenar os tanques pelo dreno de combustível até sair apenas combustível limpo",
+    "choice_c": "Aquecer o motor por mais tempo antes da decolagem",
+    "choice_d": "Reabastecer com mais combustível para diluir",
+    "correct": "B",
+    "explanation_md": "Água no tanque é causa comum de **parada de motor**. Drenar pelos pontos de drenagem (sumps) antes de cada voo até o combustível sair limpo e da cor correta (azul para 100LL). Inspecionar visualmente em um copo de drenagem.",
+    "difficulty": 2,
+    "source_ref": "MCA 58-1 / POH típico",
+    "lesson_slug": "sistema-combustivel"
   }
 ]

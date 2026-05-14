@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { HUD } from "@/components/hud/HUD";
+import { AppShell } from "@/components/nav/AppShell";
 import { computeHearts } from "@/lib/hearts";
 
 export default async function LeaguesLayout({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ export default async function LeaguesLayout({ children }: { children: React.Reac
 
   const { data: stats } = await supabase
     .from("user_stats")
-    .select("total_xp, current_streak, hearts, hearts_regen_at")
+    .select("total_xp, current_streak, hearts, hearts_regen_at, gems")
     .eq("user_id", user.id)
     .single();
 
@@ -21,9 +22,14 @@ export default async function LeaguesLayout({ children }: { children: React.Reac
     : { hearts: 5, hearts_regen_at: null, changed: false };
 
   return (
-    <>
-      <HUD xp={stats?.total_xp ?? 0} streak={stats?.current_streak ?? 0} hearts={refreshed.hearts} />
+    <AppShell>
+      <HUD
+        xp={stats?.total_xp ?? 0}
+        streak={stats?.current_streak ?? 0}
+        hearts={refreshed.hearts}
+        gems={stats?.gems ?? 0}
+      />
       {children}
-    </>
+    </AppShell>
   );
 }

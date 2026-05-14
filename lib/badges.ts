@@ -1,4 +1,5 @@
 import type { createClient } from "@/lib/supabase/server";
+import { recordActivity } from "@/lib/activities";
 
 type DB = Awaited<ReturnType<typeof createClient>>;
 
@@ -28,7 +29,7 @@ export async function evaluateBadges(supabase: DB, ctx: Ctx) {
       .eq("user_id", ctx.userId)
       .single(),
     supabase.from("user_badges").select("badge_id").eq("user_id", ctx.userId),
-    supabase.from("badges").select("id, slug, criterion"),
+    supabase.from("badges").select("id, slug, name, criterion"),
   ]);
   if (!stats || !catalog) return;
 
@@ -66,4 +67,17 @@ export async function evaluateBadges(supabase: DB, ctx: Ctx) {
   await supabase
     .from("user_badges")
     .insert(toAward.map((badge_id) => ({ user_id: ctx.userId, badge_id, earned_at: new Date().toISOString() })));
+
+  // Emit a feed entry for each fresh badge so followers see the unlock.
+  const awardedSlugs = catalog
+    .filter((b) => toAward.includes(b.id))
+    .map((b) => ({ slug: b.slug, name: b.name }));
+  await Promise.all(
+    awardedSlugs.map((b) =>
+      recordActivity(ctx.userId, "badge_earned", {
+        badge_slug: b.slug,
+        badge_name: b.name,
+      }),
+    ),
+  );
 }

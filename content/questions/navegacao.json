@@ -274,5 +274,65 @@
     "difficulty": 3,
     "source_ref": "FAA-H-8083-25",
     "lesson_slug": "triangulo-vento"
+  },
+  {
+    "stem": "Em uma carta WAC, a escala típica é:",
+    "choice_a": "1:250.000",
+    "choice_b": "1:500.000",
+    "choice_c": "1:1.000.000",
+    "choice_d": "1:2.000.000",
+    "correct": "C",
+    "explanation_md": "**WAC (World Aeronautical Chart)** usa escala **1:1.000.000** — boa para planejamento VFR de cruzeiro. Cartas mais detalhadas: 1:500.000 (Sectional).",
+    "difficulty": 2,
+    "source_ref": "AIP-BRASIL",
+    "lesson_slug": "cartas-wac"
+  },
+  {
+    "stem": "O VOR fornece ao piloto:",
+    "choice_a": "Distância em milhas náuticas até a estação",
+    "choice_b": "Radial magnético da aeronave em relação à estação",
+    "choice_c": "Altitude absoluta acima do solo",
+    "choice_d": "Velocidade em relação ao solo",
+    "correct": "B",
+    "explanation_md": "VOR (VHF Omnidirectional Range) transmite 360 radiais magnéticos a partir da estação. O CDI mostra **de qual radial você está e se está dentro ou fora dele**. Distância vem de DME; altitude do altímetro; GS do GPS.",
+    "difficulty": 2,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "principios-vor"
+  },
+  {
+    "stem": "Em GPS/RNAV, a especificação RNAV 1 exige precisão de:",
+    "choice_a": "± 1 NM em 95% do tempo",
+    "choice_b": "± 1 km em 100% do tempo",
+    "choice_c": "± 0,1 NM em 95% do tempo",
+    "choice_d": "± 5 NM em 99% do tempo",
+    "correct": "A",
+    "explanation_md": "RNAV 1 = precisão lateral de **± 1 NM** em **95% do tempo de voo**. RNP 0.3 (approach) = ± 0,3 NM. ICAO Doc 9613 define a família PBN.",
+    "difficulty": 4,
+    "source_ref": "ICAO Doc 9613",
+    "lesson_slug": "gps-rnav"
+  },
+  {
+    "stem": "No triângulo de vento, dados TC (rumo verdadeiro) 360°, TAS 100 kt, vento 270°/20 kt. Aproximadamente, qual o WCA (correção de deriva)?",
+    "choice_a": "WCA ≈ 0° (sem correção necessária)",
+    "choice_b": "WCA ≈ 11° à esquerda (proa apontada para oeste do curso)",
+    "choice_c": "WCA ≈ 11° à direita (proa apontada para leste do curso)",
+    "choice_d": "WCA ≈ 30° à direita",
+    "correct": "B",
+    "explanation_md": "Vento de 270° vem do **oeste** (esquerda do curso 360°/norte) e empurra a aeronave para a direita. Para manter o curso, a proa deve apontar **para a esquerda do curso** (na direção do vento). Fórmula: sen(WCA) = (V·sen β)/TAS. Aqui β = 90° (vento perpendicular ao curso), então sen(WCA) = 20/100 = 0,2 → **WCA ≈ 11,5° à esquerda**.",
+    "difficulty": 5,
+    "source_ref": "MCA 100-1",
+    "lesson_slug": "triangulo-vento"
+  },
+  {
+    "stem": "Para um plano de voo VFR diurno, qual a reserva mínima de combustível em tempo?",
+    "choice_a": "20 minutos no destino",
+    "choice_b": "30 minutos no destino + alternativa",
+    "choice_c": "45 minutos no destino + alternativa",
+    "choice_d": "60 minutos no destino + alternativa",
+    "correct": "B",
+    "explanation_md": "VFR diurno: combustível para o destino + alternativa + **30 min** de reserva final. VFR noturno: + 45 min. IFR: + 45 min (com alternativa) ou + 2 h (sem alternativa em condições restritas).",
+    "difficulty": 2,
+    "source_ref": "RBAC 91.151",
+    "lesson_slug": "plano-de-voo-vfr"
   }
 ]

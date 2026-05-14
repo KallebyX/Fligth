@@ -2,50 +2,97 @@ import Link from "next/link";
 import { HeartsBar } from "./HeartsBar";
 import { XPBar } from "./XPBar";
 import { StreakBadge } from "./StreakBadge";
+import { GemsBadge } from "./GemsBadge";
+import { NotificationsBell } from "./NotificationsBell";
 import { Crown } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/supabase/types";
+import type { NotificationItem } from "@/app/actions/notifications";
 
-export function HUD({
+async function loadNotifications(): Promise<{
+  items: NotificationItem[];
+  unread: number;
+}> {
+  try {
+    const supabase = await createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return { items: [], unread: 0 };
+
+    const [{ data: rows }, { count }] = await Promise.all([
+      supabase
+        .from("notifications")
+        .select("id, kind, payload, read_at, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(10),
+      supabase
+        .from("notifications")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .is("read_at", null),
+    ]);
+
+    const items: NotificationItem[] = (rows ?? []).map((r) => ({
+      id: r.id,
+      kind: r.kind as NotificationItem["kind"],
+      payload: ((r.payload as Json | null) ?? {}) as Record<string, unknown>,
+      read_at: r.read_at,
+      created_at: r.created_at,
+    }));
+    return { items, unread: count ?? 0 };
+  } catch {
+    return { items: [], unread: 0 };
+  }
+}
+
+export async function HUD({
   xp,
   streak,
   hearts,
+  gems = 0,
   isPro = false,
 }: {
   xp: number;
   streak: number;
   hearts: number;
+  gems?: number;
   isPro?: boolean;
 }) {
+  const { items, unread } = await loadNotifications();
+
   return (
     <header className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 backdrop-blur">
-      <div className="container flex h-14 items-center justify-between">
-        <Link href="/learn" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-sky">
-          <span aria-hidden>✈</span>
-          <span>Capitão Lorí</span>
+      <div className="container flex h-14 items-center justify-between gap-2 px-3 sm:px-4">
+        <Link
+          href="/learn"
+          className="flex shrink-0 items-center gap-1.5 text-lg font-extrabold tracking-tight text-sky"
+        >
+          <span aria-hidden className="text-xl">✈</span>
+          <span className="hidden sm:inline">Capitão Lorí</span>
+          <span className="sm:hidden">Lorí</span>
           {isPro && (
-            <span className="flex items-center gap-1 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-gold">
+            <span className="flex items-center gap-0.5 rounded-full bg-gold/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-gold">
               <Crown size={10} />
               Pro
             </span>
           )}
         </Link>
-        <div className="flex items-center gap-3">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
           <StreakBadge days={streak} />
+          <GemsBadge gems={gems} />
           <XPBar xp={xp} />
-          {isPro ? (
-            <Link href="/pro" className="hidden text-xs font-extrabold text-gold sm:inline">
-              Pro
+          {!isPro && <HeartsBar hearts={hearts} />}
+          {!isPro && (
+            <Link
+              href="/pro"
+              className="hidden rounded-full bg-gold/15 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-gold sm:inline-flex"
+            >
+              Upgrade
             </Link>
-          ) : (
-            <>
-              <HeartsBar hearts={hearts} />
-              <Link
-                href="/pro"
-                className="hidden rounded-full bg-gold/15 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-gold sm:inline-flex"
-              >
-                Upgrade
-              </Link>
-            </>
           )}
+          <NotificationsBell initialUnread={unread} initialItems={items} />
         </div>
       </div>
     </header>

@@ -1,8 +1,30 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/lib/supabase/types";
 import { MAX_HEARTS } from "@/lib/hearts";
+import { recordActivity } from "@/lib/activities";
 
 type DB = SupabaseClient<Database, "public">;
+
+const PRO_OUTFIT_SLUG = "pro-gold";
+
+async function grantOutfit(
+  supabase: DB,
+  userId: string,
+  slug: string,
+  acquiredVia: "purchase" | "pro_unlock",
+): Promise<boolean> {
+  // PK is (user_id, outfit_slug) so re-running is safe.
+  const { error } = await supabase.from("user_outfits").insert({
+    user_id: userId,
+    outfit_slug: slug,
+    acquired_via: acquiredVia,
+  });
+  // Ignore unique violations; surface other errors.
+  if (error && !/duplicate key|user_outfits_pkey/i.test(error.message)) {
+    throw new Error(`grant_outfit_failed:${error.message}`);
+  }
+  return !error;
+}
 
 type Provider = "stripe" | "apple_iap" | "google_iap";
 
@@ -153,6 +175,16 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
         .eq("user_id", userId);
       fulfilled.pro_until = until;
       fulfilled.pro_plan = interval === "year" ? "yearly" : "monthly";
+      // Pro subscribers also unlock the pro-gold outfit (kept on cancel).
+      const granted = await grantOutfit(supabase, userId, PRO_OUTFIT_SLUG, "pro_unlock");
+      if (granted) {
+        fulfilled.pro_outfit_unlocked = PRO_OUTFIT_SLUG;
+        await recordActivity(userId, "outfit_unlocked", {
+          outfit_slug: PRO_OUTFIT_SLUG,
+          outfit_name: "Pro Dourado",
+          via: "pro_subscription",
+        });
+      }
       break;
     }
     case "pro_lifetime": {
@@ -163,6 +195,36 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
         .eq("user_id", userId);
       fulfilled.pro_until = far;
       fulfilled.pro_plan = "lifetime";
+      const granted = await grantOutfit(supabase, userId, PRO_OUTFIT_SLUG, "pro_unlock");
+      if (granted) {
+        fulfilled.pro_outfit_unlocked = PRO_OUTFIT_SLUG;
+        await recordActivity(userId, "outfit_unlocked", {
+          outfit_slug: PRO_OUTFIT_SLUG,
+          outfit_name: "Pro Dourado",
+          via: "pro_lifetime",
+        });
+      }
+      break;
+    }
+    case "mascot_outfit": {
+      const slug = (product.payload as { outfit_slug?: string })?.outfit_slug;
+      if (!slug) break;
+      const granted = await grantOutfit(supabase, userId, slug, "purchase");
+      fulfilled.outfit_slug = slug;
+      if (granted) {
+        // Read the friendly name for the activity message.
+        const { data: outfit } = await supabase
+          .from("mascot_outfits")
+          .select("name, rarity")
+          .eq("slug", slug)
+          .maybeSingle();
+        await recordActivity(userId, "outfit_unlocked", {
+          outfit_slug: slug,
+          outfit_name: outfit?.name,
+          rarity: outfit?.rarity,
+          via: "purchase_cash",
+        });
+      }
       break;
     }
     case "remove_ads":
