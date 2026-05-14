@@ -59,6 +59,20 @@ platform :ios do
 
     profile_name = ENV["sigh_br.com.capitaolori.app_appstore_profile-name"]
 
+    # Scope manual signing to the App target only. Passing CODE_SIGN_STYLE /
+    # PROVISIONING_PROFILE_SPECIFIER via xcargs leaks into SPM dependency
+    # targets (RevenueCat etc.) and breaks the archive.
+    update_code_signing_settings(
+      path: XCODEPROJ,
+      use_automatic_signing: false,
+      team_id: ENV["APPLE_TEAM_ID"],
+      code_sign_identity: "Apple Distribution",
+      profile_name: profile_name,
+      bundle_identifier: "br.com.capitaolori.app",
+      targets: ["App"],
+      build_configurations: ["Release"],
+    )
+
     build_app(
       project: XCODEPROJ,
       scheme: SCHEME,
@@ -69,7 +83,6 @@ platform :ios do
       output_name: "Capitao_Lori.ipa",
       include_symbols: true,
       include_bitcode: false,
-      xcargs: %Q(CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM=#{ENV['APPLE_TEAM_ID']} PROVISIONING_PROFILE_SPECIFIER="#{profile_name}" CODE_SIGN_IDENTITY="Apple Distribution"),
       export_options: {
         method: EXPORT_METHOD,
         signingStyle: "manual",
