@@ -57,21 +57,16 @@ platform :ios do
     certs
     bump_build
 
-    profile_name = ENV["sigh_br.com.capitaolori.app_appstore_profile-name"]
-
-    # Scope manual signing to the App target only. Passing CODE_SIGN_STYLE /
-    # PROVISIONING_PROFILE_SPECIFIER via xcargs leaks into SPM dependency
-    # targets (RevenueCat etc.) and breaks the archive.
-    update_code_signing_settings(
-      path: XCODEPROJ,
-      use_automatic_signing: false,
-      team_id: ENV["APPLE_TEAM_ID"],
-      code_sign_identity: "Apple Distribution",
-      profile_name: profile_name,
-      bundle_identifier: "br.com.capitaolori.app",
-      targets: ["App"],
-      build_configurations: ["Release"],
-    )
+    # Signing is baked into project.pbxproj (App target → Release):
+    #   CODE_SIGN_STYLE=Manual
+    #   CODE_SIGN_IDENTITY="Apple Distribution"
+    #   DEVELOPMENT_TEAM=FWVSMZ9APG
+    #   PROVISIONING_PROFILE_SPECIFIER="match AppStore br.com.capitaolori.app 1778520305"
+    # Plus TargetAttributes.ProvisioningStyle=Manual. SPM packages stay on
+    # their defaults so RevenueCat doesn't complain about a profile being
+    # forced on a target that doesn't support one.
+    profile_name = ENV["sigh_br.com.capitaolori.app_appstore_profile-name"] ||
+                   "match AppStore br.com.capitaolori.app 1778520305"
 
     build_app(
       project: XCODEPROJ,
