@@ -1,0 +1,76 @@
+name: iOS PR archive (dry-run)
+
+# Runs on pull requests that touch iOS-relevant paths. Produces an Xcode
+# archive without uploading to TestFlight, so we catch native-side breakage
+# (Capacitor sync, plugin API drift, Info.plist regressions) before merge
+# without burning a precious TestFlight build number.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "ios/**"
+      - "capacitor.config.ts"
+      - "package.json"
+      - "package-lock.json"
+      - "fastlane/**"
+      - ".github/workflows/ios-pr-build.yml"
+
+concurrency:
+  group: ios-pr-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  archive:
+    name: Xcode archive (no upload)
+    runs-on: macos-26
+    timeout-minutes: 35
+
+    env:
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install Node deps
+        run: npm ci --no-audit --no-fund
+
+      - name: Capacitor sync (regenerates ios/App from latest web)
+        run: npm run mobile:sync
+
+      - name: Use Ruby 3.2 (cache pods)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Select Xcode 26 (iOS 26 SDK)
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26"
+
+      - name: Install pods
+        working-directory: ios/App
+        run: bundle exec pod install --repo-update
+
+      - name: Build (no signing, no upload)
+        working-directory: ios/App
+        run: |
+          xcodebuild \
+            -workspace App.xcworkspace \
+            -scheme App \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build

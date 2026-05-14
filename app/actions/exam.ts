@@ -48,6 +48,7 @@ export async function startExam(): Promise<StartExamResult> {
       .from("questions")
       .select("id, stem, choice_a, choice_b, choice_c, choice_d")
       .eq("subject_id", subj.id)
+      .eq("kind", "multiple_choice")
       .limit(200);
 
     const pool = data ?? [];

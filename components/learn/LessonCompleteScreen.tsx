@@ -9,7 +9,7 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { useSfx } from "@/components/learn/useSfx";
 import { notify } from "@/lib/haptics";
 import { useReducedMotion } from "@/lib/motion";
-import { Award, Flame, Heart, Sparkles } from "lucide-react";
+import { Award, BookOpen, Flame, Heart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // react-confetti pulls in canvas + measures the window, so it's client-only.
@@ -32,11 +32,13 @@ export function LessonCompleteScreen({
   perfect,
   newStreak,
   hearts,
+  theoryCount = 0,
 }: {
   xpAwarded: number;
   perfect: boolean;
   newStreak: number;
   hearts: number;
+  theoryCount?: number;
 }) {
   const sfx = useSfx();
   const { w, h } = useWindowSize();
@@ -86,7 +88,7 @@ export function LessonCompleteScreen({
         transition={{ type: "spring", stiffness: 200, damping: 12 }}
         className="relative"
       >
-        <Mascot state="celebrate" size={160} />
+        <Mascot state="celebrate" size={160} outfit={null} />
         {perfect && (
           <motion.div
             initial={{ scale: 0 }}
@@ -117,6 +119,14 @@ export function LessonCompleteScreen({
           value={`+${animatedXp}`}
           accent="bg-gold/20 text-gold"
         />
+        {theoryCount > 0 && (
+          <Stat
+            icon={<BookOpen size={18} />}
+            label="Mini-aulas"
+            value={`${theoryCount} · +${theoryCount * 5} XP`}
+            accent="bg-sky/15 text-sky"
+          />
+        )}
         <Stat
           icon={<Flame size={18} />}
           label="Ofensiva"

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Lock, Check, Star, Cloud, Compass, Wind, Wrench, RadioTower } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/motion";
 
 export type LessonNode = {
   id: number;
@@ -38,6 +39,7 @@ export function LessonPath({
   const Icon = SUBJECT_ICONS[subjectIcon ?? ""] ?? Star;
   const completedCount = nodes.filter((n) => n.state === "done").length;
   const progressPct = nodes.length ? Math.round((completedCount / nodes.length) * 100) : 0;
+  const reducedMotion = useReducedMotion();
 
   return (
     <section className="mx-auto w-full max-w-md py-6">
@@ -82,10 +84,14 @@ export function LessonPath({
               key={n.id}
               className="relative"
               style={{ transform: `translateX(${dir * offset}px)` }}
-              initial={{ opacity: 0, y: 24, scale: 0.85 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 24, scale: 0.85 }}
+              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.4, delay: i * 0.07, type: "spring", stiffness: 200 }}
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : { duration: 0.4, delay: i * 0.07, type: "spring", stiffness: 200 }
+              }
             >
               <p className="absolute -top-5 left-1/2 max-w-[180px] -translate-x-1/2 truncate text-[10px] font-bold uppercase tracking-wider text-ink/50">
                 {n.unitTitle}
@@ -111,7 +117,7 @@ export function LessonPath({
                   aria-label={n.title}
                 >
                   {n.state === "done" ? <Check size={32} /> : <Star size={32} />}
-                  {n.state === "available" && (
+                  {n.state === "available" && !reducedMotion && (
                     <motion.span
                       className="pointer-events-none absolute inset-0 rounded-full border-4 border-sky"
                       animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0, 0.6] }}

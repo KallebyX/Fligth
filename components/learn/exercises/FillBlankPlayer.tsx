@@ -31,6 +31,10 @@ export function FillBlankPlayer({
   onSubmit,
   onNext,
   onHearts,
+  mascotOutfit,
+  hearts,
+  gems,
+  onAbandon,
 }: PlayerProps<Extract<Exercise, { kind: "fill_blank" }>>) {
   const [picked, setPicked] = useState<number | null>(null);
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
@@ -89,6 +93,10 @@ export function FillBlankPlayer({
       submitting={submitting}
       onCheck={check}
       onNext={next}
+      mascotOutfit={mascotOutfit}
+      hearts={hearts}
+      gems={gems}
+      onAbandon={onAbandon}
     >
       <motion.h2
         key={`stem-${exercise.id}`}
@@ -148,6 +156,8 @@ export function FillBlankPlayer({
                 void impact("light");
               }}
               disabled={phase === "feedback"}
+              aria-label={`Preencher com ${word}`}
+              aria-pressed={selected}
               style={{ WebkitTapHighlightColor: "transparent" }}
               className={cn(
                 "min-h-[48px] rounded-xl border-2 px-3 py-2 text-sm font-extrabold transition-colors touch-manipulation",

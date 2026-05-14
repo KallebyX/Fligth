@@ -71,38 +71,40 @@ export async function submitAnswer(input: SubmitAnswerInput): Promise<SubmitAnsw
 
   const correct = validation.correct;
 
-  // 2. Update SRS state for this user/question. Theory steps don't have a
-  // meaningful "wrong" — they always grade as correct so SRS will simply
-  // schedule them far out.
-  const { data: prevAttempt } = await supabase
-    .from("user_question_attempts")
-    .select("sm2_easiness, sm2_interval, sm2_repetitions")
-    .eq("user_id", user.id)
-    .eq("question_id", input.questionId)
-    .order("attempted_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+  // 2. Update SRS state — only for assessment kinds. Theory-step is
+  // pedagogical (mini-aula); persisting it in user_question_attempts would
+  // surface it later in /review, which makes no sense.
+  if (kind !== "theory_step") {
+    const { data: prevAttempt } = await supabase
+      .from("user_question_attempts")
+      .select("sm2_easiness, sm2_interval, sm2_repetitions")
+      .eq("user_id", user.id)
+      .eq("question_id", input.questionId)
+      .order("attempted_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
 
-  const prevState: SrsState = prevAttempt
-    ? {
-        easiness: prevAttempt.sm2_easiness,
-        interval: prevAttempt.sm2_interval,
-        repetitions: prevAttempt.sm2_repetitions,
-      }
-    : { easiness: 2.5, interval: 0, repetitions: 0 };
+    const prevState: SrsState = prevAttempt
+      ? {
+          easiness: prevAttempt.sm2_easiness,
+          interval: prevAttempt.sm2_interval,
+          repetitions: prevAttempt.sm2_repetitions,
+        }
+      : { easiness: 2.5, interval: 0, repetitions: 0 };
 
-  const srs = nextReviewBoolean(prevState, correct, input.wasFirstTry ?? true);
+    const srs = nextReviewBoolean(prevState, correct, input.wasFirstTry ?? true);
 
-  await supabase.from("user_question_attempts").insert({
-    user_id: user.id,
-    question_id: input.questionId,
-    attempted_at: new Date().toISOString(),
-    was_correct: correct,
-    sm2_easiness: srs.easiness,
-    sm2_interval: srs.interval,
-    sm2_repetitions: srs.repetitions,
-    due_at: srs.due_at,
-  });
+    await supabase.from("user_question_attempts").insert({
+      user_id: user.id,
+      question_id: input.questionId,
+      attempted_at: new Date().toISOString(),
+      was_correct: correct,
+      sm2_easiness: srs.easiness,
+      sm2_interval: srs.interval,
+      sm2_repetitions: srs.repetitions,
+      due_at: srs.due_at,
+    });
+  }
 
   // 3. Hearts (only deduct in lesson context; Pro = unlimited; theory steps
   // never cost a heart even on the verify sub-step).

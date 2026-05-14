@@ -17,6 +17,10 @@ export function TrueFalsePlayer({
   onSubmit,
   onNext,
   onHearts,
+  mascotOutfit,
+  hearts,
+  gems,
+  onAbandon,
 }: PlayerProps<Extract<Exercise, { kind: "true_false" }>>) {
   const [pick, setPick] = useState<boolean | null>(null);
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
@@ -70,6 +74,10 @@ export function TrueFalsePlayer({
       submitting={submitting}
       onCheck={check}
       onNext={next}
+      mascotOutfit={mascotOutfit}
+      hearts={hearts}
+      gems={gems}
+      onAbandon={onAbandon}
     >
       <motion.h2
         key={`stem-${exercise.id}`}
@@ -102,6 +110,8 @@ export function TrueFalsePlayer({
               key={label}
               onClick={() => choose(v)}
               disabled={phase === "feedback"}
+              aria-label={label}
+              aria-pressed={selected}
               style={{ WebkitTapHighlightColor: "transparent" }}
               className={cn(
                 "flex min-h-[88px] items-center justify-center gap-3 rounded-2xl border-2 p-4 text-lg font-extrabold transition-colors touch-manipulation",

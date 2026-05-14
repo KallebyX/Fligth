@@ -50,6 +50,10 @@ export type PlayerProps<E extends Exercise = Exercise> = {
   total: number;
   index: number;
   onSubmit: ExerciseSubmitFn;
-  onNext: (correct: boolean) => void;
+  onNext: (correct: boolean, isTheory?: boolean) => void;
   onHearts?: (h: number) => void;
+  mascotOutfit?: string | null;
+  hearts?: number;
+  gems?: number;
+  onAbandon?: () => void;
 };

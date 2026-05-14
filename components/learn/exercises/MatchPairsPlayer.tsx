@@ -31,6 +31,10 @@ export function MatchPairsPlayer({
   onSubmit,
   onNext,
   onHearts,
+  mascotOutfit,
+  hearts,
+  gems,
+  onAbandon,
 }: PlayerProps<Extract<Exercise, { kind: "match_pairs" }>>) {
   // Right column rendered in randomised order so the player has to think;
   // left column stays in canonical order so it's predictable for screen
@@ -127,6 +131,10 @@ export function MatchPairsPlayer({
       submitting={submitting}
       onCheck={check}
       onNext={next}
+      mascotOutfit={mascotOutfit}
+      hearts={hearts}
+      gems={gems}
+      onAbandon={onAbandon}
     >
       <motion.h2
         key={`stem-${exercise.id}`}
@@ -158,6 +166,8 @@ export function MatchPairsPlayer({
                 key={`l-${i}`}
                 onClick={() => (matched ? clearMatch(i) : tapLeft(i))}
                 disabled={phase === "feedback"}
+                aria-label={matched ? `Desfazer conexão de ${p.left}` : `Conectar ${p.left}`}
+                aria-pressed={matched || selected}
                 style={{ WebkitTapHighlightColor: "transparent" }}
                 className={cn(
                   "min-h-[56px] rounded-xl border-2 px-3 py-2 text-left text-sm font-extrabold leading-snug transition-colors touch-manipulation",
@@ -188,6 +198,8 @@ export function MatchPairsPlayer({
                 key={`r-${i}`}
                 onClick={() => tapRight(i)}
                 disabled={phase === "feedback" || matched}
+                aria-label={`Conectar com ${p.right}`}
+                aria-pressed={matched || selected}
                 style={{ WebkitTapHighlightColor: "transparent" }}
                 className={cn(
                   "min-h-[56px] rounded-xl border-2 px-3 py-2 text-left text-sm font-extrabold leading-snug transition-colors touch-manipulation",

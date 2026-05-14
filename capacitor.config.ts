@@ -45,6 +45,13 @@ const config: CapacitorConfig = {
       backgroundColor: "#0EA5E9",
       overlaysWebView: false,
     },
+    Keyboard: {
+      // Resize the body instead of the native view so safe-area-inset based
+      // layouts don't shift unexpectedly when the keyboard opens.
+      resize: "body",
+      style: "default",
+      resizeOnFullScreen: true,
+    },
   },
 };
 

@@ -30,6 +30,10 @@ export function TapTilesPlayer({
   onSubmit,
   onNext,
   onHearts,
+  mascotOutfit,
+  hearts,
+  gems,
+  onAbandon,
 }: PlayerProps<Extract<Exercise, { kind: "tap_tiles" }>>) {
   const tileOrder = useMemo(
     () =>
@@ -111,6 +115,10 @@ export function TapTilesPlayer({
       submitting={submitting}
       onCheck={check}
       onNext={next}
+      mascotOutfit={mascotOutfit}
+      hearts={hearts}
+      gems={gems}
+      onAbandon={onAbandon}
     >
       <motion.h2
         key={`stem-${exercise.id}`}
@@ -141,6 +149,7 @@ export function TapTilesPlayer({
                 exit={{ opacity: 0 }}
                 onClick={() => unpick(i)}
                 disabled={phase === "feedback"}
+                aria-label={`Remover ${exercise.payload.words[i]}`}
                 style={{ WebkitTapHighlightColor: "transparent" }}
                 className={cn(
                   "rounded-xl border-2 px-3 py-2 text-sm font-extrabold touch-manipulation",
@@ -178,6 +187,7 @@ export function TapTilesPlayer({
               key={`tile-${i}`}
               onClick={() => pickTile(i)}
               disabled={used || phase === "feedback"}
+              aria-label={used ? `${exercise.payload.words[i]} já usado` : `Adicionar ${exercise.payload.words[i]}`}
               style={{ WebkitTapHighlightColor: "transparent" }}
               className={cn(
                 "min-h-[48px] rounded-xl border-2 px-3 py-2 text-sm font-extrabold transition-colors touch-manipulation",

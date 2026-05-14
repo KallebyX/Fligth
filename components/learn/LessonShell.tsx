@@ -26,6 +26,9 @@ export type LessonShellProps = {
   subjectName: string;
   subjectColor: string;
   unitTitle: string;
+  hearts: number;
+  gems: number;
+  mascotOutfit: string | null;
 };
 
 export function LessonShell({
@@ -37,11 +40,22 @@ export function LessonShell({
   subjectName,
   subjectColor,
   unitTitle,
+  hearts,
+  gems,
+  mascotOutfit,
 }: LessonShellProps) {
   const [stage, setStage] = useState<"intro" | "run">(theory ? "intro" : "run");
 
   if (stage === "run") {
-    return <LessonRunner lessonId={lessonId} exercises={exercises} />;
+    return (
+      <LessonRunner
+        lessonId={lessonId}
+        exercises={exercises}
+        initialHearts={hearts}
+        initialGems={gems}
+        mascotOutfit={mascotOutfit}
+      />
+    );
   }
 
   const xpReward = questionCount * 10 + 10; // mirrors XP_PER_CORRECT_LESSON * count + bonus
@@ -89,7 +103,8 @@ export function LessonShell({
               até {xpReward} XP
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1">
-              <Heart size={14} />5 vidas
+              <Heart size={14} />
+              {hearts} {hearts === 1 ? "vida" : "vidas"}
             </span>
           </div>
         </div>
@@ -118,7 +133,7 @@ export function LessonShell({
         className="card-pop mt-5 flex items-center gap-4 bg-gradient-to-r from-sky/10 to-grass/10 p-5"
       >
         <div className="shrink-0 rounded-full bg-white/80 p-1.5 ring-2 ring-sky/30">
-          <Mascot state="happy" size={72} />
+          <Mascot state="happy" size={72} outfit={mascotOutfit} />
         </div>
         <div className="flex-1">
           <p className="flex items-center gap-1 text-base font-extrabold text-ink">

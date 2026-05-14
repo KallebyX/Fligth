@@ -1,12 +1,14 @@
 "use client";
 
-import { QuestionPlayer, type PlayerQuestion } from "@/components/learn/QuestionPlayer";
-import type { Exercise, PlayerProps } from "./types";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { ExerciseShell, type ExerciseShellFeedback } from "./ExerciseShell";
+import type { ChoiceLetter, Exercise, PlayerProps } from "./types";
+import { cn } from "@/lib/utils";
+import { useSfx } from "@/components/learn/useSfx";
+import { impact, notify } from "@/lib/haptics";
+import { useReducedMotion } from "@/lib/motion";
 
-// Adapter: turns the legacy QuestionPlayer (which only knows about MCQ)
-// into something that fits the unified ExercisePlayer router contract.
-// We don't refactor QuestionPlayer itself because ReviewRunner still uses
-// its narrower API.
 export function MultipleChoicePlayer({
   exercise,
   total,
@@ -14,21 +16,135 @@ export function MultipleChoicePlayer({
   onSubmit,
   onNext,
   onHearts,
+  mascotOutfit,
+  hearts,
+  gems,
+  onAbandon,
 }: PlayerProps<Extract<Exercise, { kind: "multiple_choice" }>>) {
-  const question: PlayerQuestion = {
-    id: exercise.id,
-    stem: exercise.stem,
-    choices: exercise.choices,
-  };
+  const [selected, setSelected] = useState<ChoiceLetter | null>(null);
+  const [phase, setPhase] = useState<"answering" | "feedback">("answering");
+  const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const sfx = useSfx();
+  const reducedMotion = useReducedMotion();
+
+  async function check() {
+    if (!selected || submitting) return;
+    setSubmitting(true);
+    try {
+      const res = await onSubmit(exercise.id, { choice: selected });
+      setFeedback({
+        correct: res.correct,
+        explanation: res.explanation,
+        correctLabel: res.correctChoice,
+      });
+      setPhase("feedback");
+      sfx.play(res.correct ? "correct" : "wrong");
+      void notify(res.correct ? "success" : "warning");
+      onHearts?.(res.hearts);
+    } catch {
+      // Parent runner shows a full-screen error UI; we just stop the spinner.
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  function next() {
+    onNext(feedback?.correct ?? false);
+    setSelected(null);
+    setFeedback(null);
+    setPhase("answering");
+  }
+
+  function pick(letter: ChoiceLetter) {
+    if (phase !== "answering") return;
+    setSelected(letter);
+    sfx.play("tap");
+    void impact("light");
+  }
 
   return (
-    <QuestionPlayer
-      question={question}
+    <ExerciseShell
       total={total}
       index={index}
-      onSubmit={(qid, choice) => onSubmit(qid, { choice })}
-      onNext={onNext}
-      onHearts={onHearts}
-    />
+      phase={phase}
+      feedback={feedback}
+      canSubmit={selected !== null}
+      submitting={submitting}
+      onCheck={check}
+      onNext={next}
+      mascotOutfit={mascotOutfit}
+      hearts={hearts}
+      gems={gems}
+      onAbandon={onAbandon}
+    >
+      <motion.h2
+        key={`stem-${exercise.id}`}
+        initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.25 }}
+        className="mb-6 text-[22px] font-extrabold leading-snug md:text-2xl"
+      >
+        {exercise.stem}
+      </motion.h2>
+
+      <motion.div
+        key={exercise.id}
+        animate={
+          !reducedMotion && feedback?.correct === false
+            ? { x: [-10, 10, -8, 8, -4, 4, 0] }
+            : {}
+        }
+        transition={{ duration: 0.5 }}
+        className="grid select-none gap-3"
+      >
+        {(["A", "B", "C", "D"] as ChoiceLetter[]).map((letter, idx) => {
+          const isSelected = selected === letter;
+          const isCorrect = feedback?.correctLabel === letter;
+          const isWrong = phase === "feedback" && isSelected && !feedback?.correct;
+          const showCorrect = phase === "feedback" && isCorrect;
+
+          return (
+            <motion.button
+              key={`${exercise.id}-${letter}`}
+              initial={reducedMotion ? false : { opacity: 0, x: -10 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.25, delay: reducedMotion ? 0 : idx * 0.05 }}
+              whileTap={phase === "answering" ? { scale: 0.97 } : {}}
+              disabled={phase === "feedback"}
+              onClick={() => pick(letter)}
+              aria-label={`Opção ${letter}: ${exercise.choices[letter]}`}
+              aria-pressed={isSelected}
+              style={{ WebkitTapHighlightColor: "transparent" }}
+              className={cn(
+                "flex min-h-[64px] items-center gap-4 rounded-2xl border-2 p-4 text-left touch-manipulation transition-colors",
+                "bg-white active:scale-[0.99]",
+                isSelected && phase === "answering" && "border-sky bg-sky/5",
+                !isSelected && phase === "answering" && "border-cloud-deep hover:bg-cloud hover:-translate-y-px",
+                showCorrect && "border-grass bg-grass/10",
+                isWrong && "border-alert bg-alert/10",
+                phase === "feedback" && !showCorrect && !isWrong && "border-cloud-deep/40 opacity-60",
+              )}
+            >
+              <span
+                className={cn(
+                  "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-extrabold transition-colors",
+                  showCorrect
+                    ? "bg-grass text-white"
+                    : isWrong
+                      ? "bg-alert text-white"
+                      : isSelected
+                        ? "bg-sky text-white"
+                        : "bg-cloud text-ink/70",
+                )}
+              >
+                {letter}
+              </span>
+              <span className="text-base leading-snug md:text-[17px]">{exercise.choices[letter]}</span>
+            </motion.button>
+          );
+        })}
+      </motion.div>
+    </ExerciseShell>
   );
 }

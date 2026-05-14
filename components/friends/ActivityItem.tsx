@@ -29,6 +29,14 @@ function renderInfo(item: FeedItem): RenderInfo {
             <strong className="text-ink">
               {String(p.lesson_title ?? "uma lição")}
             </strong>
+            {Boolean(p.has_mixed_kinds) && (
+              <span
+                title="Lição com exercícios interativos"
+                className="ml-1 inline-flex items-center gap-0.5 rounded-full bg-sky/20 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-sky-deep align-middle"
+              >
+                interativa
+              </span>
+            )}
             {Boolean(p.perfect) && " com tudo certo 🌟"}
           </>
         ),

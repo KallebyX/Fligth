@@ -16,6 +16,10 @@ export function TheoryStepPlayer({
   onSubmit,
   onNext,
   onHearts,
+  mascotOutfit,
+  hearts,
+  gems,
+  onAbandon,
 }: PlayerProps<Extract<Exercise, { kind: "theory_step" }>>) {
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
   const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
@@ -44,7 +48,7 @@ export function TheoryStepPlayer({
   }
 
   function next() {
-    onNext(true);
+    onNext(true, true);
     setFeedback(null);
     setPhase("answering");
   }
@@ -60,6 +64,10 @@ export function TheoryStepPlayer({
       onCheck={confirm}
       onNext={next}
       submitLabel="Entendi!"
+      mascotOutfit={mascotOutfit}
+      hearts={hearts}
+      gems={gems}
+      onAbandon={onAbandon}
     >
       <motion.div
         key={`theory-${exercise.id}`}

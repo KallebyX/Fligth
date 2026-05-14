@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Crown, Gem, Loader2 } from "lucide-react";
+import { useReducedMotion } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { spinJackpotAction } from "@/app/actions/outfits";
@@ -75,13 +76,15 @@ export function JackpotPanel({
     router.refresh();
   }
 
+  const reducedMotion = useReducedMotion();
+
   return (
     <>
       <div className="card-pop overflow-hidden bg-gradient-to-br from-gold/15 to-sun/15">
         <div className="grid gap-4 p-5 sm:grid-cols-[auto,1fr] sm:items-center">
           <div className="flex justify-center">
             <motion.div
-              animate={{ rotate: spinAngle }}
+              animate={reducedMotion ? {} : { rotate: spinAngle }}
               transition={{ duration: 1.8, ease: [0.2, 0.8, 0.2, 1] }}
               className="rounded-full bg-gradient-to-br from-gold/40 to-sun/40 p-4"
             >

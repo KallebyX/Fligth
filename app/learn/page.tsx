@@ -4,7 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 import { LessonPath, type LessonNode } from "@/components/learn/LessonPath";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
+import { HUD } from "@/components/hud/HUD";
 import { getDivision } from "@/lib/leagues/divisions";
+import { computeHearts } from "@/lib/hearts";
+import { computeProStatus } from "@/lib/pro";
 import { Flame, Trophy, RotateCw, ClipboardCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -45,10 +48,21 @@ export default async function LearnPage({
       .single(),
     supabase
       .from("user_stats")
-      .select("current_streak")
+      .select("total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan, gems")
       .eq("user_id", user.id)
       .single(),
   ]);
+
+  const refreshed = stats
+    ? computeHearts({ hearts: stats.hearts, hearts_regen_at: stats.hearts_regen_at })
+    : { hearts: 5, hearts_regen_at: null, changed: false };
+  if (stats && refreshed.changed) {
+    await supabase
+      .from("user_stats")
+      .update({ hearts: refreshed.hearts, hearts_regen_at: refreshed.hearts_regen_at })
+      .eq("user_id", user.id);
+  }
+  const pro = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
 
   const completedSet = new Set(
     (progress ?? []).filter((p) => p.completed_at).map((p) => p.lesson_id),
@@ -59,7 +73,15 @@ export default async function LearnPage({
   const streak = stats?.current_streak ?? 0;
 
   return (
-    <main className="container max-w-3xl py-6">
+    <>
+      <HUD
+        xp={stats?.total_xp ?? 0}
+        streak={stats?.current_streak ?? 0}
+        hearts={refreshed.hearts}
+        gems={stats?.gems ?? 0}
+        isPro={pro.isPro}
+      />
+      <main className="container max-w-3xl py-6">
       {params.out === "hearts" && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-alert bg-alert/10 p-4">
           <p className="text-sm font-bold text-alert">
@@ -164,6 +186,7 @@ export default async function LearnPage({
           );
         })}
       </div>
-    </main>
+      </main>
+    </>
   );
 }

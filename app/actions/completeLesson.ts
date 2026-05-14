@@ -2,7 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { awardXP, XP_LESSON_COMPLETE_BONUS, XP_PER_CORRECT_LESSON } from "@/lib/xp";
+import {
+  awardXP,
+  XP_LESSON_COMPLETE_BONUS,
+  XP_PER_CORRECT_LESSON,
+  XP_PER_THEORY,
+} from "@/lib/xp";
 import { bumpStreak } from "@/lib/streak";
 import { evaluateBadges } from "@/lib/badges";
 import { recordActivity, STREAK_MILESTONES } from "@/lib/activities";
@@ -12,6 +17,10 @@ export type CompleteLessonInput = {
   lessonId: number;
   correctCount: number;
   totalCount: number;
+  // Mini-aulas (theory_step) sempre marcam correct=true mas só rendem XP
+  // reduzido, e NÃO contam pro cálculo de "perfect lesson".
+  theoryCount?: number;
+  hasMixedKinds?: boolean;
 };
 
 export type CompleteLessonResult =
@@ -20,6 +29,7 @@ export type CompleteLessonResult =
       xpAwarded: number;
       newStreak: number;
       perfect: boolean;
+      theoryCount: number;
     }
   | { ok: false; error: string };
 
@@ -30,8 +40,16 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "unauthenticated" };
 
+  const theoryCount = input.theoryCount ?? 0;
+  // correctCount already inclui theory_step (que sempre marca correct=true
+  // no submitAnswer), então subtrair pra calcular XP avaliativo.
+  const assessmentCorrect = Math.max(0, input.correctCount - theoryCount);
+  const assessmentTotal = Math.max(0, input.totalCount - theoryCount);
+  const perfect = assessmentTotal > 0 && assessmentCorrect === assessmentTotal;
   const xpAwarded =
-    input.correctCount * XP_PER_CORRECT_LESSON + XP_LESSON_COMPLETE_BONUS;
+    assessmentCorrect * XP_PER_CORRECT_LESSON +
+    theoryCount * XP_PER_THEORY +
+    (perfect ? XP_LESSON_COMPLETE_BONUS : 0);
 
   // 1. user_progress upsert
   const { data: existing } = await supabase
@@ -41,7 +59,8 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
     .eq("lesson_id", input.lessonId)
     .maybeSingle();
 
-  const score = Math.round((input.correctCount / Math.max(1, input.totalCount)) * 100);
+  // best_score reflete só a parte avaliativa (theory_step não vira nota).
+  const score = Math.round((assessmentCorrect / Math.max(1, assessmentTotal)) * 100);
   await supabase.from("user_progress").upsert({
     user_id: user.id,
     lesson_id: input.lessonId,
@@ -82,8 +101,6 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
     }
   }
 
-  const perfect = input.correctCount === input.totalCount;
-
   // 4. Lesson title (for the feed item).
   const { data: lessonRow } = await supabase
     .from("lessons")
@@ -105,8 +122,9 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
     subject_id: lessonRow?.subject_id,
     xp: xpAwarded,
     perfect,
+    has_mixed_kinds: input.hasMixedKinds ?? false,
   });
 
   revalidatePath("/learn");
-  return { ok: true, xpAwarded, newStreak, perfect };
+  return { ok: true, xpAwarded, newStreak, perfect, theoryCount };
 }
