@@ -29,7 +29,11 @@ platform :ios do
   desc "Fetch / refresh App Store signing artifacts via match (uses API Key, never Apple ID password)"
   lane :certs do
     api_key = asc_api_key
-    match(
+    # Let match use the keychain that setup_ci created (default
+    # "fastlane_tmp_keychain" with the password setup_ci injected into ENV).
+    # Forcing an empty keychain_password breaks the partition-list step and
+    # the private key becomes unreachable to xcodebuild at archive time.
+    match_args = {
       type: "appstore",
       app_identifier: "br.com.capitaolori.app",
       team_id: ENV["APPLE_TEAM_ID"],
@@ -37,10 +41,12 @@ platform :ios do
       readonly: ENV["CI"] == "true",
       git_url: ENV.fetch("MATCH_GIT_URL"),
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
-      keychain_name: ENV["CI"] == "true" ? (ENV["MATCH_KEYCHAIN_NAME"] || "fastlane_tmp_keychain") : "login.keychain",
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || "",
       verbose: ENV["FASTLANE_VERBOSE"] == "true",
-    )
+    }
+    unless ENV["CI"] == "true"
+      match_args[:keychain_name] = "login.keychain"
+    end
+    match(**match_args)
   end
 
   desc "Bump CFBundleVersion to (latest TestFlight build + 1)"
@@ -78,6 +84,9 @@ platform :ios do
       output_name: "Capitao_Lori.ipa",
       include_symbols: true,
       include_bitcode: false,
+      # Disable xcbeautify so any xcodebuild error surfaces in the GitHub
+      # Actions log instead of being filtered. Re-enable once stable.
+      xcodebuild_formatter: "",
       export_options: {
         method: EXPORT_METHOD,
         signingStyle: "manual",
