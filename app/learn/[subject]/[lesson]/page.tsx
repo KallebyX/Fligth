@@ -1,11 +1,69 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LessonShell } from "@/components/learn/LessonShell";
-import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
+import type { Exercise } from "@/components/learn/exercises/types";
+import type {
+  FillBlankPayload,
+  MatchPairsPayload,
+  TapTilesPayload,
+  TheoryStepPayload,
+  TrueFalsePayload,
+} from "@/lib/exercises/types";
 
 export const dynamic = "force-dynamic";
 
 type Params = { subject: string; lesson: string };
+
+type RawRow = {
+  id: number;
+  stem: string;
+  kind: string | null;
+  payload: unknown;
+  choice_a: string;
+  choice_b: string;
+  choice_c: string;
+  choice_d: string;
+};
+
+function toExercise(row: RawRow): Exercise | null {
+  const kind = (row.kind ?? "multiple_choice") as Exercise["kind"];
+  switch (kind) {
+    case "multiple_choice":
+      return {
+        id: row.id,
+        kind,
+        stem: row.stem,
+        choices: {
+          A: row.choice_a,
+          B: row.choice_b,
+          C: row.choice_c,
+          D: row.choice_d,
+        },
+      };
+    case "match_pairs":
+      return row.payload
+        ? { id: row.id, kind, stem: row.stem, payload: row.payload as MatchPairsPayload }
+        : null;
+    case "fill_blank":
+      return row.payload
+        ? { id: row.id, kind, stem: row.stem, payload: row.payload as FillBlankPayload }
+        : null;
+    case "true_false":
+      return row.payload
+        ? { id: row.id, kind, stem: row.stem, payload: row.payload as TrueFalsePayload }
+        : null;
+    case "tap_tiles":
+      return row.payload
+        ? { id: row.id, kind, stem: row.stem, payload: row.payload as TapTilesPayload }
+        : null;
+    case "theory_step":
+      return row.payload
+        ? { id: row.id, kind, stem: row.stem, payload: row.payload as TheoryStepPayload }
+        : null;
+    default:
+      return null;
+  }
+}
 
 export default async function LessonPage({ params }: { params: Promise<Params> }) {
   const { subject: subjectSlug, lesson: lessonSlug } = await params;
@@ -37,28 +95,27 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
     .eq("id", lesson.unit_id)
     .single();
 
-  // Pull up to 8 questions for this lesson (or fall back to subject questions).
+  const cols = "id, stem, kind, payload, choice_a, choice_b, choice_c, choice_d";
+
   const { data: lessonQuestions } = await supabase
     .from("questions_public")
-    .select("id, stem, choice_a, choice_b, choice_c, choice_d")
+    .select(cols)
     .eq("lesson_id", lesson.id)
     .limit(8);
 
-  let questions = lessonQuestions ?? [];
-  if (questions.length < 4) {
+  let rows = (lessonQuestions ?? []) as RawRow[];
+  if (rows.length < 4) {
     const { data: fallback } = await supabase
       .from("questions_public")
-      .select("id, stem, choice_a, choice_b, choice_c, choice_d")
+      .select(cols)
       .eq("subject_id", subject.id)
       .limit(8);
-    questions = fallback ?? [];
+    rows = (fallback ?? []) as RawRow[];
   }
 
-  const playerQuestions: PlayerQuestion[] = questions.map((q) => ({
-    id: q.id,
-    stem: q.stem,
-    choices: { A: q.choice_a, B: q.choice_b, C: q.choice_c, D: q.choice_d },
-  }));
+  const exercises = rows
+    .map(toExercise)
+    .filter((e): e is Exercise => e !== null);
 
   // Check user's hearts before starting.
   const { data: stats } = await supabase
@@ -75,8 +132,8 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
       lessonId={lesson.id}
       title={lesson.title}
       theory={lesson.theory_md}
-      questionCount={playerQuestions.length}
-      questions={playerQuestions}
+      questionCount={exercises.length}
+      exercises={exercises}
       subjectName={subject.name}
       subjectColor={subject.color}
       unitTitle={unit?.title ?? ""}

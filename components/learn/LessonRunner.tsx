@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { QuestionPlayer, type ChoiceLetter, type PlayerQuestion } from "@/components/learn/QuestionPlayer";
+import { ExercisePlayer } from "@/components/learn/ExercisePlayer";
+import type { Exercise, ExerciseSubmission } from "@/components/learn/exercises/types";
 import { LessonCompleteScreen } from "@/components/learn/LessonCompleteScreen";
 import { submitAnswer } from "@/app/actions/submitAnswer";
 import { completeLesson } from "@/app/actions/completeLesson";
@@ -11,10 +12,10 @@ import { Mascot } from "@/components/mascot/Mascot";
 
 export type LessonRunnerProps = {
   lessonId: number;
-  questions: PlayerQuestion[];
+  exercises: Exercise[];
 };
 
-export function LessonRunner({ lessonId, questions }: LessonRunnerProps) {
+export function LessonRunner({ lessonId, exercises }: LessonRunnerProps) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
   const [correctCount, setCorrectCount] = useState(0);
@@ -27,21 +28,29 @@ export function LessonRunner({ lessonId, questions }: LessonRunnerProps) {
     newStreak: number;
   } | null>(null);
 
-  const current = questions[index];
+  const current = exercises[index];
 
   const handleSubmit = useMemo(
-    () => async (questionId: number, choice: ChoiceLetter) => {
+    () => async (questionId: number, submission: ExerciseSubmission) => {
       try {
-        const res = await submitAnswer({ questionId, choice, context: "lesson", wasFirstTry: true });
+        const res = await submitAnswer({
+          questionId,
+          choice: submission.choice,
+          response: {
+            matches: submission.matches,
+            fillIndex: submission.fillIndex,
+            bool: submission.bool,
+            order: submission.order,
+          },
+          context: "lesson",
+          wasFirstTry: true,
+        });
         if (!res.ok) {
           setError(`Não consegui validar sua resposta (${res.error}). Tente recarregar a página.`);
-          // Surface a *visible* error state to the QuestionPlayer instead of
-          // silently marking the answer wrong.
           throw new Error(res.error);
         }
         return res;
       } catch (err) {
-        // Re-throw so QuestionPlayer can stop the submit spinner.
         throw err;
       }
     },
@@ -53,16 +62,15 @@ export function LessonRunner({ lessonId, questions }: LessonRunnerProps) {
     setCorrectCount(newCorrect);
 
     if (hearts === 0) {
-      // Out of hearts: end run as failure (no completion bonus).
       router.push("/learn?out=hearts");
       return;
     }
 
-    if (index + 1 >= questions.length) {
+    if (index + 1 >= exercises.length) {
       const res = await completeLesson({
         lessonId,
         correctCount: newCorrect,
-        totalCount: questions.length,
+        totalCount: exercises.length,
       });
       if (res.ok) {
         setCompletion({
@@ -112,9 +120,9 @@ export function LessonRunner({ lessonId, questions }: LessonRunnerProps) {
   if (!current) return null;
 
   return (
-    <QuestionPlayer
-      question={current}
-      total={questions.length}
+    <ExercisePlayer
+      exercise={current}
+      total={exercises.length}
       index={index}
       onSubmit={handleSubmit}
       onNext={handleNext}

@@ -70,9 +70,11 @@ export function LessonPath({
         </div>
       </motion.div>
 
-      <ol className="relative flex flex-col items-center gap-10">
+      <ol className="relative flex flex-col items-center gap-10 overflow-x-hidden">
         {nodes.map((n, i) => {
-          const offset = i % 4 === 0 ? 0 : i % 4 === 1 ? 56 : i % 4 === 2 ? 80 : 56;
+          // Offsets stay tight enough that the 80×80 node never crosses
+          // the 320 px viewport edge (max horizontal travel = 56 px).
+          const offset = i % 4 === 0 ? 0 : i % 4 === 1 ? 40 : i % 4 === 2 ? 56 : 40;
           const dir = Math.floor(i / 4) % 2 === 0 ? 1 : -1;
 
           return (
@@ -85,7 +87,7 @@ export function LessonPath({
               viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.4, delay: i * 0.07, type: "spring", stiffness: 200 }}
             >
-              <p className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-ink/50">
+              <p className="absolute -top-5 left-1/2 max-w-[180px] -translate-x-1/2 truncate text-[10px] font-bold uppercase tracking-wider text-ink/50">
                 {n.unitTitle}
               </p>
 
@@ -116,7 +118,7 @@ export function LessonPath({
                       transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                     />
                   )}
-                  <span className="pointer-events-none absolute -bottom-7 left-1/2 max-w-[180px] -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-3 py-0.5 text-xs font-extrabold text-ink shadow-pop">
+                  <span className="pointer-events-none absolute -bottom-7 left-1/2 max-w-[180px] -translate-x-1/2 truncate rounded-full bg-white px-3 py-0.5 text-xs font-extrabold text-ink shadow-pop">
                     {n.title}
                   </span>
                 </Link>

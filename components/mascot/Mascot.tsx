@@ -2,6 +2,7 @@
 
 import { motion, type TargetAndTransition, type Transition } from "framer-motion";
 import { MascotOutfit } from "@/components/mascot/outfits";
+import { useReducedMotion } from "@/lib/motion";
 
 export type MascotState = "idle" | "happy" | "sad" | "celebrate" | "sleeping";
 
@@ -52,6 +53,7 @@ export function Mascot({
   const isHappy = state === "happy" || state === "celebrate";
   const isSad = state === "sad";
   const isSleeping = state === "sleeping";
+  const reducedMotion = useReducedMotion();
 
   // Default outfit so users without an equipped slug still get the cap+goggles.
   const renderedOutfit = outfit ?? "aviator-classic";
@@ -61,20 +63,20 @@ export function Mascot({
       width={size}
       height={size}
       viewBox="0 0 120 140"
-      animate={animations[state]}
+      animate={reducedMotion ? undefined : animations[state]}
       aria-label={`Capitão Lorí ${state}`}
     >
       {/* Wings (behind body) with subtle flap */}
       <motion.path
         d="M22 86 Q10 96 22 116 Q32 110 30 96 Z"
         fill="#047857"
-        animate={!isSleeping ? WING_FLAP : undefined}
+        animate={!isSleeping && !reducedMotion ? WING_FLAP : undefined}
         style={{ transformOrigin: "26px 96px" }}
       />
       <motion.path
         d="M98 86 Q110 96 98 116 Q88 110 90 96 Z"
         fill="#047857"
-        animate={!isSleeping ? WING_FLAP_RIGHT : undefined}
+        animate={!isSleeping && !reducedMotion ? WING_FLAP_RIGHT : undefined}
         style={{ transformOrigin: "94px 96px" }}
       />
 
@@ -116,8 +118,8 @@ export function Mascot({
       ) : (
         <>
           <motion.g
-            animate={BLINK_KEYFRAMES}
-            transition={BLINK_TRANSITION}
+            animate={reducedMotion ? undefined : BLINK_KEYFRAMES}
+            transition={reducedMotion ? undefined : BLINK_TRANSITION}
             style={{ transformOrigin: "48px 46px" }}
           >
             <circle cx="48" cy="46" r="9" fill="#FFFFFF" />
@@ -125,8 +127,8 @@ export function Mascot({
             <circle cx="49.5" cy="44.5" r="1.3" fill="#FFFFFF" />
           </motion.g>
           <motion.g
-            animate={BLINK_KEYFRAMES}
-            transition={BLINK_TRANSITION}
+            animate={reducedMotion ? undefined : BLINK_KEYFRAMES}
+            transition={reducedMotion ? undefined : BLINK_TRANSITION}
             style={{ transformOrigin: "72px 46px" }}
           >
             <circle cx="72" cy="46" r="9" fill="#FFFFFF" />

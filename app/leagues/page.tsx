@@ -154,7 +154,7 @@ export default async function LeaguesPage() {
           <ResetTimer />
         </div>
 
-        {myRank >= 0 && (
+        {myRank >= 3 && (
           <div className="relative mt-4 flex items-center justify-between rounded-2xl bg-white/95 px-4 py-3 text-ink shadow-pop">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-ink/55">
@@ -254,7 +254,7 @@ export default async function LeaguesPage() {
       <Card>
         <CardTitle>Mapa das divisões</CardTitle>
         <CardDesc>10 ligas de Bronze até Diamante.</CardDesc>
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
+        <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-5">
           {DIVISIONS.map((d) => {
             const here = d.slug === division.slug;
             return (

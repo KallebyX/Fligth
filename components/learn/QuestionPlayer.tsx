@@ -9,6 +9,7 @@ import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
 import { useSfx } from "@/components/learn/useSfx";
 import { impact, notify } from "@/lib/haptics";
+import { useReducedMotion } from "@/lib/motion";
 
 export type ChoiceLetter = "A" | "B" | "C" | "D";
 
@@ -54,6 +55,7 @@ export function QuestionPlayer({
   } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const sfx = useSfx();
+  const reducedMotion = useReducedMotion();
 
   async function check() {
     if (!selected || submitting) return;
@@ -93,14 +95,18 @@ export function QuestionPlayer({
 
   return (
     <div className="flex min-h-[100dvh] flex-col">
-      {/* Sticky progress + counter */}
-      <div className="sticky top-0 z-10 bg-cloud/95 backdrop-blur supports-[backdrop-filter]:bg-cloud/70">
-        <div className="container max-w-2xl px-4 pb-2 pt-3">
-          <div className="mb-1 flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-ink/60">
+      {/* Sticky progress + counter — slim above the question so the HUD
+         doesn't double-stack visually. */}
+      <div
+        className="sticky top-0 z-10 bg-cloud/95 backdrop-blur supports-[backdrop-filter]:bg-cloud/70"
+        style={{ paddingTop: "env(safe-area-inset-top)" }}
+      >
+        <div className="container max-w-2xl px-4 pb-1.5 pt-2">
+          <div className="mb-1 flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-ink/55">
             <span>Questão {index + 1} de {total}</span>
-            <span>{progressPct}%</span>
+            <span className="tabular-nums">{progressPct}%</span>
           </div>
-          <div className="h-2 w-full overflow-hidden rounded-full bg-cloud-deep/30">
+          <div className="h-1.5 w-full overflow-hidden rounded-full bg-cloud-deep/30">
             <div
               className="h-full bg-grass transition-all duration-500"
               style={{ width: `${progressPct}%` }}
@@ -122,7 +128,11 @@ export function QuestionPlayer({
 
         <motion.div
           key={question.id}
-          animate={feedback?.correct === false ? { x: [-10, 10, -8, 8, -4, 4, 0] } : {}}
+          animate={
+            !reducedMotion && feedback?.correct === false
+              ? { x: [-10, 10, -8, 8, -4, 4, 0] }
+              : {}
+          }
           transition={{ duration: 0.5 }}
           className="grid gap-3 select-none"
         >

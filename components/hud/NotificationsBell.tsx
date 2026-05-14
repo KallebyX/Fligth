@@ -50,7 +50,7 @@ export function NotificationsBell({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-label={`Notificações${unread ? ` (${unread} não lidas)` : ""}`}
-        className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-ink/70 hover:bg-cloud"
+        className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-ink/70 hover:bg-cloud"
       >
         <Bell size={18} />
         {unread > 0 && (

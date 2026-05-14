@@ -99,5 +99,14 @@
 	<!-- App Store Connect, since we use only HTTPS/TLS (standard system encryption). -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+
+	<!-- Force Light appearance until a real dark palette ships. Avoids the
+	     half-styled look when iOS user has system dark mode on. -->
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+
+	<!-- App Store category. Required for proper placement and review. -->
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.education</string>
 </dict>
 </plist>

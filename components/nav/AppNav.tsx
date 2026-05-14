@@ -71,13 +71,13 @@ export function AppNav() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors",
+                    "flex min-h-[56px] flex-col items-center justify-center gap-0.5 rounded-xl py-1.5 text-[10px] font-bold uppercase tracking-wider transition-colors",
                     active ? "text-sky" : "text-ink/55",
                   )}
                 >
                   <span
                     className={cn(
-                      "flex h-9 w-12 items-center justify-center rounded-2xl transition-colors",
+                      "flex h-10 w-12 items-center justify-center rounded-2xl transition-colors",
                       active ? "bg-sky/15" : "hover:bg-cloud",
                     )}
                   >

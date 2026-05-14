@@ -20,12 +20,16 @@ export function Podium({
 }) {
   // Render slots in order [2nd, 1st, 3rd] so 1st sits in the middle/up.
   const ordered = [top[1], top[0], top[2]];
-  const heights = ["h-20", "h-24", "h-16"]; // pedestal heights
-  const sizes = [88, 112, 80]; // mascot sizes
+  // Pedestal heights tuned so the gold base is visibly taller without
+  // crowding the mascot above it on narrow screens.
+  const heights = ["h-24", "h-32", "h-20"];
+  // Mascot sizes scale down on mobile to fit the 320 px iPhone SE width.
+  const sizesSm = [72, 96, 64];
+  const sizesMd = [88, 112, 80];
   const ranks = [2, 1, 3];
 
   return (
-    <div className="grid grid-cols-3 items-end gap-2 sm:gap-4">
+    <div className="grid grid-cols-3 items-end gap-3 sm:gap-4">
       {ordered.map((entry, idx) => {
         if (!entry)
           return (
@@ -51,11 +55,20 @@ export function Podium({
                   fill="currentColor"
                 />
               )}
-              <Mascot
-                state={isFirst ? "celebrate" : "happy"}
-                size={sizes[idx]}
-                outfit={entry.outfit}
-              />
+              <span className="sm:hidden">
+                <Mascot
+                  state={isFirst ? "celebrate" : "happy"}
+                  size={sizesSm[idx]}
+                  outfit={entry.outfit}
+                />
+              </span>
+              <span className="hidden sm:inline">
+                <Mascot
+                  state={isFirst ? "celebrate" : "happy"}
+                  size={sizesMd[idx]}
+                  outfit={entry.outfit}
+                />
+              </span>
               <span
                 className={cn(
                   "mt-1 max-w-[120px] truncate text-center text-xs font-extrabold",

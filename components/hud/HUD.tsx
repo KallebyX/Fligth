@@ -63,8 +63,11 @@ export async function HUD({
   const { items, unread } = await loadNotifications();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 backdrop-blur">
-      <div className="container flex h-14 items-center justify-between gap-2 px-3 sm:px-4">
+    <header
+      className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 backdrop-blur"
+      style={{ paddingTop: "env(safe-area-inset-top)" }}
+    >
+      <div className="container flex min-h-14 items-center justify-between gap-2 px-3 py-1.5 sm:px-4 sm:py-2">
         <Link
           href="/learn"
           className="flex shrink-0 items-center gap-1.5 text-lg font-extrabold tracking-tight text-sky"

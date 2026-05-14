@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { useSfx } from "@/components/learn/useSfx";
 import { notify } from "@/lib/haptics";
+import { useReducedMotion } from "@/lib/motion";
 import { Award, Flame, Heart, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -39,6 +40,7 @@ export function LessonCompleteScreen({
 }) {
   const sfx = useSfx();
   const { w, h } = useWindowSize();
+  const reducedMotion = useReducedMotion();
   const [animatedXp, setAnimatedXp] = useState(0);
   const [confettiRunning, setConfettiRunning] = useState(true);
 
@@ -67,7 +69,7 @@ export function LessonCompleteScreen({
 
   return (
     <main className="container relative flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-6 py-10 text-center">
-      {w > 0 && (
+      {!reducedMotion && w > 0 && (
         <Confetti
           width={w}
           height={h}

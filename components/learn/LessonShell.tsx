@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { LessonRunner } from "@/components/learn/LessonRunner";
-import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
+import type { Exercise } from "@/components/learn/exercises/types";
 import { Markdown } from "@/components/ui/markdown";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
@@ -22,7 +22,7 @@ export type LessonShellProps = {
   title: string;
   theory: string | null;
   questionCount: number;
-  questions: PlayerQuestion[];
+  exercises: Exercise[];
   subjectName: string;
   subjectColor: string;
   unitTitle: string;
@@ -33,7 +33,7 @@ export function LessonShell({
   title,
   theory,
   questionCount,
-  questions,
+  exercises,
   subjectName,
   subjectColor,
   unitTitle,
@@ -41,7 +41,7 @@ export function LessonShell({
   const [stage, setStage] = useState<"intro" | "run">(theory ? "intro" : "run");
 
   if (stage === "run") {
-    return <LessonRunner lessonId={lessonId} questions={questions} />;
+    return <LessonRunner lessonId={lessonId} exercises={exercises} />;
   }
 
   const xpReward = questionCount * 10 + 10; // mirrors XP_PER_CORRECT_LESSON * count + bonus

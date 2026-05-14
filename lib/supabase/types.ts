@@ -78,6 +78,14 @@ export type Database = {
         explanation_md: string | null;
         difficulty: number;
         source_ref: string | null;
+        kind:
+          | "multiple_choice"
+          | "match_pairs"
+          | "fill_blank"
+          | "true_false"
+          | "tap_tiles"
+          | "theory_step";
+        payload: Json | null;
       }>;
       user_progress: Tbl<{
         user_id: string;
@@ -245,6 +253,14 @@ export type Database = {
         subject_id: number;
         lesson_id: number | null;
         stem: string;
+        kind:
+          | "multiple_choice"
+          | "match_pairs"
+          | "fill_blank"
+          | "true_false"
+          | "tap_tiles"
+          | "theory_step";
+        payload: Json | null;
         choice_a: string;
         choice_b: string;
         choice_c: string;

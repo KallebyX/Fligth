@@ -337,7 +337,7 @@ export function ExamRunner() {
                         void impact("light");
                       }}
                       className={cn(
-                        "h-9 rounded-lg text-xs font-bold touch-manipulation",
+                        "h-11 rounded-lg text-xs font-bold touch-manipulation",
                         i === index
                           ? "bg-sky text-white"
                           : a

@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { useReducedMotion } from "@/lib/motion";
 
 const Confetti = dynamic(() => import("react-confetti"), { ssr: false });
 
 export function ResultsConfetti() {
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [running, setRunning] = useState(true);
+  const reducedMotion = useReducedMotion();
 
   useEffect(() => {
     const update = () => setSize({ w: window.innerWidth, h: window.innerHeight });
@@ -20,7 +22,7 @@ export function ResultsConfetti() {
     };
   }, []);
 
-  if (size.w === 0) return null;
+  if (reducedMotion || size.w === 0) return null;
   return (
     <Confetti
       width={size.w}
