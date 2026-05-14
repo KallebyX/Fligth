@@ -17,6 +17,11 @@ const config: CapacitorConfig = {
       "*.supabase.in",
       "*.vercel.app",
       "fligth.vercel.app",
+      // OAuth: Google and Apple redirect flows route through these domains
+      // before bouncing back to the Supabase callback.
+      "accounts.google.com",
+      "*.googleusercontent.com",
+      "appleid.apple.com",
     ],
   },
   ios: {

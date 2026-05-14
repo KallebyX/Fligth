@@ -1,4 +1,5 @@
 import { AppNav } from "@/components/nav/AppNav";
+import { BiometricEnrollPrompt } from "@/components/auth/BiometricEnrollPrompt";
 
 /**
  * Wraps an authenticated app section with the side-nav (md+) and the
@@ -16,6 +17,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <div className="md:pl-56">
         <div className="pb-24 md:pb-8">{children}</div>
       </div>
+      <BiometricEnrollPrompt />
     </>
   );
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mascot } from "@/components/mascot/Mascot";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { createClient } from "@/lib/supabase/client";
 import { CheckCircle2, Loader2 } from "lucide-react";
 
@@ -24,7 +25,7 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${location.origin}/auth/callback` },
+      options: { emailRedirectTo: `${location.origin}/callback?next=/onboarding` },
     });
     setLoading(false);
     if (error) {
@@ -116,6 +117,8 @@ export default function SignupPage() {
               )}
             </Button>
           </form>
+
+          <OAuthButtons next="/onboarding" />
         </div>
 
         <p className="mt-5 text-center text-sm text-ink/60">

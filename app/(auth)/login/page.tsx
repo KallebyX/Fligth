@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mascot } from "@/components/mascot/Mascot";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 
@@ -109,6 +110,8 @@ function LoginForm() {
               )}
             </Button>
           </form>
+
+          <OAuthButtons next={next} />
         </div>
 
         <p className="mt-5 text-center text-sm text-ink/60">

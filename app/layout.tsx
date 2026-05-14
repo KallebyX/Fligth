@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 import "./globals.css";
 import { PwaRegister } from "@/components/pwa-register";
+import { BiometricGate } from "@/components/auth/BiometricGate";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -72,7 +73,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={nunito.variable}>
       <body className="min-h-screen bg-cloud font-sans text-ink antialiased">
-        {children}
+        <BiometricGate>{children}</BiometricGate>
         <PwaRegister />
       </body>
     </html>

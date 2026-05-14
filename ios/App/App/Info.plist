@@ -70,6 +70,12 @@
 		</dict>
 	</array>
 
+	<!-- Face ID prompt copy. Apple requires this string whenever the app
+	     calls LAContext / Local Authentication. Used by BiometricGate +
+	     BiometricEnrollPrompt to ungate the WebView after first login. -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>O Capitão Lorí usa Face ID para desbloquear sua conta rapidamente, sem precisar digitar a senha toda vez.</string>
+
 	<!-- Disable file sharing and document browser by default. -->
 	<key>UIFileSharingEnabled</key>
 	<false/>
