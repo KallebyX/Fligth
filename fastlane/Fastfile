@@ -1,6 +1,7 @@
 default_platform(:ios)
 
 XCODEPROJ = "./ios/App/App.xcodeproj"
+XCWORKSPACE = "./ios/App/App.xcworkspace"
 SCHEME = "App"
 EXPORT_METHOD = "app-store"
 OUTPUT_DIR = "./build"
@@ -21,15 +22,14 @@ platform :ios do
     setup_ci if ENV["CI"]
   end
 
-  desc "Sync Capacitor (SPM resolves plugin dependencies — no Cocoapods)"
+  desc "Sync Capacitor + install Pods"
   lane :prepare do
     sh("cd .. && npm run mobile:sync")
-    # cap sync regenerates CapApp-SPM/Package.swift pinning capacitor-swift-pm
-    # to the matching CLI version (8.3.3). That release renamed several
-    # protocol/method symbols, breaking @capacitor/status-bar@8.0.2 and
-    # @capacitor/splash-screen@8.0.1 (the latest available plugin versions).
-    # Pin back to 8.0.2 of swift-pm, which matches the plugin API.
-    sh(%q(cd .. && sed -i.bak 's|exact: "8.3.3"|exact: "8.0.2"|' ios/App/CapApp-SPM/Package.swift && rm -f ios/App/CapApp-SPM/Package.swift.bak))
+    # Capacitor 8 plugins (status-bar, splash-screen, etc.) reference the
+    # Capacitor framework API that ships in @capacitor/ios via Cocoapods —
+    # capacitor-swift-pm has a divergent API and these plugins won't compile
+    # against it. So we keep iOS on Cocoapods.
+    cocoapods(podfile: "./ios/App/Podfile", repo_update: true)
   end
 
   desc "Fetch / refresh App Store signing artifacts via match (uses API Key, never Apple ID password)"
@@ -81,7 +81,7 @@ platform :ios do
                    "match AppStore br.com.capitaolori.app 1778520305"
 
     build_app(
-      project: XCODEPROJ,
+      workspace: XCWORKSPACE,
       scheme: SCHEME,
       configuration: "Release",
       export_method: EXPORT_METHOD,
