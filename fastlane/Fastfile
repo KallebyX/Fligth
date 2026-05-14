@@ -24,6 +24,12 @@ platform :ios do
   desc "Sync Capacitor (SPM resolves plugin dependencies — no Cocoapods)"
   lane :prepare do
     sh("cd .. && npm run mobile:sync")
+    # cap sync regenerates CapApp-SPM/Package.swift pinning capacitor-swift-pm
+    # to the matching CLI version (8.3.3). That release renamed several
+    # protocol/method symbols, breaking @capacitor/status-bar@8.0.2 and
+    # @capacitor/splash-screen@8.0.1 (the latest available plugin versions).
+    # Pin back to 8.0.2 of swift-pm, which matches the plugin API.
+    sh(%q(cd .. && sed -i.bak 's|exact: "8.3.3"|exact: "8.0.2"|' ios/App/CapApp-SPM/Package.swift && rm -f ios/App/CapApp-SPM/Package.swift.bak))
   end
 
   desc "Fetch / refresh App Store signing artifacts via match (uses API Key, never Apple ID password)"
