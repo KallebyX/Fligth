@@ -30,8 +30,8 @@ Eles só vão funcionar **depois** de você completar a configuração abaixo.
    `https://fligth.vercel.app` e que **Redirect URLs** inclui:
    - `https://fligth.vercel.app/callback`
    - `https://fligth-*.vercel.app/callback` (previews)
-   - `capacitor://localhost/callback` (Capacitor iOS)
    - `http://localhost:*/callback` (dev)
+   - `capitaolori://callback` (Capacitor iOS / Android — deep link nativo)
 
 Pronto. O botão "Google" no `/login` agora redireciona via
 `signInWithOAuth({ provider: 'google' })` para o Supabase, que faz o
@@ -86,8 +86,28 @@ Por enquanto o flow web é suficiente para passar Review.
 
 ## 3. Capacitor — redirect & WebView
 
-O `capacitor.config.ts` já permite navegar para `*.supabase.co` e domínios
-Vercel. Confira após edits que esses entries seguem em `server.allowNavigation`:
+No nativo (iOS + Android), o OAuth NÃO abre dentro do WebView do app — usamos
+`@capacitor/browser` para mostrar Safari View Controller. Sem isso, o Google
+detecta WebView pelo User-Agent e recusa o login (App-bound domains policy).
+
+Fluxo nativo:
+
+1. Tap no botão **Google / Apple** → `signInWithOAuth({ skipBrowserRedirect: true })`
+   devolve a URL OAuth do provider.
+2. `Browser.open({ url })` abre Safari View Controller com aquela URL.
+3. Usuário autoriza no Google / Apple.
+4. Provider redireciona para `https://<supabase>.supabase.co/auth/v1/callback?code=...`.
+5. Supabase troca o code com o provider e redireciona para o **redirect URL
+   configurado**, que no nativo é `capitaolori://callback?next=<destino>`.
+6. iOS / Android forwarda esse deep link de volta para o app via Capacitor
+   `appUrlOpen`. `NativeOAuthListener` captura, fecha o Safari View,
+   chama `exchangeCodeForSession(code)` e navega para `next`.
+
+Para isso funcionar você precisa garantir:
+
+- `capitaolori://callback` está na lista de Redirect URLs do Supabase (passo 1.7).
+- O scheme `capitaolori` está em `CFBundleURLSchemes` no `Info.plist` (já está).
+- O `capacitor.config.ts` permite navegar para os domínios de auth:
 
 ```ts
 allowNavigation: [
@@ -95,16 +115,15 @@ allowNavigation: [
   "*.supabase.in",
   "*.vercel.app",
   "fligth.vercel.app",
-  // (necessário para OAuth Google)
+  // OAuth provider domains
   "accounts.google.com",
   "*.googleusercontent.com",
-  // (necessário para OAuth Apple)
   "appleid.apple.com",
 ]
 ```
 
 > Se OAuth abrir mas voltar com erro de "redirect uri not allowed", revise a
-> lista de Redirect URLs no Supabase (passo 1.7) e a allowlist do Capacitor.
+> lista de Redirect URLs no Supabase (passo 1.7).
 
 ---
 

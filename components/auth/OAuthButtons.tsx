@@ -8,6 +8,8 @@ import { Loader2 } from "lucide-react";
 
 type Provider = "google" | "apple";
 
+const NATIVE_DEEP_LINK = "capitaolori://callback";
+
 export function OAuthButtons({
   next = "/learn",
   className = "",
@@ -23,17 +25,33 @@ export function OAuthButtons({
     setError(null);
     try {
       const supabase = createClient();
-      // The OAuth callback exchanges the code and lands on `next`.
-      // On native, the Capacitor WebView opens the provider's auth page
-      // (Supabase configures the redirect URI on its side). Capacitor's
-      // app-bound domain config + server.allowNavigation already permits
-      // the round-trip back to the deployed origin.
-      const redirectTo = `${window.location.origin}/callback?next=${encodeURIComponent(next)}`;
-      const { error } = await supabase.auth.signInWithOAuth({
+      const native = isNative();
+      // Web: Supabase handles the entire redirect dance via the browser.
+      // Native: we open the OAuth URL in Safari View Controller via
+      // @capacitor/browser. Supabase's redirect target is the custom URL
+      // scheme `capitaolori://callback`, which iOS / Android forwards back
+      // into the app, where NativeOAuthListener exchanges the code.
+      const redirectTo = native
+        ? `${NATIVE_DEEP_LINK}?next=${encodeURIComponent(next)}`
+        : `${window.location.origin}/callback?next=${encodeURIComponent(next)}`;
+
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo, skipBrowserRedirect: false },
+        options: {
+          redirectTo,
+          skipBrowserRedirect: native,
+        },
       });
       if (error) throw error;
+
+      if (native) {
+        const url = data?.url;
+        if (!url) throw new Error("Supabase não devolveu a URL OAuth.");
+        const { Browser } = await import("@capacitor/browser");
+        await Browser.open({ url, presentationStyle: "popover" });
+        // Don't reset busy — the SafariViewController owns the screen until
+        // it returns; NativeOAuthListener navigates us after the exchange.
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao iniciar login");
       setBusy(null);
