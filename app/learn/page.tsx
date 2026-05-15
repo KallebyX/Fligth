@@ -8,6 +8,7 @@ import { HUD } from "@/components/hud/HUD";
 import { getDivision } from "@/lib/leagues/divisions";
 import { computeHearts } from "@/lib/hearts";
 import { computeProStatus } from "@/lib/pro";
+import { getTodayXP } from "@/lib/dailyGoal";
 import { Flame, Trophy, RotateCw, ClipboardCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -63,6 +64,8 @@ export default async function LearnPage({
       .eq("user_id", user.id);
   }
   const pro = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
+  const todayXp = await getTodayXP(supabase, user.id);
+  const goalXp = profile?.daily_goal_xp ?? 20;
 
   const completedSet = new Set(
     (progress ?? []).filter((p) => p.completed_at).map((p) => p.lesson_id),
@@ -80,6 +83,8 @@ export default async function LearnPage({
         hearts={refreshed.hearts}
         gems={stats?.gems ?? 0}
         isPro={pro.isPro}
+        todayXp={todayXp}
+        goalXp={goalXp}
       />
       <main className="container max-w-3xl py-6">
       {params.out === "hearts" && (

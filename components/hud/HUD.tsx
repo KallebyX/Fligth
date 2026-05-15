@@ -3,6 +3,7 @@ import { HeartsBar } from "./HeartsBar";
 import { XPBar } from "./XPBar";
 import { StreakBadge } from "./StreakBadge";
 import { GemsBadge } from "./GemsBadge";
+import { DailyGoalRing } from "./DailyGoalRing";
 import { NotificationsBell } from "./NotificationsBell";
 import { Crown } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
@@ -53,12 +54,16 @@ export async function HUD({
   hearts,
   gems = 0,
   isPro = false,
+  todayXp,
+  goalXp,
 }: {
   xp: number;
   streak: number;
   hearts: number;
   gems?: number;
   isPro?: boolean;
+  todayXp?: number;
+  goalXp?: number;
 }) {
   const { items, unread } = await loadNotifications();
 
@@ -84,6 +89,9 @@ export async function HUD({
         </Link>
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
           <StreakBadge days={streak} />
+          {todayXp != null && goalXp != null && (
+            <DailyGoalRing todayXp={todayXp} goalXp={goalXp} />
+          )}
           <GemsBadge gems={gems} />
           <XPBar xp={xp} />
           {!isPro && <HeartsBar hearts={hearts} />}
