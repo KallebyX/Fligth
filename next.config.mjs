@@ -1,3 +1,5 @@
+import { withSentryConfig } from "@sentry/nextjs";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
@@ -31,4 +33,17 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Sentry wraps the Next config. When SENTRY_DSN/NEXT_PUBLIC_SENTRY_DSN are
+// absent (e.g. local dev without keys), the runtime SDK simply doesn't init —
+// builds and routes work normally. Source-map upload only happens when
+// SENTRY_AUTH_TOKEN is set in CI / Vercel project env.
+export default withSentryConfig(nextConfig, {
+  org: "oryum-tech",
+  project: "fligth",
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+  // Tunneling through /monitoring lets the SDK ping survive ad-blocker rules.
+  tunnelRoute: "/monitoring",
+});
