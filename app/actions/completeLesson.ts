@@ -21,6 +21,9 @@ export type CompleteLessonInput = {
   // reduzido, e NÃO contam pro cálculo de "perfect lesson".
   theoryCount?: number;
   hasMixedKinds?: boolean;
+  // Practice mode: re-fazer uma lição já completada não dá XP, não bump
+  // streak, não conta no feed — só registra um attempt em user_progress.
+  isPractice?: boolean;
 };
 
 export type CompleteLessonResult =
@@ -30,6 +33,7 @@ export type CompleteLessonResult =
       newStreak: number;
       perfect: boolean;
       theoryCount: number;
+      goalJustHit: boolean;
     }
   | { ok: false; error: string };
 
@@ -40,16 +44,18 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
   } = await supabase.auth.getUser();
   if (!user) return { ok: false, error: "unauthenticated" };
 
+  const isPractice = input.isPractice ?? false;
   const theoryCount = input.theoryCount ?? 0;
   // correctCount already inclui theory_step (que sempre marca correct=true
   // no submitAnswer), então subtrair pra calcular XP avaliativo.
   const assessmentCorrect = Math.max(0, input.correctCount - theoryCount);
   const assessmentTotal = Math.max(0, input.totalCount - theoryCount);
   const perfect = assessmentTotal > 0 && assessmentCorrect === assessmentTotal;
-  const xpAwarded =
-    assessmentCorrect * XP_PER_CORRECT_LESSON +
-    theoryCount * XP_PER_THEORY +
-    (perfect ? XP_LESSON_COMPLETE_BONUS : 0);
+  const xpAwarded = isPractice
+    ? 0
+    : assessmentCorrect * XP_PER_CORRECT_LESSON +
+      theoryCount * XP_PER_THEORY +
+      (perfect ? XP_LESSON_COMPLETE_BONUS : 0);
 
   // 1. user_progress upsert
   const { data: existing } = await supabase
@@ -69,6 +75,41 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
     attempts: (existing?.attempts ?? 0) + 1,
   });
 
+  // Practice mode short-circuits XP / streak / activity / badges.
+  if (isPractice) {
+    revalidatePath("/learn");
+    return {
+      ok: true,
+      xpAwarded: 0,
+      newStreak: 0,
+      perfect,
+      theoryCount,
+      goalJustHit: false,
+    };
+  }
+
+  // Capture todayXp BEFORE awarding so we can detect goal crossings.
+  const todayKey = todayISO();
+  const { data: profileGoal } = await supabase
+    .from("profiles")
+    .select("daily_goal_xp")
+    .eq("id", user.id)
+    .single();
+  const goalXp = profileGoal?.daily_goal_xp ?? 20;
+
+  const { data: prevToday } = await supabase
+    .from("user_activities")
+    .select("payload")
+    .eq("user_id", user.id)
+    .gte("created_at", `${todayKey}T00:00:00.000Z`)
+    .lt("created_at", `${todayKey}T23:59:59.999Z`)
+    .in("kind", ["lesson_completed", "exam_passed"]);
+  const prevTodayXp = (prevToday ?? []).reduce(
+    (sum, row) => sum + Number((row.payload as { xp?: number } | null)?.xp ?? 0),
+    0,
+  );
+  const goalJustHit = prevTodayXp < goalXp && prevTodayXp + xpAwarded >= goalXp;
+
   // 2. XP
   await awardXP(supabase, user.id, xpAwarded);
 
@@ -81,7 +122,7 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
 
   let newStreak = stats?.current_streak ?? 0;
   if (stats) {
-    const r = bumpStreak(stats, todayISO());
+    const r = bumpStreak(stats, todayKey);
     if (r.changed) {
       await supabase
         .from("user_stats")
@@ -126,5 +167,5 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
   });
 
   revalidatePath("/learn");
-  return { ok: true, xpAwarded, newStreak, perfect, theoryCount };
+  return { ok: true, xpAwarded, newStreak, perfect, theoryCount, goalJustHit };
 }

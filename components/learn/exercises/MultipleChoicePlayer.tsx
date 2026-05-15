@@ -20,6 +20,7 @@ export function MultipleChoicePlayer({
   hearts,
   gems,
   onAbandon,
+  isPractice,
 }: PlayerProps<Extract<Exercise, { kind: "multiple_choice" }>>) {
   const [selected, setSelected] = useState<ChoiceLetter | null>(null);
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
@@ -77,6 +78,7 @@ export function MultipleChoicePlayer({
       hearts={hearts}
       gems={gems}
       onAbandon={onAbandon}
+      isPractice={isPractice}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

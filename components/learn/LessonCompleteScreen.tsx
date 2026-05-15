@@ -9,7 +9,7 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { useSfx } from "@/components/learn/useSfx";
 import { notify } from "@/lib/haptics";
 import { useReducedMotion } from "@/lib/motion";
-import { Award, BookOpen, Flame, Heart, Sparkles } from "lucide-react";
+import { Award, BookOpen, Crown, Flame, Heart, Sparkles, Target } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // react-confetti pulls in canvas + measures the window, so it's client-only.
@@ -33,12 +33,18 @@ export function LessonCompleteScreen({
   newStreak,
   hearts,
   theoryCount = 0,
+  isPractice = false,
+  goalJustHit = false,
+  isPro = false,
 }: {
   xpAwarded: number;
   perfect: boolean;
   newStreak: number;
   hearts: number;
   theoryCount?: number;
+  isPractice?: boolean;
+  goalJustHit?: boolean;
+  isPro?: boolean;
 }) {
   const sfx = useSfx();
   const { w, h } = useWindowSize();
@@ -47,14 +53,19 @@ export function LessonCompleteScreen({
   const [confettiRunning, setConfettiRunning] = useState(true);
 
   useEffect(() => {
-    sfx.play("lesson-complete");
-    void notify("success");
+    if (!isPractice) {
+      sfx.play("lesson-complete");
+      void notify("success");
+    }
+    if (goalJustHit) {
+      // Extra notify after the success haptic for the goal beat.
+      window.setTimeout(() => void notify("success"), 500);
+    }
     const dur = 900;
     const start = performance.now();
     let raf = 0;
     const tick = (t: number) => {
       const p = Math.min(1, (t - start) / dur);
-      // ease-out cubic so the number lands instead of speeds.
       const eased = 1 - Math.pow(1 - p, 3);
       setAnimatedXp(Math.round(xpAwarded * eased));
       if (p < 1) raf = requestAnimationFrame(tick);
@@ -67,18 +78,21 @@ export function LessonCompleteScreen({
       cancelAnimationFrame(raf);
       window.clearTimeout(confettiTimer);
     };
-  }, [xpAwarded, sfx]);
+  }, [xpAwarded, sfx, isPractice, goalJustHit]);
+
+  const goldConfettiColors = ["#FBBF24", "#F59E0B", "#FCD34D", "#EAB308", "#FDE68A"];
+  const standardConfettiColors = ["#0EA5E9", "#10B981", "#F97316", "#FBBF24", "#A78BFA"];
 
   return (
     <main className="container relative flex min-h-[100dvh] max-w-md flex-col items-center justify-center gap-6 py-10 text-center">
-      {!reducedMotion && w > 0 && (
+      {!reducedMotion && w > 0 && !isPractice && (
         <Confetti
           width={w}
           height={h}
-          numberOfPieces={perfect ? 280 : 160}
+          numberOfPieces={goalJustHit ? 360 : perfect ? 280 : 160}
           recycle={confettiRunning}
           gravity={0.22}
-          colors={["#0EA5E9", "#10B981", "#F97316", "#FBBF24", "#A78BFA"]}
+          colors={goalJustHit ? goldConfettiColors : standardConfettiColors}
         />
       )}
 
@@ -103,13 +117,28 @@ export function LessonCompleteScreen({
 
       <div>
         <h1 className="text-3xl font-black md:text-4xl">
-          {perfect ? "Voo perfeito!" : "Lição concluída!"}
+          {isPractice
+            ? "Praticado!"
+            : goalJustHit
+              ? "Meta diária batida!"
+              : perfect
+                ? "Voo perfeito!"
+                : "Lição concluída!"}
         </h1>
-        {perfect && (
+        {isPractice ? (
+          <p className="mt-1 text-sm font-bold uppercase tracking-wider text-sun">
+            Modo prática · sem XP, mas sua mente agradece
+          </p>
+        ) : goalJustHit ? (
+          <p className="mt-1 inline-flex items-center gap-1 text-sm font-bold uppercase tracking-wider text-gold">
+            <Target size={14} />
+            Você bateu sua meta de XP hoje
+          </p>
+        ) : perfect ? (
           <p className="mt-1 text-sm font-bold uppercase tracking-wider text-gold">
             Você acertou todas
           </p>
-        )}
+        ) : null}
       </div>
 
       <div className="grid w-full gap-3">
@@ -141,13 +170,26 @@ export function LessonCompleteScreen({
         />
       </div>
 
-      <div className="w-full pt-2 pb-[env(safe-area-inset-bottom)]">
+      <div className="w-full pt-2 pb-[env(safe-area-inset-bottom)] space-y-3">
         <Link href="/learn">
           <Button size="lg" className="w-full">
             <Award size={18} />
             Continuar voando
           </Button>
         </Link>
+
+        {!isPro && !isPractice && (perfect || goalJustHit) && (
+          <Link href="/pro">
+            <Button
+              size="md"
+              variant="outline"
+              className="w-full border-gold/60 text-gold hover:bg-gold/10"
+            >
+              <Crown size={16} />
+              Vidas ilimitadas com Pro · 7 dias grátis
+            </Button>
+          </Link>
+        )}
       </div>
     </main>
   );

@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { LessonShell } from "@/components/learn/LessonShell";
+import { computeProStatus } from "@/lib/pro";
 import type { Exercise } from "@/components/learn/exercises/types";
 import {
   EXERCISE_SELECT,
@@ -64,10 +65,22 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
 
   const { data: stats } = await supabase
     .from("user_stats")
-    .select("hearts, gems")
+    .select("hearts, gems, pro_until, pro_plan")
     .eq("user_id", user.id)
     .single();
-  if ((stats?.hearts ?? 5) <= 0) {
+  const pro = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
+
+  const { data: progress } = await supabase
+    .from("user_progress")
+    .select("completed_at")
+    .eq("user_id", user.id)
+    .eq("lesson_id", lesson.id)
+    .maybeSingle();
+  const isPractice = !!progress?.completed_at;
+
+  // Out of hearts blocks new lessons, but practice (re-fazer "done") never
+  // costs hearts so we let the user in regardless.
+  if (!isPractice && (stats?.hearts ?? 5) <= 0) {
     redirect("/learn?out=hearts");
   }
 
@@ -90,6 +103,8 @@ export default async function LessonPage({ params }: { params: Promise<Params> }
       hearts={stats?.hearts ?? 5}
       gems={stats?.gems ?? 0}
       mascotOutfit={profile?.equipped_outfit_slug ?? null}
+      isPractice={isPractice}
+      isPro={pro.isPro}
     />
   );
 }

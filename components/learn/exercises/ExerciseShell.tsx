@@ -34,6 +34,7 @@ export function ExerciseShell({
   hearts,
   gems,
   onAbandon,
+  isPractice = false,
 }: {
   total: number;
   index: number;
@@ -50,6 +51,7 @@ export function ExerciseShell({
   hearts?: number;
   gems?: number;
   onAbandon?: () => void;
+  isPractice?: boolean;
 }) {
   const progressPct = Math.round(((index + 1) / total) * 100);
   const showChrome = onAbandon != null || hearts != null || gems != null;
@@ -115,7 +117,20 @@ export function ExerciseShell({
         )}
       </div>
 
-      <div className="container max-w-2xl flex-1 px-4 pb-40 pt-4">{children}</div>
+      <div className="container max-w-2xl flex-1 px-4 pb-40 pt-4">
+        {isPractice && (
+          <div
+            role="status"
+            className="mb-4 flex items-center gap-2 rounded-2xl border border-sun/40 bg-sun/10 px-3 py-2 text-xs font-bold text-sun"
+          >
+            <span aria-hidden>🎯</span>
+            <span>
+              Modo prática · sem perda de vidas, sem XP. Você já completou esta lição.
+            </span>
+          </div>
+        )}
+        {children}
+      </div>
 
       <AnimatePresence>
         {phase === "feedback" && feedback && (

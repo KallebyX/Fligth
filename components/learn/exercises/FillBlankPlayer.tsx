@@ -35,6 +35,7 @@ export function FillBlankPlayer({
   hearts,
   gems,
   onAbandon,
+  isPractice,
 }: PlayerProps<Extract<Exercise, { kind: "fill_blank" }>>) {
   const [picked, setPicked] = useState<number | null>(null);
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
@@ -97,6 +98,7 @@ export function FillBlankPlayer({
       hearts={hearts}
       gems={gems}
       onAbandon={onAbandon}
+      isPractice={isPractice}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

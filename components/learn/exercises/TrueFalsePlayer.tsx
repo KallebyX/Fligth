@@ -21,6 +21,7 @@ export function TrueFalsePlayer({
   hearts,
   gems,
   onAbandon,
+  isPractice,
 }: PlayerProps<Extract<Exercise, { kind: "true_false" }>>) {
   const [pick, setPick] = useState<boolean | null>(null);
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
@@ -78,6 +79,7 @@ export function TrueFalsePlayer({
       hearts={hearts}
       gems={gems}
       onAbandon={onAbandon}
+      isPractice={isPractice}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

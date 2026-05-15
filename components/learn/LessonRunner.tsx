@@ -17,6 +17,8 @@ export type LessonRunnerProps = {
   initialHearts: number;
   initialGems: number;
   mascotOutfit: string | null;
+  isPractice?: boolean;
+  isPro?: boolean;
 };
 
 export function LessonRunner({
@@ -25,6 +27,8 @@ export function LessonRunner({
   initialHearts,
   initialGems,
   mascotOutfit,
+  isPractice = false,
+  isPro = false,
 }: LessonRunnerProps) {
   const router = useRouter();
   const [index, setIndex] = useState(0);
@@ -39,6 +43,7 @@ export function LessonRunner({
     perfect: boolean;
     newStreak: number;
     theoryCount: number;
+    goalJustHit: boolean;
   } | null>(null);
 
   const current = exercises[index];
@@ -60,7 +65,7 @@ export function LessonRunner({
             bool: submission.bool,
             order: submission.order,
           },
-          context: "lesson",
+          context: isPractice ? "review" : "lesson",
           wasFirstTry: true,
         });
         if (!res.ok) {
@@ -72,7 +77,7 @@ export function LessonRunner({
         throw err;
       }
     },
-    [],
+    [isPractice],
   );
 
   async function handleNext(correct: boolean, isTheory?: boolean) {
@@ -81,7 +86,7 @@ export function LessonRunner({
     setCorrectCount(newCorrect);
     setTheoryCount(newTheory);
 
-    if (hearts === 0) {
+    if (hearts === 0 && !isPractice) {
       router.push("/learn?out=hearts");
       return;
     }
@@ -93,6 +98,7 @@ export function LessonRunner({
         theoryCount: newTheory,
         totalCount: exercises.length,
         hasMixedKinds,
+        isPractice,
       });
       if (res.ok) {
         setCompletion({
@@ -100,6 +106,7 @@ export function LessonRunner({
           perfect: res.perfect,
           newStreak: res.newStreak,
           theoryCount: res.theoryCount,
+          goalJustHit: res.goalJustHit,
         });
         setDone(true);
       } else {
@@ -121,6 +128,9 @@ export function LessonRunner({
         newStreak={completion.newStreak}
         hearts={hearts}
         theoryCount={completion.theoryCount}
+        isPractice={isPractice}
+        goalJustHit={completion.goalJustHit}
+        isPro={isPro}
       />
     );
   }
@@ -153,9 +163,10 @@ export function LessonRunner({
         onNext={handleNext}
         onHearts={setHearts}
         mascotOutfit={mascotOutfit}
-        hearts={hearts}
+        hearts={isPractice ? undefined : hearts}
         gems={initialGems}
         onAbandon={() => setShowAbandon(true)}
+        isPractice={isPractice}
       />
       <AbandonDialog
         open={showAbandon}

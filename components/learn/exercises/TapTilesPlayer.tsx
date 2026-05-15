@@ -34,6 +34,7 @@ export function TapTilesPlayer({
   hearts,
   gems,
   onAbandon,
+  isPractice,
 }: PlayerProps<Extract<Exercise, { kind: "tap_tiles" }>>) {
   const tileOrder = useMemo(
     () =>
@@ -119,6 +120,7 @@ export function TapTilesPlayer({
       hearts={hearts}
       gems={gems}
       onAbandon={onAbandon}
+      isPractice={isPractice}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

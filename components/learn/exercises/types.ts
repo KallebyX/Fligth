@@ -56,4 +56,5 @@ export type PlayerProps<E extends Exercise = Exercise> = {
   hearts?: number;
   gems?: number;
   onAbandon?: () => void;
+  isPractice?: boolean;
 };

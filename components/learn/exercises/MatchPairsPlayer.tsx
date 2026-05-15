@@ -35,6 +35,7 @@ export function MatchPairsPlayer({
   hearts,
   gems,
   onAbandon,
+  isPractice,
 }: PlayerProps<Extract<Exercise, { kind: "match_pairs" }>>) {
   // Right column rendered in randomised order so the player has to think;
   // left column stays in canonical order so it's predictable for screen
@@ -135,6 +136,7 @@ export function MatchPairsPlayer({
       hearts={hearts}
       gems={gems}
       onAbandon={onAbandon}
+      isPractice={isPractice}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

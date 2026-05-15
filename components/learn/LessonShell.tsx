@@ -29,6 +29,8 @@ export type LessonShellProps = {
   hearts: number;
   gems: number;
   mascotOutfit: string | null;
+  isPractice?: boolean;
+  isPro?: boolean;
 };
 
 export function LessonShell({
@@ -43,6 +45,8 @@ export function LessonShell({
   hearts,
   gems,
   mascotOutfit,
+  isPractice = false,
+  isPro = false,
 }: LessonShellProps) {
   const [stage, setStage] = useState<"intro" | "run">(theory ? "intro" : "run");
 
@@ -54,6 +58,8 @@ export function LessonShell({
         initialHearts={hearts}
         initialGems={gems}
         mascotOutfit={mascotOutfit}
+        isPractice={isPractice}
+        isPro={isPro}
       />
     );
   }

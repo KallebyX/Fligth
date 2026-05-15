@@ -20,6 +20,7 @@ export function TheoryStepPlayer({
   hearts,
   gems,
   onAbandon,
+  isPractice,
 }: PlayerProps<Extract<Exercise, { kind: "theory_step" }>>) {
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
   const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
@@ -68,6 +69,7 @@ export function TheoryStepPlayer({
       hearts={hearts}
       gems={gems}
       onAbandon={onAbandon}
+      isPractice={isPractice}
     >
       <motion.div
         key={`theory-${exercise.id}`}
