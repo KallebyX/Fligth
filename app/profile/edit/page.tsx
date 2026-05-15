@@ -10,6 +10,8 @@ import { createClient } from "@/lib/supabase/server";
 import { loadOutfits } from "@/lib/outfits/catalog";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 import { computeProStatus } from "@/lib/pro";
+import { calculateCompletion } from "@/lib/profileCompletion";
+import { CompletionMeter } from "@/components/profile/CompletionMeter";
 
 export const dynamic = "force-dynamic";
 
@@ -24,17 +26,29 @@ export default async function EditProfilePage() {
     supabase
       .from("profiles")
       .select(
-        "username, display_name, bio, country_code, profile_color, profile_public, equipped_outfit_slug",
+        "username, display_name, bio, country_code, profile_color, profile_public, equipped_outfit_slug, avatar_url",
       )
       .eq("id", user.id)
       .single(),
     supabase.from("user_outfits").select("outfit_slug").eq("user_id", user.id),
     loadOutfits(),
     getNotificationPrefs(),
-    supabase.from("user_stats").select("pro_until, pro_plan").eq("user_id", user.id).single(),
+    supabase
+      .from("user_stats")
+      .select("pro_until, pro_plan, profile_completed_at")
+      .eq("user_id", user.id)
+      .single(),
   ]);
 
   const proStatus = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
+  const completion = calculateCompletion({
+    username: profile?.username ?? null,
+    display_name: profile?.display_name ?? null,
+    bio: profile?.bio ?? null,
+    country_code: profile?.country_code ?? null,
+    avatar_url: profile?.avatar_url ?? null,
+    equipped_outfit_slug: profile?.equipped_outfit_slug ?? null,
+  });
 
   const ownedSet = new Set((owned ?? []).map((o) => o.outfit_slug));
   const items: CatalogOutfit[] = catalog
@@ -70,6 +84,11 @@ export default async function EditProfilePage() {
           Personalize como o mundo vê o piloto.
         </p>
       </header>
+
+      <CompletionMeter
+        completion={completion}
+        alreadyClaimed={!!stats?.profile_completed_at}
+      />
 
       <Card>
         <CardTitle>Outfit do Capitão Lorí</CardTitle>

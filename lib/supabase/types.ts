@@ -38,6 +38,8 @@ export type Database = {
         joined_at: string;
         // 0008_outfits
         equipped_outfit_slug: string | null;
+        // 0019_profile_completion_avatars
+        avatar_url: string | null;
       }>;
       subjects: Tbl<{
         id: number;
@@ -121,6 +123,8 @@ export type Database = {
         gems: number;
         last_spin_at: string | null;
         last_jackpot_at: string | null;
+        // 0019_profile_completion_avatars
+        profile_completed_at: string | null;
       }>;
       subscriptions: Tbl<{
         id: number;
