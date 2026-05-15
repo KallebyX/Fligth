@@ -4,9 +4,11 @@ import { ChevronLeft } from "lucide-react";
 import { EditProfileForm } from "@/components/profile/EditProfileForm";
 import { OutfitPicker, type CatalogOutfit } from "@/components/mascot/OutfitPicker";
 import { SecuritySection } from "@/components/profile/SecuritySection";
+import { NotificationPrefsSection } from "@/components/profile/NotificationPrefsSection";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { loadOutfits } from "@/lib/outfits/catalog";
+import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +19,7 @@ export default async function EditProfilePage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: owned }, catalog] = await Promise.all([
+  const [{ data: profile }, { data: owned }, catalog, notifPrefs] = await Promise.all([
     supabase
       .from("profiles")
       .select(
@@ -27,6 +29,7 @@ export default async function EditProfilePage() {
       .single(),
     supabase.from("user_outfits").select("outfit_slug").eq("user_id", user.id),
     loadOutfits(),
+    getNotificationPrefs(),
   ]);
 
   const ownedSet = new Set((owned ?? []).map((o) => o.outfit_slug));
@@ -84,6 +87,8 @@ export default async function EditProfilePage() {
           profile_public: profile?.profile_public ?? true,
         }}
       />
+
+      <NotificationPrefsSection initial={notifPrefs} />
 
       <SecuritySection email={user.email ?? null} />
     </main>

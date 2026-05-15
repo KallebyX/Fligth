@@ -230,6 +230,16 @@ export type Database = {
         last_seen_at: string;
         revoked_at: string | null;
       }>;
+      notification_prefs: Tbl<{
+        user_id: string;
+        push_streak: boolean;
+        push_friends: boolean;
+        push_leagues: boolean;
+        push_promotions: boolean;
+        email_product_updates: boolean;
+        email_security: boolean;
+        updated_at: string;
+      }>;
       user_outfits: Tbl<{
         user_id: string;
         outfit_slug: string;
