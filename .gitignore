@@ -76,3 +76,5 @@ fastlane/*.p8
 # Ruby bundler
 vendor/bundle
 .bundle/
+*.p8
+AuthKey_*
