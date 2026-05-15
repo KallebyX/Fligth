@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 import { EditProfileForm } from "@/components/profile/EditProfileForm";
 import { OutfitPicker, type CatalogOutfit } from "@/components/mascot/OutfitPicker";
+import { SecuritySection } from "@/components/profile/SecuritySection";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { loadOutfits } from "@/lib/outfits/catalog";
@@ -83,6 +84,8 @@ export default async function EditProfilePage() {
           profile_public: profile?.profile_public ?? true,
         }}
       />
+
+      <SecuritySection email={user.email ?? null} />
     </main>
   );
 }
