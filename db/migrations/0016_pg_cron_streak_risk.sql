@@ -9,60 +9,35 @@ create extension if not exists pg_net;
 -- send-push enfileirando uma notificação "ofensiva em risco".
 --
 -- A função roda como SECURITY DEFINER para conseguir ler auth.users e
--- public.push_tokens. O JWT no Authorization é a anon key (pública,
--- segura — a edge function valida internamente o ownership do user_id).
+-- public.push_tokens. O JWT no Authorization é lido do Supabase Vault
+-- (segredo 'fligth_anon_key') em vez de hardcoded — definido em 0017.
 --
--- IMPORTANTE: anon key hardcoded. Se rotacionar, atualizar v_anon_key
--- ou migrar pra ler de current_setting('app.anon_key').
+-- Pré-requisito (rodar UMA vez fora desta migration, com a anon key real):
+--
+--   select vault.create_secret(
+--     new_secret => '<NEXT_PUBLIC_SUPABASE_ANON_KEY>',
+--     new_name => 'fligth_anon_key',
+--     new_description => 'Public anon JWT used by pg_cron to call edge functions'
+--   );
+--
+-- A função real (que faz o lookup no Vault) está em 0017. Esta migration
+-- só configura cron + extensions + dummy function pra schedule funcionar.
 create or replace function public.notify_streak_risk()
 returns int
 language plpgsql
 security definer
 set search_path = public, auth, extensions
 as $$
-declare
-  v_user record;
-  v_count int := 0;
-  v_anon_key text := 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdndmVkdXhma2xqaWR6a3JtbW9vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1MDI4ODgsImV4cCI6MjA5NDA3ODg4OH0.TL62DFKGzImF7fS2jSuik1Qa1F7NmhWmpChNUBI8F2c';
 begin
-  for v_user in (
-    select s.user_id, s.current_streak, coalesce(p.display_name, p.username, 'piloto') as name
-    from public.user_stats s
-    left join public.profiles p on p.id = s.user_id
-    where s.current_streak > 0
-      and (s.last_activity_date is null or s.last_activity_date < current_date)
-      and exists (
-        select 1 from public.push_tokens t
-        where t.user_id = s.user_id and t.revoked_at is null
-      )
-  ) loop
-    perform net.http_post(
-      url := 'https://ggveduxfkljidzkrmmoo.supabase.co/functions/v1/send-push',
-      body := jsonb_build_object(
-        'user_id', v_user.user_id::text,
-        'title', 'Sua ofensiva está em risco!',
-        'body', v_user.name || ', faça uma lição agora pra manter os ' ||
-                v_user.current_streak || ' dia' ||
-                case when v_user.current_streak = 1 then '' else 's' end ||
-                ' de streak.'
-      ),
-      headers := jsonb_build_object(
-        'Authorization', 'Bearer ' || v_anon_key,
-        'Content-Type', 'application/json'
-      ),
-      timeout_milliseconds := 5000
-    );
-    v_count := v_count + 1;
-  end loop;
-  return v_count;
+  -- Stub: substituído por 0017_streak_risk_use_vault.
+  return 0;
 end;
 $$;
 
 revoke all on function public.notify_streak_risk() from public;
 grant execute on function public.notify_streak_risk() to service_role;
 
--- Schedule diário às 21:00 UTC = 18:00 Brasília. Hora boa: o usuário
--- ainda tem 6 horas pra abrir o app antes do dia virar. Idempotente.
+-- Schedule diário às 21:00 UTC = 18:00 Brasília. Idempotente.
 do $$
 declare
   v_jobid bigint;
