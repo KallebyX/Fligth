@@ -75,6 +75,7 @@ export default async function LeaguesPage() {
     username: string | null;
     display_name: string | null;
     outfit: string | null;
+    avatar_url: string | null;
   }[] = [];
 
   if (league) {
@@ -88,7 +89,7 @@ export default async function LeaguesPage() {
     const ids = (members ?? []).map((m) => m.user_id);
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, username, display_name, equipped_outfit_slug")
+      .select("id, username, display_name, equipped_outfit_slug, avatar_url")
       .in("id", ids);
     const map = new Map((profiles ?? []).map((p) => [p.id, p]));
 
@@ -100,6 +101,7 @@ export default async function LeaguesPage() {
         username: p?.username ?? null,
         display_name: p?.display_name ?? null,
         outfit: p?.equipped_outfit_slug ?? null,
+        avatar_url: p?.avatar_url ?? null,
       };
     });
   }
@@ -232,6 +234,8 @@ export default async function LeaguesPage() {
                       rank={rank}
                       username={m.username}
                       displayName={m.display_name}
+                      avatarUrl={m.avatar_url}
+                      outfit={m.outfit}
                       weeklyXp={m.weekly_xp}
                       isMe={m.user_id === user.id}
                       zone={zone}

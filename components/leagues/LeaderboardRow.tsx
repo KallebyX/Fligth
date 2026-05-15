@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { UserAvatar } from "@/components/profile/UserAvatar";
 
 type Zone = "promote" | "demote" | "stay" | null;
 
@@ -7,6 +8,8 @@ export function LeaderboardRow({
   rank,
   username,
   displayName,
+  avatarUrl,
+  outfit,
   weeklyXp,
   isMe,
   zone,
@@ -14,6 +17,8 @@ export function LeaderboardRow({
   rank: number;
   username: string | null;
   displayName: string | null;
+  avatarUrl?: string | null;
+  outfit?: string | null;
   weeklyXp: number;
   isMe: boolean;
   zone: Zone;
@@ -41,6 +46,7 @@ export function LeaderboardRow({
         >
           {rank}
         </span>
+        <UserAvatar avatarUrl={avatarUrl} outfit={outfit} size={36} />
         <div className="min-w-0">
           <p className={cn("truncate text-sm font-extrabold", isMe ? "text-sky" : "text-ink")}>
             {name}

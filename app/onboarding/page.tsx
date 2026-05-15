@@ -70,21 +70,33 @@ export default function Onboarding() {
       (typeof meta.name === "string" && meta.name) ||
       (typeof meta.display_name === "string" && meta.display_name) ||
       null;
+    const oauthPicture =
+      (typeof meta.picture === "string" && meta.picture) ||
+      (typeof meta.avatar_url === "string" && meta.avatar_url) ||
+      null;
 
     const { data: existingProfile } = await supabase
       .from("profiles")
-      .select("display_name")
+      .select("display_name, avatar_url")
       .eq("id", user.id)
       .maybeSingle();
 
-    const baseUpdate = {
+    const baseUpdate: {
+      username: string | null;
+      daily_goal_xp: number;
+      display_name?: string;
+      avatar_url?: string;
+    } = {
       username: cleanUsername || null,
       daily_goal_xp: goal,
     };
-    const updates =
-      oauthName && !existingProfile?.display_name
-        ? { ...baseUpdate, display_name: oauthName }
-        : baseUpdate;
+    if (oauthName && !existingProfile?.display_name) {
+      baseUpdate.display_name = oauthName;
+    }
+    if (oauthPicture && !existingProfile?.avatar_url) {
+      baseUpdate.avatar_url = oauthPicture;
+    }
+    const updates = baseUpdate;
 
     const { error } = await supabase
       .from("profiles")

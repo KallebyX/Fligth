@@ -12,6 +12,7 @@ import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 import { computeProStatus } from "@/lib/pro";
 import { calculateCompletion } from "@/lib/profileCompletion";
 import { CompletionMeter } from "@/components/profile/CompletionMeter";
+import { AvatarPicker } from "@/components/profile/AvatarPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -88,6 +89,12 @@ export default async function EditProfilePage() {
       <CompletionMeter
         completion={completion}
         alreadyClaimed={!!stats?.profile_completed_at}
+      />
+
+      <AvatarPicker
+        userId={user.id}
+        initialAvatarUrl={profile?.avatar_url ?? null}
+        outfit={profile?.equipped_outfit_slug ?? null}
       />
 
       <Card>
