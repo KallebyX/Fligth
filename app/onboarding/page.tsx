@@ -101,7 +101,7 @@ export default function Onboarding() {
       return;
     }
     if (toPaywall) setStep(2);
-    else router.push("/learn");
+    else router.push("/learn?welcome=1");
   }
 
   return (

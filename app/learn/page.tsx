@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { HUD } from "@/components/hud/HUD";
 import { HeartsOutCard } from "@/components/hearts/HeartsOutCard";
+import { WelcomeBanner } from "@/components/learn/WelcomeBanner";
+import { Suspense } from "react";
 import { getDivision } from "@/lib/leagues/divisions";
 import { computeHearts } from "@/lib/hearts";
 import { computeProStatus } from "@/lib/pro";
@@ -88,6 +90,12 @@ export default async function LearnPage({
         goalXp={goalXp}
       />
       <main className="container max-w-3xl py-6">
+      <Suspense fallback={null}>
+        <WelcomeBanner
+          displayName={friendlyName}
+          outfit={profile?.equipped_outfit_slug ?? null}
+        />
+      </Suspense>
       {params.out === "hearts" && (
         <HeartsOutCard
           heartsRegenAt={refreshed.hearts_regen_at}
