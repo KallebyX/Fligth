@@ -5,6 +5,7 @@ import { LessonPath, type LessonNode } from "@/components/learn/LessonPath";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { HUD } from "@/components/hud/HUD";
+import { HeartsOutCard } from "@/components/hearts/HeartsOutCard";
 import { getDivision } from "@/lib/leagues/divisions";
 import { computeHearts } from "@/lib/hearts";
 import { computeProStatus } from "@/lib/pro";
@@ -88,16 +89,10 @@ export default async function LearnPage({
       />
       <main className="container max-w-3xl py-6">
       {params.out === "hearts" && (
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-alert bg-alert/10 p-4">
-          <p className="text-sm font-bold text-alert">
-            Você ficou sem vidas — recupera 1 a cada 30 min.
-          </p>
-          <Link href="/shop">
-            <Button size="sm" variant="danger">
-              Recarregar agora
-            </Button>
-          </Link>
-        </div>
+        <HeartsOutCard
+          heartsRegenAt={refreshed.hearts_regen_at}
+          hearts={refreshed.hearts}
+        />
       )}
 
       <section className="card-pop relative mb-6 overflow-hidden p-4 sm:p-5">
