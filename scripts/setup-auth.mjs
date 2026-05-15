@@ -9,11 +9,19 @@
 //   3. Auth config crítico: site URL, redirect URLs, password min length,
 //      OTP expiry, mailer autoconfirm, secure email change
 //
-// Pré-requisitos:
+// Pré-requisitos obrigatórios:
 //   - export SUPABASE_ACCESS_TOKEN=<personal access token>
 //     (gera em https://supabase.com/dashboard/account/tokens)
 //   - export SUPABASE_PROJECT_REF=ggveduxfkljidzkrmmoo
 //     (ou passa --project=<ref>)
+//
+// Opcional — habilita Google OAuth se preenchidos:
+//   - export GOOGLE_OAUTH_CLIENT_ID=...apps.googleusercontent.com
+//   - export GOOGLE_OAUTH_CLIENT_SECRET=GOCSPX-...
+//
+// Opcional — habilita Apple OAuth se preenchidos:
+//   - export APPLE_SERVICES_ID=br.com.capitaolori.web
+//   - export APPLE_OAUTH_SECRET=<JWT compilado com .p8 OU o .p8 raw>
 //
 // Uso:
 //   node scripts/setup-auth.mjs
@@ -93,6 +101,25 @@ const payload = {
   jwt_exp: 3600,
 };
 
+// ─── OAuth providers (opcionais) ──────────────────────────────────────────
+// Só aplicamos quando as credenciais estão em env vars. Faltou? O field
+// fica de fora do PATCH e o setting atual do projeto não muda.
+const googleId = process.env.GOOGLE_OAUTH_CLIENT_ID;
+const googleSecret = process.env.GOOGLE_OAUTH_CLIENT_SECRET;
+if (googleId && googleSecret) {
+  payload.external_google_enabled = true;
+  payload.external_google_client_id = googleId;
+  payload.external_google_secret = googleSecret;
+}
+
+const appleId = process.env.APPLE_SERVICES_ID;
+const appleSecret = process.env.APPLE_OAUTH_SECRET;
+if (appleId && appleSecret) {
+  payload.external_apple_enabled = true;
+  payload.external_apple_client_id = appleId;
+  payload.external_apple_secret = appleSecret;
+}
+
 if (dryRun) {
   console.log("dry-run — payload que seria enviado:");
   console.log(JSON.stringify(payload, null, 2).slice(0, 2000) + "\n... (truncated)");
@@ -120,4 +147,6 @@ if (!res.ok) {
 
 console.log(`✓ auth config atualizada para projeto ${projectRef}`);
 console.log("  Templates de email + redirect URLs + behavior flags aplicados.");
+if (payload.external_google_enabled) console.log("  ✓ Google OAuth habilitado.");
+if (payload.external_apple_enabled) console.log("  ✓ Apple OAuth habilitado.");
 console.log("  Faça um signup de teste pra ver os emails novos.");

@@ -33,6 +33,26 @@ O script é **idempotente** — pode rodar quantas vezes quiser. Aplica:
 Para customizar os templates, edite os HTMLs em `supabase/templates/` e
 rode `npm run setup-auth` novamente.
 
+### Opcional: habilitar Google + Apple no mesmo comando
+
+Defina as envs OAuth antes de rodar:
+
+```bash
+# Google (passos abaixo na seção 1 deste doc):
+export GOOGLE_OAUTH_CLIENT_ID=000-xxxxxx.apps.googleusercontent.com
+export GOOGLE_OAUTH_CLIENT_SECRET=GOCSPX-xxxxxx
+
+# Apple (passos abaixo na seção 2):
+export APPLE_SERVICES_ID=br.com.capitaolori.web
+export APPLE_OAUTH_SECRET="$(cat ~/Downloads/AuthKey_XYZ.p8)"
+
+npm run setup-auth
+```
+
+O Supabase vai aceitar o `.p8` raw como secret e gerar o JWT internamente.
+Se preferir compilar você mesmo o JWT (recomendado em CI), passe o JWT
+pronto em `APPLE_OAUTH_SECRET`.
+
 > Por que via script e não via Supabase MCP? O MCP atualmente expõe
 > `execute_sql` + `apply_migration` mas não a Management API. Email
 > templates e providers OAuth são configurados via Management API HTTP
