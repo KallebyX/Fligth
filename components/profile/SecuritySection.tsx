@@ -9,9 +9,10 @@ import {
   isBiometricEnrolled,
   setBiometricEnrolled,
 } from "@/components/auth/BiometricGate";
-import { Bell, Fingerprint, KeyRound, LogOut, Loader2 } from "lucide-react";
+import { Bell, Fingerprint, KeyRound, LogOut, Loader2, Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { registerPushToken, revokePushToken } from "@/app/actions/pushToken";
+import { DeleteAccountDialog } from "@/components/profile/DeleteAccountDialog";
 
 type BiometricState = "unsupported" | "off" | "on";
 type PushState = "unsupported" | "denied" | "off" | "on";
@@ -25,6 +26,7 @@ export function SecuritySection({ email }: { email: string | null }) {
   const [pushBusy, setPushBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -237,12 +239,32 @@ export function SecuritySection({ email }: { email: string | null }) {
           </Button>
         </Row>
 
+        <Row
+          icon={<Trash2 size={18} />}
+          label="Excluir conta permanentemente"
+          description="Apaga sua conta, perfil, progresso e compras. Não pode ser desfeito. Requisito da App Store + LGPD."
+        >
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowDelete(true)}
+            className="border-alert text-alert hover:bg-alert/10"
+          >
+            Excluir
+          </Button>
+        </Row>
+
         {error && (
           <p className="rounded-xl bg-alert/10 px-3 py-2 text-sm font-bold text-alert">
             {error}
           </p>
         )}
       </div>
+
+      <DeleteAccountDialog
+        open={showDelete}
+        onClose={() => setShowDelete(false)}
+      />
     </Card>
   );
 }

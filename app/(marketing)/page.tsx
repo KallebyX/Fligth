@@ -1,10 +1,32 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
-import { Flame, Heart, Star, Trophy, BookOpen, Plane, ShieldCheck } from "lucide-react";
+import { Flame, Heart, Star, Trophy, BookOpen, Plane, ShieldCheck, CheckCircle2 } from "lucide-react";
+
+function DeletedBanner() {
+  const params = useSearchParams();
+  if (params.get("deleted") !== "1") return null;
+  return (
+    <motion.div
+      initial={{ y: -40, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="fixed inset-x-0 top-0 z-30 flex justify-center px-3 pt-3"
+      style={{ paddingTop: "calc(0.75rem + env(safe-area-inset-top))" }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="flex items-center gap-2 rounded-full bg-grass px-4 py-2 text-sm font-bold text-white shadow-pop">
+        <CheckCircle2 size={16} />
+        Conta excluída com sucesso.
+      </div>
+    </motion.div>
+  );
+}
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -16,6 +38,9 @@ const fadeUp = {
 export default function Landing() {
   return (
     <main className="overflow-x-hidden">
+      <Suspense fallback={null}>
+        <DeletedBanner />
+      </Suspense>
       <section className="relative isolate">
         <div className="absolute inset-x-0 top-0 -z-10 h-[60vh] bg-gradient-to-b from-sky/10 via-cloud to-cloud" />
         <div className="container flex min-h-[88vh] flex-col items-center justify-center gap-8 py-12 text-center">
