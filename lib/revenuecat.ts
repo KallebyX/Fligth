@@ -75,3 +75,22 @@ function isNativeAndEnabled(): boolean {
   const p = detectPlatform();
   return (p === "ios" || p === "android") && NATIVE_IAP_ENABLED;
 }
+
+// App Store guideline 3.1.1 requires every app with IAP to expose a
+// "Restore Purchases" button. RevenueCat surfaces all active entitlements
+// owned by the current Apple ID / Google account; the RevenueCat webhook
+// fan-out then syncs `user_stats.pro_until` server-side.
+export async function restoreNativePurchases(): Promise<
+  | { ok: true; restored: number }
+  | { ok: false; error: string }
+> {
+  if (!isNativeAndEnabled()) return { ok: false, error: "iap_disabled" };
+  try {
+    const info = await Purchases.restorePurchases();
+    const active = info.customerInfo?.entitlements?.active ?? {};
+    return { ok: true, restored: Object.keys(active).length };
+  } catch (err) {
+    const e = err as { message?: string };
+    return { ok: false, error: e?.message ?? "restore_failed" };
+  }
+}

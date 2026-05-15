@@ -9,10 +9,20 @@ import {
   isBiometricEnrolled,
   setBiometricEnrolled,
 } from "@/components/auth/BiometricGate";
-import { Bell, Fingerprint, KeyRound, LogOut, Loader2, Trash2 } from "lucide-react";
+import {
+  Bell,
+  Fingerprint,
+  KeyRound,
+  LogOut,
+  Loader2,
+  RotateCcw,
+  Trash2,
+} from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { registerPushToken, revokePushToken } from "@/app/actions/pushToken";
 import { DeleteAccountDialog } from "@/components/profile/DeleteAccountDialog";
+import { restoreNativePurchases } from "@/lib/revenuecat";
+import { NATIVE_IAP_ENABLED } from "@/lib/platform";
 
 type BiometricState = "unsupported" | "off" | "on";
 type PushState = "unsupported" | "denied" | "off" | "on";
@@ -27,6 +37,10 @@ export function SecuritySection({ email }: { email: string | null }) {
   const [error, setError] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [restoring, setRestoring] = useState(false);
+  const [restoreMsg, setRestoreMsg] = useState<string | null>(null);
+
+  const showRestore = isNative() && NATIVE_IAP_ENABLED;
 
   useEffect(() => {
     let cancelled = false;
@@ -131,6 +145,25 @@ export function SecuritySection({ email }: { email: string | null }) {
     }
   }
 
+  async function restore() {
+    setRestoring(true);
+    setRestoreMsg(null);
+    const result = await restoreNativePurchases();
+    if (result.ok) {
+      setRestoreMsg(
+        result.restored > 0
+          ? `Restaurado: ${result.restored} ${result.restored === 1 ? "assinatura" : "assinaturas"} ativas. Aguarde alguns segundos para o app atualizar.`
+          : "Nada para restaurar. Você não tem compras ativas nesta conta da App Store.",
+      );
+      // The RevenueCat webhook will refresh user_stats.pro_until server-side;
+      // a hard refresh ensures the new HUD reflects it.
+      setTimeout(() => router.refresh(), 1500);
+    } else {
+      setRestoreMsg(`Falha ao restaurar: ${result.error}`);
+    }
+    setRestoring(false);
+  }
+
   async function signOut() {
     setSigningOut(true);
     setBiometricEnrolled(false);
@@ -223,6 +256,30 @@ export function SecuritySection({ email }: { email: string | null }) {
             Mudar
           </Button>
         </Row>
+
+        {showRestore && (
+          <Row
+            icon={<RotateCcw size={18} />}
+            label="Restaurar compras"
+            description={
+              restoreMsg ??
+              "Recupera assinaturas Pro feitas nesta conta da App Store ou Google Play."
+            }
+          >
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={restore}
+              disabled={restoring}
+            >
+              {restoring ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                "Restaurar"
+              )}
+            </Button>
+          </Row>
+        )}
 
         <Row
           icon={<LogOut size={18} />}
