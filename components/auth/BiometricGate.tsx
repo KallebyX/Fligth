@@ -35,18 +35,20 @@ type GateState = "checking" | "locked" | "unlocked" | "skipped";
  * passthrough that just renders {children}.
  */
 export function BiometricGate({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<GateState>("checking");
+  // Optimistic: web and unenrolled native devices skip immediately. Avoids
+  // a flash of loading spinner on every page load.
+  const [state, setState] = useState<GateState>(() => {
+    if (typeof window === "undefined") return "skipped";
+    if (!isNative() || !isBiometricEnrolled()) return "skipped";
+    return "checking";
+  });
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (state !== "checking") return;
     let cancelled = false;
 
     async function boot() {
-      if (!isNative() || !isBiometricEnrolled()) {
-        if (!cancelled) setState("skipped");
-        return;
-      }
-
       const supabase = createClient();
       const {
         data: { session },
@@ -74,7 +76,7 @@ export function BiometricGate({ children }: { children: React.ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [state]);
 
   async function promptBiometric() {
     const mod = await import("@aparajita/capacitor-biometric-auth");
