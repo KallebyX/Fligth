@@ -61,9 +61,34 @@ export default function Onboarding() {
       return;
     }
     const cleanUsername = username.trim().toLowerCase();
+    // Auto-populate display_name from the OAuth provider's metadata
+    // (Google sends `name`, `full_name` or `display_name`; Apple sends `name`).
+    // This is only used if the profile didn't already have one set.
+    const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
+    const oauthName =
+      (typeof meta.full_name === "string" && meta.full_name) ||
+      (typeof meta.name === "string" && meta.name) ||
+      (typeof meta.display_name === "string" && meta.display_name) ||
+      null;
+
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const baseUpdate = {
+      username: cleanUsername || null,
+      daily_goal_xp: goal,
+    };
+    const updates =
+      oauthName && !existingProfile?.display_name
+        ? { ...baseUpdate, display_name: oauthName }
+        : baseUpdate;
+
     const { error } = await supabase
       .from("profiles")
-      .update({ username: cleanUsername || null, daily_goal_xp: goal })
+      .update(updates)
       .eq("id", user.id);
     setSaving(false);
     if (error) {
