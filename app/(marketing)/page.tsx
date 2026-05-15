@@ -67,7 +67,7 @@ export default function Landing() {
             transition={{ delay: 0.6 }}
             className="text-xs text-ink/50"
           >
-            5 trilhas · 27 lições · 140 questões · simulado de 3 horas
+            5 trilhas · 27 lições · exercícios interativos · simulado de 3h
           </motion.p>
         </div>
       </section>
