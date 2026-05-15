@@ -220,6 +220,16 @@ export type Database = {
         drop_weight: number;
         created_at: string;
       }>;
+      push_tokens: Tbl<{
+        id: number;
+        user_id: string;
+        token: string;
+        platform: "ios" | "android" | "web";
+        device_label: string | null;
+        created_at: string;
+        last_seen_at: string;
+        revoked_at: string | null;
+      }>;
       user_outfits: Tbl<{
         user_id: string;
         outfit_slug: string;

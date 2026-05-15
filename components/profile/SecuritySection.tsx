@@ -4,20 +4,25 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { isNative } from "@/lib/capacitor";
+import { isNative, getPlatform } from "@/lib/capacitor";
 import {
   isBiometricEnrolled,
   setBiometricEnrolled,
 } from "@/components/auth/BiometricGate";
-import { Fingerprint, KeyRound, LogOut, Loader2 } from "lucide-react";
+import { Bell, Fingerprint, KeyRound, LogOut, Loader2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { registerPushToken, revokePushToken } from "@/app/actions/pushToken";
 
 type BiometricState = "unsupported" | "off" | "on";
+type PushState = "unsupported" | "denied" | "off" | "on";
 
 export function SecuritySection({ email }: { email: string | null }) {
   const router = useRouter();
   const [bio, setBio] = useState<BiometricState | null>(null);
+  const [push, setPush] = useState<PushState | null>(null);
+  const [pushToken, setPushToken] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [pushBusy, setPushBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
 
@@ -25,20 +30,31 @@ export function SecuritySection({ email }: { email: string | null }) {
     let cancelled = false;
     async function detect() {
       if (!isNative()) {
-        if (!cancelled) setBio("unsupported");
+        if (!cancelled) {
+          setBio("unsupported");
+          setPush("unsupported");
+        }
         return;
       }
       try {
         const mod = await import("@aparajita/capacitor-biometric-auth");
         const status = await mod.BiometricAuth.checkBiometry();
         if (cancelled) return;
-        if (!status.isAvailable) {
-          setBio("unsupported");
-          return;
-        }
-        setBio(isBiometricEnrolled() ? "on" : "off");
+        if (!status.isAvailable) setBio("unsupported");
+        else setBio(isBiometricEnrolled() ? "on" : "off");
       } catch {
         if (!cancelled) setBio("unsupported");
+      }
+
+      try {
+        const { PushNotifications: PN } = await import("@capacitor/push-notifications");
+        const perm = await PN.checkPermissions();
+        if (cancelled) return;
+        if (perm.receive === "denied") setPush("denied");
+        else if (perm.receive === "granted") setPush("on");
+        else setPush("off");
+      } catch {
+        if (!cancelled) setPush("unsupported");
       }
     }
     void detect();
@@ -46,6 +62,44 @@ export function SecuritySection({ email }: { email: string | null }) {
       cancelled = true;
     };
   }, []);
+
+  async function togglePush() {
+    if (push === null || push === "unsupported" || push === "denied") return;
+    setPushBusy(true);
+    setError(null);
+    try {
+      const { PushNotifications: PN } = await import("@capacitor/push-notifications");
+      if (push === "off") {
+        const perm = await PN.requestPermissions();
+        if (perm.receive !== "granted") {
+          setPush(perm.receive === "denied" ? "denied" : "off");
+          return;
+        }
+        // Register triggers a 'registration' event with the device token.
+        // We listen here briefly to capture it, then persist.
+        await PN.register();
+        const handle = await PN.addListener("registration", async (token) => {
+          await registerPushToken({
+            token: token.value,
+            platform: getPlatform() as "ios" | "android",
+            deviceLabel: navigator.userAgent.slice(0, 120),
+          });
+          setPushToken(token.value);
+        });
+        // Auto-remove the listener after 5s — token should arrive within ms.
+        setTimeout(() => handle.remove(), 5000);
+        setPush("on");
+      } else {
+        if (pushToken) await revokePushToken(pushToken);
+        await PN.removeAllListeners();
+        setPush("off");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Não foi possível alterar");
+    } finally {
+      setPushBusy(false);
+    }
+  }
 
   async function toggleBiometric() {
     if (bio === null || bio === "unsupported") return;
@@ -94,6 +148,37 @@ export function SecuritySection({ email }: { email: string | null }) {
       </CardDesc>
 
       <div className="mt-4 space-y-2">
+        {push !== "unsupported" && (
+          <Row
+            icon={<Bell size={18} />}
+            label="Notificações push"
+            description={
+              push === "on"
+                ? "Você vai receber lembretes de streak, conquistas e ranking semanal."
+                : push === "denied"
+                  ? "Permissão foi negada. Habilite nas Configurações do iOS."
+                  : push === "off"
+                    ? "Receba avisos pra não perder ofensiva."
+                    : "Verificando…"
+            }
+          >
+            <Button
+              size="sm"
+              variant={push === "on" ? "outline" : "primary"}
+              onClick={togglePush}
+              disabled={pushBusy || push === null || push === "denied"}
+            >
+              {pushBusy ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : push === "on" ? (
+                "Desativar"
+              ) : (
+                "Ativar"
+              )}
+            </Button>
+          </Row>
+        )}
+
         {bio !== "unsupported" && (
           <Row
             icon={<Fingerprint size={18} />}
