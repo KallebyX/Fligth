@@ -26,11 +26,42 @@ export function OAuthButtons({
     try {
       const supabase = createClient();
       const native = isNative();
+
+      // Native iOS + Apple: use the SignInWithApple plugin so users get the
+      // native Apple sheet (Face ID / Touch ID), not a Safari View. App Store
+      // guideline 4.8 requires this when other social logins are offered.
+      if (native && provider === "apple") {
+        const isIOS =
+          typeof navigator !== "undefined" &&
+          /iPad|iPhone|iPod/.test(navigator.userAgent);
+        if (isIOS) {
+          const { SignInWithApple } = await import(
+            "@capacitor-community/apple-sign-in"
+          );
+          const result = await SignInWithApple.authorize({
+            clientId: "br.com.capitaolori.app",
+            redirectURI: "https://capitaolori.com.br/callback",
+            scopes: "email name",
+          });
+          const identityToken = result.response?.identityToken;
+          if (!identityToken) throw new Error("Apple não devolveu identityToken.");
+          const { error } = await supabase.auth.signInWithIdToken({
+            provider: "apple",
+            token: identityToken,
+          });
+          if (error) throw error;
+          if (typeof window !== "undefined") {
+            window.location.href = next;
+          }
+          return;
+        }
+      }
+
       // Web: Supabase handles the entire redirect dance via the browser.
-      // Native: we open the OAuth URL in Safari View Controller via
-      // @capacitor/browser. Supabase's redirect target is the custom URL
-      // scheme `capitaolori://callback`, which iOS / Android forwards back
-      // into the app, where NativeOAuthListener exchanges the code.
+      // Native (Android, or iOS Google): we open the OAuth URL in Safari
+      // View Controller via @capacitor/browser. Supabase's redirect target
+      // is the custom URL scheme `capitaolori://callback`, which iOS /
+      // Android forwards back into the app.
       const redirectTo = native
         ? `${NATIVE_DEEP_LINK}?next=${encodeURIComponent(next)}`
         : `${window.location.origin}/callback?next=${encodeURIComponent(next)}`;

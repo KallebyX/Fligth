@@ -34,6 +34,7 @@
     "@capacitor/push-notifications": "^8.1.0",
     "@capacitor/splash-screen": "^8.0.1",
     "@capacitor/status-bar": "^8.0.2",
+    "@capacitor-community/apple-sign-in": "^7.0.0",
     "@revenuecat/purchases-capacitor": "^13.1.0",
     "@sentry/nextjs": "^10.53.1",
     "@supabase/ssr": "^0.10.3",
