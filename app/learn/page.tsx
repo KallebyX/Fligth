@@ -7,6 +7,7 @@ import { Mascot } from "@/components/mascot/Mascot";
 import { HUD } from "@/components/hud/HUD";
 import { HeartsOutCard } from "@/components/hearts/HeartsOutCard";
 import { WelcomeBanner } from "@/components/learn/WelcomeBanner";
+import { StreakAtRiskCard } from "@/components/learn/StreakAtRiskCard";
 import { Suspense } from "react";
 import { getDivision } from "@/lib/leagues/divisions";
 import { computeHearts } from "@/lib/hearts";
@@ -52,7 +53,9 @@ export default async function LearnPage({
       .single(),
     supabase
       .from("user_stats")
-      .select("total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan, gems")
+      .select(
+        "total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan, gems, streak_freezes, last_activity_date",
+      )
       .eq("user_id", user.id)
       .single(),
   ]);
@@ -77,6 +80,12 @@ export default async function LearnPage({
   const division = getDivision(profile?.current_league ?? "bronze");
   const friendlyName = profile?.display_name ?? profile?.username ?? "piloto";
   const streak = stats?.current_streak ?? 0;
+  const freezes = stats?.streak_freezes ?? 0;
+  const today = new Date().toISOString().slice(0, 10);
+  const trainedToday = stats?.last_activity_date === today;
+  const localHour = new Date().getHours();
+  const streakAtRisk =
+    streak > 0 && !trainedToday && freezes > 0 && localHour >= 18;
 
   return (
     <>
@@ -88,6 +97,7 @@ export default async function LearnPage({
         isPro={pro.isPro}
         todayXp={todayXp}
         goalXp={goalXp}
+        freezes={freezes}
       />
       <main className="container max-w-3xl py-6">
       <Suspense fallback={null}>
@@ -101,6 +111,9 @@ export default async function LearnPage({
           heartsRegenAt={refreshed.hearts_regen_at}
           hearts={refreshed.hearts}
         />
+      )}
+      {streakAtRisk && (
+        <StreakAtRiskCard streak={streak} freezes={freezes} />
       )}
 
       <section className="card-pop relative mb-6 overflow-hidden p-4 sm:p-5">

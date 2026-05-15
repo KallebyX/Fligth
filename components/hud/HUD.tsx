@@ -56,6 +56,7 @@ export async function HUD({
   isPro = false,
   todayXp,
   goalXp,
+  freezes = 0,
 }: {
   xp: number;
   streak: number;
@@ -64,6 +65,7 @@ export async function HUD({
   isPro?: boolean;
   todayXp?: number;
   goalXp?: number;
+  freezes?: number;
 }) {
   const { items, unread } = await loadNotifications();
 
@@ -88,7 +90,7 @@ export async function HUD({
           )}
         </Link>
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
-          <StreakBadge days={streak} />
+          <StreakBadge days={streak} freezes={freezes} />
           {todayXp != null && goalXp != null && (
             <DailyGoalRing todayXp={todayXp} goalXp={goalXp} />
           )}
