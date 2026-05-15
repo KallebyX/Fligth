@@ -275,6 +275,11 @@ export type Database = {
         created_at: string;
       }>;
     };
-    Functions: Record<string, never>;
+    Functions: {
+      find_user_id_by_email: {
+        Args: { p_email: string };
+        Returns: string;
+      };
+    };
   };
 };
