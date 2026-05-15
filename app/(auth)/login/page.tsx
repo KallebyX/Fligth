@@ -28,10 +28,11 @@ function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") ?? "/learn";
+  const callbackError = params.get("error");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(callbackError);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -109,6 +110,13 @@ function LoginForm() {
                 "Entrar"
               )}
             </Button>
+
+            <Link
+              href="/forgot-password"
+              className="block text-center text-xs font-bold text-ink/55 hover:text-sky"
+            >
+              Esqueci minha senha
+            </Link>
           </form>
 
           <OAuthButtons next={next} />
