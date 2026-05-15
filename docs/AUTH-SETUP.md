@@ -1,4 +1,47 @@
-# Auth — configuração de OAuth + biometria
+# Auth — configuração de OAuth, biometria + emails
+
+## Quick start — configurar emails + redirect URLs em 1 comando
+
+Os templates de email (confirmação, recuperação de senha, magic link, troca
+de email e convite) já estão prontos em `supabase/templates/*.html`. O
+script `scripts/setup-auth.mjs` pusha tudo pro projeto remoto via
+Supabase Management API:
+
+```bash
+# 1. Gere um Personal Access Token em https://supabase.com/dashboard/account/tokens
+#    (escopo "All access" ou "project:write" pro projeto).
+export SUPABASE_ACCESS_TOKEN=sbp_xxxxxxxxxxxxxxxxxxxxx
+
+# 2. Conferir o payload antes de aplicar:
+npm run setup-auth:dry
+
+# 3. Aplicar de verdade:
+npm run setup-auth
+```
+
+O script é **idempotente** — pode rodar quantas vezes quiser. Aplica:
+- HTML body + subject pra cada flow (confirmation, recovery, magic_link,
+  email_change, invite).
+- `site_url = https://fligth.vercel.app`.
+- `uri_allow_list` com web + previews + localhost + `capitaolori://callback`
+  (Capacitor native deep link).
+- `mailer_autoconfirm = false` (exige confirmação por email).
+- `mailer_secure_email_change_enabled = true` (confirmação dupla).
+- `password_min_length = 6` (sincroniza com a validação do form).
+- `mailer_otp_exp = 3600` (1h — bate com a copy nos templates).
+
+Para customizar os templates, edite os HTMLs em `supabase/templates/` e
+rode `npm run setup-auth` novamente.
+
+> Por que via script e não via Supabase MCP? O MCP atualmente expõe
+> `execute_sql` + `apply_migration` mas não a Management API. Email
+> templates e providers OAuth são configurados via Management API HTTP
+> endpoints (`PATCH /v1/projects/{ref}/config/auth`), então o script é
+> a forma programática de fazer isso.
+
+---
+
+## Detalhes por método de login
 
 Este projeto suporta três caminhos de login:
 

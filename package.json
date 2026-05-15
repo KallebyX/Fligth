@@ -12,6 +12,8 @@
     "seed": "tsx scripts/seed.ts",
     "test": "vitest run",
     "icons": "node scripts/gen-icons.mjs",
+    "setup-auth": "node scripts/setup-auth.mjs",
+    "setup-auth:dry": "node scripts/setup-auth.mjs --dry-run",
     "mobile:assets": "npx @capacitor/assets generate --iconBackgroundColor '#0EA5E9' --iconBackgroundColorDark '#0EA5E9' --splashBackgroundColor '#0EA5E9' --splashBackgroundColorDark '#0EA5E9'",
     "mobile:sync": "npx cap sync",
     "mobile:open:ios": "npx cap open ios",
