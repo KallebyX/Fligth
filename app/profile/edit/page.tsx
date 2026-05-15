@@ -9,6 +9,7 @@ import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { loadOutfits } from "@/lib/outfits/catalog";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
+import { computeProStatus } from "@/lib/pro";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export default async function EditProfilePage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: owned }, catalog, notifPrefs] = await Promise.all([
+  const [{ data: profile }, { data: owned }, catalog, notifPrefs, { data: stats }] = await Promise.all([
     supabase
       .from("profiles")
       .select(
@@ -30,7 +31,10 @@ export default async function EditProfilePage() {
     supabase.from("user_outfits").select("outfit_slug").eq("user_id", user.id),
     loadOutfits(),
     getNotificationPrefs(),
+    supabase.from("user_stats").select("pro_until, pro_plan").eq("user_id", user.id).single(),
   ]);
+
+  const proStatus = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
 
   const ownedSet = new Set((owned ?? []).map((o) => o.outfit_slug));
   const items: CatalogOutfit[] = catalog
@@ -90,7 +94,7 @@ export default async function EditProfilePage() {
 
       <NotificationPrefsSection initial={notifPrefs} />
 
-      <SecuritySection email={user.email ?? null} />
+      <SecuritySection email={user.email ?? null} isPro={proStatus.isPro} />
     </main>
   );
 }

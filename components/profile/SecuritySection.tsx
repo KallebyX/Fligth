@@ -11,6 +11,7 @@ import {
 } from "@/components/auth/BiometricGate";
 import {
   Bell,
+  Crown,
   Fingerprint,
   KeyRound,
   LogOut,
@@ -27,7 +28,13 @@ import { NATIVE_IAP_ENABLED } from "@/lib/platform";
 type BiometricState = "unsupported" | "off" | "on";
 type PushState = "unsupported" | "denied" | "off" | "on";
 
-export function SecuritySection({ email }: { email: string | null }) {
+export function SecuritySection({
+  email,
+  isPro = false,
+}: {
+  email: string | null;
+  isPro?: boolean;
+}) {
   const router = useRouter();
   const [bio, setBio] = useState<BiometricState | null>(null);
   const [push, setPush] = useState<PushState | null>(null);
@@ -256,6 +263,22 @@ export function SecuritySection({ email }: { email: string | null }) {
             Mudar
           </Button>
         </Row>
+
+        {isPro && (
+          <Row
+            icon={<Crown size={18} />}
+            label="Gerenciar assinatura Pro"
+            description="Ver próxima cobrança, trocar de plano ou cancelar a qualquer momento."
+          >
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => router.push("/pro/manage")}
+            >
+              Abrir
+            </Button>
+          </Row>
+        )}
 
         {showRestore && (
           <Row
