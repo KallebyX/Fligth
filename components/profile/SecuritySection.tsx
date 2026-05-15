@@ -16,12 +16,14 @@ import {
   KeyRound,
   LogOut,
   Loader2,
+  Mail,
   RotateCcw,
   Trash2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { registerPushToken, revokePushToken } from "@/app/actions/pushToken";
 import { DeleteAccountDialog } from "@/components/profile/DeleteAccountDialog";
+import { EmailChangeDialog } from "@/components/profile/EmailChangeDialog";
 import { restoreNativePurchases } from "@/lib/revenuecat";
 import { NATIVE_IAP_ENABLED } from "@/lib/platform";
 
@@ -44,6 +46,7 @@ export function SecuritySection({
   const [error, setError] = useState<string | null>(null);
   const [signingOut, setSigningOut] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [showEmailChange, setShowEmailChange] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [restoreMsg, setRestoreMsg] = useState<string | null>(null);
 
@@ -251,6 +254,20 @@ export function SecuritySection({
         )}
 
         <Row
+          icon={<Mail size={18} />}
+          label="Mudar email"
+          description="Confirmação dupla — você precisa clicar no link enviado pros dois endereços."
+        >
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowEmailChange(true)}
+          >
+            Mudar
+          </Button>
+        </Row>
+
+        <Row
           icon={<KeyRound size={18} />}
           label="Trocar senha"
           description="Te enviamos um link por email para criar uma nova senha."
@@ -344,6 +361,12 @@ export function SecuritySection({
       <DeleteAccountDialog
         open={showDelete}
         onClose={() => setShowDelete(false)}
+      />
+
+      <EmailChangeDialog
+        open={showEmailChange}
+        currentEmail={email}
+        onClose={() => setShowEmailChange(false)}
       />
     </Card>
   );
