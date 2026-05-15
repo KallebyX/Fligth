@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Mascot } from "@/components/mascot/Mascot";
 import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { createClient } from "@/lib/supabase/client";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, MailCheck } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -16,13 +16,14 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [sentTo, setSentTo] = useState<string | null>(null);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: { emailRedirectTo: `${location.origin}/callback?next=/onboarding` },
@@ -32,8 +33,52 @@ export default function SignupPage() {
       setError(error.message);
       return;
     }
-    router.push("/onboarding");
-    router.refresh();
+    // If Supabase email confirmation is enabled (default), the user must
+    // click the link before getting a session. Show a confirmation screen.
+    // If confirmation is OFF, `data.session` is present and we route straight.
+    if (data.session) {
+      router.push("/onboarding");
+      router.refresh();
+      return;
+    }
+    setSentTo(email);
+  }
+
+  if (sentTo) {
+    return (
+      <main className="container flex min-h-[100dvh] flex-col items-center justify-center px-4 py-10">
+        <div className="w-full max-w-md text-center">
+          <div className="mx-auto rounded-full bg-grass/10 p-2 ring-4 ring-grass/20">
+            <Mascot state="celebrate" size={128} />
+          </div>
+          <h1 className="mt-4 text-3xl font-black tracking-tight">Confirme seu email</h1>
+          <p className="mt-2 text-sm text-ink/65">
+            Enviamos um link de ativação para{" "}
+            <strong className="text-ink">{sentTo}</strong>. Abra o email e
+            clique no botão para entrar na conta.
+          </p>
+
+          <div className="card-pop mt-5 flex items-start gap-3 p-4 text-left text-sm">
+            <MailCheck size={20} className="mt-0.5 shrink-0 text-grass" />
+            <div>
+              <p className="font-bold text-ink">Não chegou em 1 minuto?</p>
+              <p className="mt-0.5 text-ink/65">
+                Verifique a pasta de spam ou tente outro endereço.
+              </p>
+            </div>
+          </div>
+
+          <Button
+            size="lg"
+            variant="outline"
+            className="mt-4 w-full"
+            onClick={() => setSentTo(null)}
+          >
+            Usar outro email
+          </Button>
+        </div>
+      </main>
+    );
   }
 
   return (
