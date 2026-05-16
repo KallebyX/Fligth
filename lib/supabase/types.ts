@@ -270,6 +270,44 @@ export type Database = {
         payload: Json;
         created_at: string;
       }>;
+      gallery_posts: Tbl<{
+        id: string;
+        user_id: string;
+        image_url: string;
+        thumbnail_url: string;
+        caption: string | null;
+        aircraft_model: string | null;
+        location: string | null;
+        taken_at: string | null;
+        status: "pending" | "approved" | "rejected";
+        rejection_reason: string | null;
+        moderator_id: string | null;
+        moderated_at: string | null;
+        likes_count: number;
+        comments_count: number;
+        created_at: string;
+      }>;
+      gallery_likes: Tbl<{
+        user_id: string;
+        post_id: string;
+        created_at: string;
+      }>;
+      gallery_comments: Tbl<{
+        id: string;
+        post_id: string;
+        user_id: string;
+        body: string;
+        created_at: string;
+      }>;
+      gallery_reports: Tbl<{
+        id: string;
+        post_id: string;
+        reporter_id: string;
+        reason: "inappropriate" | "spam" | "irrelevant" | "other";
+        details: string | null;
+        status: "pending" | "resolved";
+        created_at: string;
+      }>;
     };
     Views: {
       questions_public: View<{
