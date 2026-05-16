@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Settings } from "lucide-react";
 import { EditProfileForm } from "@/components/profile/EditProfileForm";
 import { OutfitPicker, type CatalogOutfit } from "@/components/mascot/OutfitPicker";
 import { SecuritySection } from "@/components/profile/SecuritySection";
@@ -79,11 +79,20 @@ export default async function EditProfilePage() {
         Voltar
       </Link>
 
-      <header>
-        <h1 className="text-3xl font-black">Editar perfil</h1>
-        <p className="text-sm text-ink/60">
-          Personalize como o mundo vê o piloto.
-        </p>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-black">Editar perfil</h1>
+          <p className="text-sm text-ink/60">
+            Personalize como o mundo vê o piloto.
+          </p>
+        </div>
+        <Link
+          href="/configuracoes"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-2xl border-2 border-cloud-deep bg-white px-3 py-2 text-xs font-extrabold text-ink hover:bg-cloud/40"
+        >
+          <Settings size={14} />
+          Configurações
+        </Link>
       </header>
 
       <CompletionMeter
