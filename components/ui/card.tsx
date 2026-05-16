@@ -9,9 +9,9 @@ export const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDi
 Card.displayName = "Card";
 
 export const CardTitle = ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
-  <h3 className={cn("text-xl font-extrabold text-ink", className)} {...props} />
+  <h3 className={cn("text-xl font-extrabold text-ink dark:text-cloud", className)} {...props} />
 );
 
 export const CardDesc = ({ className, ...props }: React.HTMLAttributes<HTMLParagraphElement>) => (
-  <p className={cn("text-sm text-ink/70 leading-relaxed", className)} {...props} />
+  <p className={cn("text-sm leading-relaxed text-ink/70 dark:text-cloud/70", className)} {...props} />
 );

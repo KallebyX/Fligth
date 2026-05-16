@@ -66,7 +66,7 @@ export default async function SettingsPage() {
       <main className="container max-w-2xl space-y-6 py-6">
         <Link
           href="/profile"
-          className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink"
+          className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink dark:text-cloud/60 dark:hover:text-cloud"
         >
           <ChevronLeft size={16} />
           Voltar
@@ -224,12 +224,12 @@ function SectionHeader({
 }) {
   return (
     <div className="flex items-start gap-2 pt-2">
-      <span className="mt-0.5 text-ink/60">{icon}</span>
+      <span className="mt-0.5 text-ink/60 dark:text-cloud/60">{icon}</span>
       <div>
-        <h2 className="text-xs font-extrabold uppercase tracking-widest text-ink/65">
+        <h2 className="text-xs font-extrabold uppercase tracking-widest text-ink/65 dark:text-cloud/65">
           {title}
         </h2>
-        <p className="text-xs text-ink/50">{description}</p>
+        <p className="text-xs text-ink/50 dark:text-cloud/50">{description}</p>
       </div>
     </div>
   );

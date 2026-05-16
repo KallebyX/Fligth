@@ -36,15 +36,15 @@ export function PrivacySection({
         atividades pelo @username.
       </CardDesc>
 
-      <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-2xl bg-cloud/60 p-3 hover:bg-cloud-deep/30">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-ink/70 ring-1 ring-cloud-deep/40">
+      <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-2xl bg-cloud/60 p-3 hover:bg-cloud-deep/30 dark:bg-ink-deep/40 dark:hover:bg-ink-deep/60">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-ink/70 ring-1 ring-cloud-deep/40 dark:bg-ink-mid dark:text-cloud/70 dark:ring-ink-light/60">
           {isPublic ? <Eye size={18} /> : <EyeOff size={18} />}
         </span>
         <div className="flex-1">
-          <p className="text-sm font-extrabold text-ink">
+          <p className="text-sm font-extrabold text-ink dark:text-cloud">
             {isPublic ? "Perfil visível para todos" : "Perfil privado"}
           </p>
-          <p className="mt-0.5 text-xs leading-snug text-ink/65">
+          <p className="mt-0.5 text-xs leading-snug text-ink/65 dark:text-cloud/65">
             {isPublic
               ? "Qualquer usuário logado pode achar seu perfil pelo @ e seguir você."
               : "Seu perfil não aparece em buscas nem rankings. Só você consegue ver."}
@@ -58,7 +58,7 @@ export function PrivacySection({
           disabled={busy}
           className={cn(
             "relative h-6 w-11 shrink-0 rounded-full transition-colors",
-            isPublic ? "bg-sky" : "bg-cloud-deep/60",
+            isPublic ? "bg-sky" : "bg-cloud-deep/60 dark:bg-ink-light/60",
             busy && "cursor-not-allowed",
           )}
           style={{ WebkitTapHighlightColor: "transparent" }}

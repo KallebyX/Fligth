@@ -126,7 +126,7 @@ function Section({
 }) {
   return (
     <div>
-      <h3 className="mb-1.5 flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-widest text-ink/55">
+      <h3 className="mb-1.5 flex items-center gap-2 text-[11px] font-extrabold uppercase tracking-widest text-ink/55 dark:text-cloud/55">
         {icon}
         {title}
       </h3>
@@ -151,14 +151,14 @@ function PrefRow({
   return (
     <label
       className={cn(
-        "flex cursor-pointer items-start gap-3 rounded-2xl bg-cloud/60 p-3 transition-colors",
-        "hover:bg-cloud-deep/30",
+        "flex cursor-pointer items-start gap-3 rounded-2xl bg-cloud/60 p-3 transition-colors dark:bg-ink-deep/40",
+        "hover:bg-cloud-deep/30 dark:hover:bg-ink-deep/60",
         busy && "opacity-60",
       )}
     >
       <div className="flex-1">
-        <p className="text-sm font-extrabold text-ink">{label}</p>
-        <p className="mt-0.5 text-xs leading-snug text-ink/65">{description}</p>
+        <p className="text-sm font-extrabold text-ink dark:text-cloud">{label}</p>
+        <p className="mt-0.5 text-xs leading-snug text-ink/65 dark:text-cloud/65">{description}</p>
       </div>
       <button
         type="button"
@@ -168,7 +168,7 @@ function PrefRow({
         disabled={busy}
         className={cn(
           "relative h-6 w-11 shrink-0 rounded-full transition-colors",
-          value ? "bg-sky" : "bg-cloud-deep/60",
+          value ? "bg-sky" : "bg-cloud-deep/60 dark:bg-ink-light/60",
           busy && "cursor-not-allowed",
         )}
         style={{ WebkitTapHighlightColor: "transparent" }}

@@ -384,13 +384,13 @@ function Row({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-start gap-3 rounded-2xl bg-cloud/60 p-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-ink/70 ring-1 ring-cloud-deep/40">
+    <div className="flex items-start gap-3 rounded-2xl bg-cloud/60 p-3 dark:bg-ink-deep/40">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-ink/70 ring-1 ring-cloud-deep/40 dark:bg-ink-mid dark:text-cloud/70 dark:ring-ink-light/60">
         {icon}
       </span>
       <div className="flex-1">
-        <p className="text-sm font-extrabold text-ink">{label}</p>
-        <p className="mt-0.5 text-xs leading-snug text-ink/65">{description}</p>
+        <p className="text-sm font-extrabold text-ink dark:text-cloud">{label}</p>
+        <p className="mt-0.5 text-xs leading-snug text-ink/65 dark:text-cloud/65">{description}</p>
       </div>
       <div className="shrink-0">{children}</div>
     </div>
