@@ -1,8 +1,11 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardTitle, CardDesc } from "@/components/ui/card";
+import Link from "next/link";
 import {
   BookOpen,
+  Building2,
+  Camera,
   HelpCircle,
   Layers,
   ShieldAlert,
@@ -81,6 +84,33 @@ export default async function AdminPage() {
         <Stat icon={<HelpCircle size={18} />} tint="bg-gold/20 text-gold" label="Questões" value={questionsCount} />
         <Stat icon={<Users size={18} />} tint="bg-alert/15 text-alert" label="Usuários" value={usersCount} />
         <Stat icon={<Trophy size={18} />} tint="bg-ink/10 text-ink" label="Em liga" value={leagueMembers} />
+      </section>
+
+      <section className="grid gap-3 sm:grid-cols-2">
+        <Link
+          href="/admin/gallery/queue"
+          className="card-pop flex items-center gap-3 p-4 hover:bg-cloud/40"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky/15 text-sky-deep">
+            <Camera size={20} />
+          </span>
+          <div className="flex-1">
+            <p className="font-black">Moderar galeria</p>
+            <p className="text-xs text-ink/60">Aprovar ou rejeitar fotos pendentes</p>
+          </div>
+        </Link>
+        <Link
+          href="/admin/escolas"
+          className="card-pop flex items-center gap-3 p-4 hover:bg-cloud/40"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-grass/15 text-grass-deep">
+            <Building2 size={20} />
+          </span>
+          <div className="flex-1">
+            <p className="font-black">Escolas</p>
+            <p className="text-xs text-ink/60">Cadastrar e editar escolas afiliadas</p>
+          </div>
+        </Link>
       </section>
 
       <Card>
