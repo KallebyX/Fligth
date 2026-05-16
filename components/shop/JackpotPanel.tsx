@@ -2,11 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Crown, Gem, Loader2 } from "lucide-react";
-import { useReducedMotion } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
-import { Mascot } from "@/components/mascot/Mascot";
+import { SpinningWheel } from "@/components/shop/SpinningWheel";
 import { spinJackpotAction } from "@/app/actions/outfits";
 import { impact, notify } from "@/lib/haptics";
 import { useSfx } from "@/components/learn/useSfx";
@@ -43,7 +41,8 @@ export function JackpotPanel({
     void impact("heavy");
     sfx.play("level-up");
     setError(null);
-    setSpinAngle((a) => a + 2160 + Math.floor(Math.random() * 360));
+    // Jackpot spins MORE rotations than the daily roulette for extra drama.
+    setSpinAngle((a) => a + 2520 + Math.floor(Math.random() * 360));
     start(async () => {
       const res = await spinJackpotAction();
       if (!res.ok) {
@@ -76,20 +75,18 @@ export function JackpotPanel({
     router.refresh();
   }
 
-  const reducedMotion = useReducedMotion();
-
   return (
     <>
       <div className="card-pop overflow-hidden bg-gradient-to-br from-gold/15 to-sun/15">
         <div className="grid gap-4 p-5 sm:grid-cols-[auto,1fr] sm:items-center">
           <div className="flex justify-center">
-            <motion.div
-              animate={reducedMotion ? {} : { rotate: spinAngle }}
-              transition={{ duration: 1.8, ease: [0.2, 0.8, 0.2, 1] }}
-              className="rounded-full bg-gradient-to-br from-gold/40 to-sun/40 p-4"
-            >
-              <Mascot state="celebrate" size={120} outfit="diamante-jacket" />
-            </motion.div>
+            <SpinningWheel
+              variant="jackpot"
+              spinAngle={spinAngle}
+              spinning={spinning}
+              outfit="diamante-jacket"
+              size={200}
+            />
           </div>
           <div>
             <p className="inline-flex items-center gap-1 rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-gold">

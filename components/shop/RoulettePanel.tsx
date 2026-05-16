@@ -2,10 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Mascot } from "@/components/mascot/Mascot";
+import { SpinningWheel } from "@/components/shop/SpinningWheel";
 import { spinRouletteAction } from "@/app/actions/outfits";
 import { impact, notify } from "@/lib/haptics";
 import { useSfx } from "@/components/learn/useSfx";
@@ -36,7 +35,8 @@ export function RoulettePanel({
     void impact("medium");
     sfx.play("tap");
     setError(null);
-    setSpinAngle((a) => a + 1440 + Math.floor(Math.random() * 360));
+    // Multiple full rotations + random landing angle for visual drama.
+    setSpinAngle((a) => a + 1800 + Math.floor(Math.random() * 360));
     start(async () => {
       const res = await spinRouletteAction();
       if (!res.ok) {
@@ -73,13 +73,13 @@ export function RoulettePanel({
       <div className="card-pop overflow-hidden">
         <div className="grid gap-4 p-5 sm:grid-cols-[auto,1fr] sm:items-center">
           <div className="flex justify-center">
-            <motion.div
-              animate={{ rotate: spinAngle }}
-              transition={{ duration: 1.4, ease: [0.2, 0.8, 0.2, 1] }}
-              className="rounded-full bg-gradient-to-br from-sky/30 to-sun/30 p-4"
-            >
-              <Mascot state="happy" size={120} outfit="sunset-shades" />
-            </motion.div>
+            <SpinningWheel
+              variant="roulette"
+              spinAngle={spinAngle}
+              spinning={spinning}
+              outfit="sunset-shades"
+              size={180}
+            />
           </div>
           <div>
             <p className="inline-flex items-center gap-1 rounded-full bg-grass/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-grass-deep">

@@ -7,8 +7,11 @@ import { NativeOAuthListener } from "@/components/auth/NativeOAuthListener";
 
 const nunito = Nunito({
   subsets: ["latin"],
-  weight: ["400", "600", "700", "800", "900"],
+  // 500 (medium) added for labels & secondary text where 400 is too thin
+  // and 600 too heavy. Matches Apple/SF Pro's hierarchy.
+  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-nunito",
+  display: "swap",
 });
 
 export const metadata: Metadata = {

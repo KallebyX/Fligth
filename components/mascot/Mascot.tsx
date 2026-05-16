@@ -4,7 +4,14 @@ import { motion, type TargetAndTransition, type Transition } from "framer-motion
 import { MascotOutfit } from "@/components/mascot/outfits";
 import { useReducedMotion } from "@/lib/motion";
 
-export type MascotState = "idle" | "happy" | "sad" | "celebrate" | "sleeping";
+export type MascotState =
+  | "idle"
+  | "happy"
+  | "sad"
+  | "celebrate"
+  | "sleeping"
+  | "confused"
+  | "thinking";
 
 const animations: Record<MascotState, TargetAndTransition> = {
   idle: {
@@ -16,9 +23,21 @@ const animations: Record<MascotState, TargetAndTransition> = {
   celebrate: {
     scale: [1, 1.12, 1],
     rotate: [0, 10, -10, 0],
-    transition: { duration: 0.9 },
+    y: [0, -10, 0],
+    transition: { duration: 0.9, ease: "easeOut" },
   },
   sleeping: { rotate: 0 },
+  // Confused: slow side-to-side head tilt, like "huh?"
+  confused: {
+    rotate: [0, -5, 5, -3, 0],
+    y: [0, -1, 0],
+    transition: { duration: 2.4, repeat: Infinity, ease: "easeInOut" },
+  },
+  // Thinking: slow steady bob; paired with a "..." bubble visually if desired.
+  thinking: {
+    y: [0, -2, 0],
+    transition: { duration: 2.6, repeat: Infinity, ease: "easeInOut" },
+  },
 };
 
 // Natural blink: long open, quick close, long open again.
@@ -53,6 +72,8 @@ export function Mascot({
   const isHappy = state === "happy" || state === "celebrate";
   const isSad = state === "sad";
   const isSleeping = state === "sleeping";
+  const isConfused = state === "confused";
+  const isThinking = state === "thinking";
   const reducedMotion = useReducedMotion();
 
   // Default outfit so users without an equipped slug still get the cap+goggles.
@@ -100,7 +121,42 @@ export function Mascot({
         </>
       )}
 
-      {/* Eyes with natural blink (skipped on sad/sleeping where eyes are static). */}
+      {/* Thought bubble for thinking state */}
+      {isThinking && !reducedMotion && (
+        <motion.g
+          initial={{ opacity: 0 }}
+          animate={{ opacity: [0, 1, 1, 1, 0] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <circle cx="92" cy="20" r="6" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.5" />
+          <circle cx="100" cy="14" r="3" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="1.2" />
+          <circle cx="90" cy="14" r="0.9" fill="#0F172A" />
+          <circle cx="94" cy="20" r="0.9" fill="#0F172A" />
+          <circle cx="92" cy="24" r="0.9" fill="#0F172A" />
+        </motion.g>
+      )}
+
+      {/* Confused: question mark hovering over head */}
+      {isConfused && !reducedMotion && (
+        <motion.g
+          animate={{ y: [0, -3, 0], rotate: [-6, 6, -6] }}
+          transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <text
+            x="90"
+            y="22"
+            fontSize="22"
+            fontWeight="900"
+            fill="#F97316"
+            stroke="#9A3412"
+            strokeWidth="0.7"
+          >
+            ?
+          </text>
+        </motion.g>
+      )}
+
+      {/* Eyes — varied by state */}
       {isSleeping ? (
         <g>
           <circle cx="48" cy="46" r="9" fill="#FFFFFF" />
@@ -114,6 +170,26 @@ export function Mascot({
           <circle cx="72" cy="46" r="9" fill="#FFFFFF" />
           <circle cx="48" cy="48" r="3.5" fill="#0F172A" />
           <circle cx="72" cy="48" r="3.5" fill="#0F172A" />
+        </g>
+      ) : isConfused ? (
+        // One eye looks up-left, one looks straight — "wait, what?"
+        <g>
+          <circle cx="48" cy="46" r="9" fill="#FFFFFF" />
+          <circle cx="72" cy="46" r="9" fill="#FFFFFF" />
+          <circle cx="45" cy="44" r="3.5" fill="#0F172A" />
+          <circle cx="72" cy="46" r="3.5" fill="#0F172A" />
+          <circle cx="46" cy="42.5" r="1.1" fill="#FFFFFF" />
+          <circle cx="73" cy="44.5" r="1.1" fill="#FFFFFF" />
+        </g>
+      ) : isThinking ? (
+        // Both eyes look up to the side, mascot pondering
+        <g>
+          <circle cx="48" cy="46" r="9" fill="#FFFFFF" />
+          <circle cx="72" cy="46" r="9" fill="#FFFFFF" />
+          <circle cx="51" cy="43" r="3.5" fill="#0F172A" />
+          <circle cx="75" cy="43" r="3.5" fill="#0F172A" />
+          <circle cx="52" cy="41.5" r="1.1" fill="#FFFFFF" />
+          <circle cx="76" cy="41.5" r="1.1" fill="#FFFFFF" />
         </g>
       ) : (
         <>
@@ -138,7 +214,7 @@ export function Mascot({
         </>
       )}
 
-      {/* Beak */}
+      {/* Beak — happy / sad / pursed for confused / neutral */}
       {isHappy ? (
         <>
           {/* Open beak / smile */}
@@ -162,6 +238,23 @@ export function Mascot({
           fill="#F97316"
           stroke="#9A3412"
           strokeWidth="1"
+        />
+      ) : isConfused ? (
+        // Slightly off-center half-open beak — "uh…"
+        <path
+          d="M53 62 Q60 68 66 62 Q60 65 53 62 Z"
+          fill="#F97316"
+          stroke="#9A3412"
+          strokeWidth="1"
+        />
+      ) : isThinking ? (
+        // Tight pursed beak — concentrating
+        <path
+          d="M55 62 L65 62"
+          stroke="#9A3412"
+          strokeWidth="2.5"
+          fill="none"
+          strokeLinecap="round"
         />
       ) : (
         <path

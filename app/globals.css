@@ -18,11 +18,24 @@
 
   body {
     @apply bg-cloud text-ink antialiased font-sans;
-    font-feature-settings: "cv11", "ss01";
+    /* cv11 = alternative single-story "a" + tighter "g"; ss01 = stylistic
+       set with rounded numerals. Both ship with Nunito and Inter. Falls
+       back gracefully on Apple system fonts. */
+    font-feature-settings: "cv11", "ss01", "kern";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   button {
     @apply select-none;
+  }
+
+  /* Bigger numbers in HUD chips should look TABULAR so they don't dance
+     while incrementing. Numerals with the same width — Duolingo trick. */
+  .tabular,
+  [data-tabular="true"] {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -33,5 +46,52 @@
 
   .card-pop {
     @apply rounded-2xl bg-white shadow-pop border border-cloud-deep/40;
+  }
+
+  /* A softer card style for layered/secondary surfaces — Apple-like depth
+     without the chunky bottom-pop. Use for modals, sheets, popovers. */
+  .card-soft {
+    @apply rounded-2xl bg-white shadow-soft ring-1 ring-cloud-deep/30;
+  }
+
+  /* Hairline divider — 1px in design, 0.5px on Retina via transform. */
+  .hairline {
+    @apply border-t border-cloud-deep/40;
+  }
+
+  /* Skeleton shimmer for loading states. */
+  .skeleton {
+    @apply animate-shimmer rounded-xl;
+    background: linear-gradient(
+      90deg,
+      rgba(203, 213, 225, 0.4) 0%,
+      rgba(203, 213, 225, 0.7) 50%,
+      rgba(203, 213, 225, 0.4) 100%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+@layer utilities {
+  /* Safe-area-aware padding helpers for iOS notch/home indicator. */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  /* Apple-style focus ring (only on keyboard navigation). */
+  .focus-ring {
+    @apply outline-none;
+  }
+  .focus-ring:focus-visible {
+    @apply ring-2 ring-sky ring-offset-2 ring-offset-cloud;
   }
 }
