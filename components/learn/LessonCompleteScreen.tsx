@@ -219,7 +219,7 @@ function Stat({
         </span>
         {label}
       </span>
-      <span className="text-2xl font-black text-ink">{value}</span>
+      <span className="text-2xl font-black tabular-nums text-ink">{value}</span>
     </motion.div>
   );
 }

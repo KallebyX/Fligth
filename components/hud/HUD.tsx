@@ -71,7 +71,7 @@ export async function HUD({
 
   return (
     <header
-      className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 backdrop-blur"
+      className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-white/75"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
       <div className="container flex min-h-14 items-center justify-between gap-2 px-3 py-1.5 sm:px-4 sm:py-2">

@@ -1,9 +1,10 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft, MapPin, Globe } from "lucide-react";
+import { ChevronLeft, MapPin } from "lucide-react";
 import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
 import { SchoolFilters } from "@/components/schools/SchoolFilters";
+import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
 import { computeHearts } from "@/lib/hearts";
 
@@ -89,13 +90,15 @@ export default async function SchoolsPage(props: {
         />
 
         {!schools || schools.length === 0 ? (
-          <div className="rounded-3xl border-2 border-dashed border-cloud-deep bg-white/60 p-10 text-center">
-            <Globe className="mx-auto mb-3 text-ink/30" size={48} />
-            <h2 className="text-lg font-black">Nenhuma escola encontrada</h2>
-            <p className="mt-1 text-sm text-ink/60">
-              Ajuste o filtro ou volte mais tarde — novas escolas chegam toda
-              semana.
-            </p>
+          <div className="card-soft flex flex-col items-center gap-4 p-10 text-center">
+            <Mascot state="confused" size={120} />
+            <div>
+              <h2 className="text-lg font-black">Nenhuma escola encontrada</h2>
+              <p className="mt-1 text-sm text-ink/60">
+                Ajuste o filtro ou volte mais tarde — novas escolas chegam toda
+                semana.
+              </p>
+            </div>
           </div>
         ) : (
           <ul className="space-y-3">

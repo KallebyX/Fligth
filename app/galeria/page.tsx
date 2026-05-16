@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
 import { GalleryFeed } from "@/components/gallery/GalleryFeed";
+import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
 import { computeHearts } from "@/lib/hearts";
 
@@ -90,23 +91,31 @@ export default async function GalleryFeedPage() {
         </header>
 
         {items.length === 0 ? (
-          <div className="rounded-3xl border-2 border-dashed border-cloud-deep bg-white/60 p-10 text-center">
-            <Camera size={48} className="mx-auto mb-3 text-ink/30" />
-            <h2 className="text-lg font-black">Galeria vazia</h2>
-            <p className="mt-1 text-sm text-ink/60">
-              Seja o primeiro a postar uma foto de avião!
-            </p>
-            <Link href="/galeria/novo" className="mt-4 inline-block">
-              <Button>
-                <ImagePlus size={16} />
-                Postar a primeira
-              </Button>
-            </Link>
-          </div>
+          <EmptyGallery />
         ) : (
           <GalleryFeed items={items} />
         )}
       </main>
     </AppShell>
+  );
+}
+
+function EmptyGallery() {
+  return (
+    <div className="card-soft flex flex-col items-center gap-4 p-10 text-center">
+      <Mascot state="thinking" size={120} />
+      <div>
+        <h2 className="text-lg font-black">Galeria ainda vazia</h2>
+        <p className="mt-1 text-sm text-ink/60">
+          Que tal você ser o primeiro a postar uma foto de avião?
+        </p>
+      </div>
+      <Link href="/galeria/novo">
+        <Button>
+          <ImagePlus size={16} />
+          Postar a primeira
+        </Button>
+      </Link>
+    </div>
   );
 }

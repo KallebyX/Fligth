@@ -2,8 +2,9 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { AlertTriangle, RotateCw } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Mascot } from "@/components/mascot/Mascot";
 
 export default function ProfileError({
   error,
@@ -21,18 +22,19 @@ export default function ProfileError({
 
   return (
     <main className="container max-w-md py-10">
-      <div className="card-pop space-y-4 p-6 text-center">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-alert/10 text-alert">
-          <AlertTriangle size={28} />
+      <div className="card-soft space-y-5 p-6 text-center">
+        <div className="mx-auto inline-flex items-center justify-center">
+          <Mascot state="confused" size={120} />
         </div>
         <div>
-          <h1 className="text-xl font-black">Não consegui carregar seu perfil</h1>
+          <h1 className="text-xl font-black">Hmm, algo deu errado</h1>
           <p className="mt-1 text-sm text-ink/60">
-            Algo deu errado ao buscar seus dados. Tente recarregar.
+            Não consegui carregar seu perfil. Pode ser sua sessão ou conexão —
+            tente recarregar.
           </p>
         </div>
         {error.digest && (
-          <p className="rounded-xl bg-cloud/60 px-3 py-2 font-mono text-[11px] text-ink/50">
+          <p className="rounded-xl bg-cloud/60 px-3 py-2 font-mono text-[11px] tabular-nums text-ink/50">
             Código: {error.digest}
           </p>
         )}
@@ -43,7 +45,7 @@ export default function ProfileError({
           </Button>
           <Link
             href="/learn"
-            className="inline-flex w-full items-center justify-center rounded-2xl border-2 border-cloud-deep bg-white px-4 py-3 text-sm font-extrabold text-ink hover:bg-cloud/40"
+            className="inline-flex w-full items-center justify-center rounded-2xl border-2 border-cloud-deep bg-white px-4 py-3 text-sm font-extrabold text-ink transition-colors hover:bg-cloud/40"
           >
             Voltar para aprender
           </Link>

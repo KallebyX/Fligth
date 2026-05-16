@@ -6,10 +6,10 @@ export function GemsBadge({ gems, href = "/shop/outfits" }: { gems: number; href
     <Link
       href={href}
       aria-label={`${gems} gems`}
-      className="inline-flex items-center gap-1 rounded-full bg-sky/10 px-2.5 py-1 text-xs font-extrabold text-sky-deep hover:bg-sky/15"
+      className="inline-flex items-center gap-1 rounded-full bg-sky/10 px-2.5 py-1 text-xs font-extrabold tabular-nums text-sky-deep transition-colors hover:bg-sky/15"
     >
       <Gem size={14} className="text-sky" />
-      {gems}
+      {gems.toLocaleString("pt-BR")}
     </Link>
   );
 }

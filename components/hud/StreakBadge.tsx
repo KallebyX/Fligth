@@ -21,11 +21,11 @@ export function StreakBadge({
         size={18}
         className={cn(active ? "fill-sun text-sun" : "text-cloud-deep")}
       />
-      <span className={cn("text-sm font-extrabold", active ? "text-ink" : "text-ink/50")}>
+      <span className={cn("text-sm font-extrabold tabular-nums", active ? "text-ink" : "text-ink/50")}>
         {days}
       </span>
       {freezes > 0 && (
-        <span className="ml-0.5 flex items-center gap-0.5 border-l border-cloud-deep/40 pl-1.5 text-xs font-extrabold text-sky-deep">
+        <span className="ml-0.5 flex items-center gap-0.5 border-l border-cloud-deep/40 pl-1.5 text-xs font-extrabold tabular-nums text-sky-deep">
           <Snowflake size={12} className="fill-sky-deep/30 text-sky-deep" />
           {freezes}
         </span>

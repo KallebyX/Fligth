@@ -10,7 +10,7 @@ export function HeartsBar({ hearts }: { hearts: number }) {
         aria-label={`${hearts} vidas restantes`}
       >
         <Heart size={16} className="fill-alert text-alert" />
-        <span className="text-sm font-extrabold text-ink">{hearts}</span>
+        <span className="text-sm font-extrabold tabular-nums text-ink">{hearts}</span>
       </div>
       {/* Full hearts row for sm+. */}
       <div

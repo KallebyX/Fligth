@@ -64,7 +64,7 @@ export function DeleteAccountDialog({
             animate={{ y: 0 }}
             exit={{ y: 40 }}
             transition={{ type: "spring", stiffness: 280, damping: 26 }}
-            className="w-full max-w-sm rounded-t-3xl bg-white px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-6 shadow-pop-lg sm:rounded-3xl sm:pb-6"
+            className="w-full max-w-sm rounded-t-[28px] bg-white px-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] pt-6 shadow-soft-lg ring-1 ring-cloud-deep/30 sm:rounded-[28px] sm:pb-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start gap-3">

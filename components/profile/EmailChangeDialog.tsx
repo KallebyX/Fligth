@@ -56,7 +56,7 @@ export function EmailChangeDialog({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-md rounded-3xl bg-white p-5 shadow-pop"
+        className="w-full max-w-md rounded-[28px] bg-white p-5 shadow-soft-lg ring-1 ring-cloud-deep/30"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3">
