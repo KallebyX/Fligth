@@ -16,6 +16,7 @@ import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
 import { NotificationPrefsSection } from "@/components/profile/NotificationPrefsSection";
 import { SoundHapticToggles } from "@/components/settings/SoundHapticToggles";
+import { SoundMixerSection } from "@/components/settings/SoundMixerSection";
 import { PrivacySection } from "@/components/settings/PrivacySection";
 import { computeHearts } from "@/lib/hearts";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
@@ -84,11 +85,12 @@ export default async function SettingsPage() {
         <SectionHeader
           icon={<Volume2 size={18} />}
           title="Som & vibração"
-          description="Vale só pra este dispositivo."
+          description="Mixer e atalhos. Vale só pra este dispositivo."
         />
         <Card>
           <SoundHapticToggles />
         </Card>
+        <SoundMixerSection />
 
         <SectionHeader
           icon={<Eye size={18} />}
