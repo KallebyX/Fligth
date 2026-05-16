@@ -8,6 +8,8 @@ import {
   Languages,
   User,
   Info,
+  Camera,
+  Building2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
@@ -131,6 +133,30 @@ export default async function SettingsPage() {
               <Button variant="outline">Abrir editor de perfil</Button>
             </Link>
           </div>
+        </Card>
+
+        <SectionHeader
+          icon={<Camera size={18} />}
+          title="Explorar"
+          description="Galeria da comunidade e escolas de aviação."
+        />
+        <Card>
+          <ul className="divide-y divide-cloud-deep/30 text-sm">
+            <li className="flex items-center justify-between py-2.5">
+              <Link href="/galeria" className="flex items-center gap-2 font-extrabold text-ink hover:text-sky">
+                <Camera size={14} className="text-ink/60" />
+                Galeria de aviões
+              </Link>
+              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+            </li>
+            <li className="flex items-center justify-between py-2.5">
+              <Link href="/escolas" className="flex items-center gap-2 font-extrabold text-ink hover:text-sky">
+                <Building2 size={14} className="text-ink/60" />
+                Escolas de aviação
+              </Link>
+              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+            </li>
+          </ul>
         </Card>
 
         <SectionHeader

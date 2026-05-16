@@ -308,6 +308,67 @@ export type Database = {
         status: "pending" | "resolved";
         created_at: string;
       }>;
+      schools: Tbl<{
+        id: string;
+        slug: string;
+        name: string;
+        legal_name: string | null;
+        cnpj: string | null;
+        description: string | null;
+        logo_url: string | null;
+        cover_url: string | null;
+        city: string;
+        state: string;
+        country: string;
+        address: string | null;
+        lat: number | null;
+        lng: number | null;
+        phone: string | null;
+        email: string;
+        website: string | null;
+        instagram: string | null;
+        whatsapp: string | null;
+        cursos: Json;
+        anac_codigo: string | null;
+        status: "active" | "suspended" | "inactive";
+        affiliate_active: boolean;
+        commission_pct: number | null;
+        featured: boolean;
+        featured_until: string | null;
+        created_at: string;
+        updated_at: string;
+      }>;
+      school_leads: Tbl<{
+        id: string;
+        school_id: string;
+        user_id: string | null;
+        name: string;
+        email: string;
+        phone: string;
+        course_interest: string | null;
+        message: string | null;
+        source: string | null;
+        utm_source: string | null;
+        utm_medium: string | null;
+        utm_campaign: string | null;
+        status: "new" | "contacted" | "qualified" | "converted" | "lost";
+        conversion_value: number | null;
+        converted_at: string | null;
+        notes: string | null;
+        consent_given: boolean;
+        ip_hash: string | null;
+        created_at: string;
+      }>;
+      school_lead_webhooks: Tbl<{
+        school_id: string;
+        webhook_url: string | null;
+        webhook_secret: string | null;
+        email_notify: string | null;
+        last_delivered_at: string | null;
+        last_status: number | null;
+        failure_count: number;
+        updated_at: string;
+      }>;
     };
     Views: {
       questions_public: View<{
