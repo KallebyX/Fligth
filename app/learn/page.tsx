@@ -8,6 +8,7 @@ import { HUD } from "@/components/hud/HUD";
 import { HeartsOutCard } from "@/components/hearts/HeartsOutCard";
 import { WelcomeBanner } from "@/components/learn/WelcomeBanner";
 import { StreakAtRiskCard } from "@/components/learn/StreakAtRiskCard";
+import { OnboardingCoach } from "@/components/onboarding/OnboardingCoach";
 import { Suspense } from "react";
 import { getDivision } from "@/lib/leagues/divisions";
 import { computeHearts } from "@/lib/hearts";
@@ -89,6 +90,7 @@ export default async function LearnPage({
 
   return (
     <>
+      <OnboardingCoach />
       <HUD
         xp={stats?.total_xp ?? 0}
         streak={stats?.current_streak ?? 0}

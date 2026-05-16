@@ -5,6 +5,7 @@ import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
 import { SchoolFilters } from "@/components/schools/SchoolFilters";
 import { Mascot } from "@/components/mascot/Mascot";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import { createClient } from "@/lib/supabase/server";
 import { computeHearts } from "@/lib/hearts";
 
@@ -66,18 +67,19 @@ export default async function SchoolsPage(props: {
         gems={stats?.gems ?? 0}
       />
 
+      <PullToRefresh className="relative">
       <main className="container max-w-3xl space-y-6 py-6">
         <Link
           href="/learn"
-          className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink"
+          className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink dark:text-cloud/60 dark:hover:text-cloud"
         >
           <ChevronLeft size={16} />
           Voltar
         </Link>
 
         <header>
-          <h1 className="text-3xl font-black">Escolas de aviação</h1>
-          <p className="text-sm text-ink/60">
+          <h1 className="text-3xl font-black dark:text-cloud">Escolas de aviação</h1>
+          <p className="text-sm text-ink/60 dark:text-cloud/60">
             Encontre uma escola próxima e fale direto com elas. Pesquisa por
             estado, cidade ou curso.
           </p>
@@ -166,6 +168,7 @@ export default async function SchoolsPage(props: {
           </ul>
         )}
       </main>
+      </PullToRefresh>
     </AppShell>
   );
 }

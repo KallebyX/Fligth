@@ -6,6 +6,7 @@ import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
 import { GalleryFeed } from "@/components/gallery/GalleryFeed";
 import { Mascot } from "@/components/mascot/Mascot";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import { createClient } from "@/lib/supabase/server";
 import { computeHearts } from "@/lib/hearts";
 
@@ -66,36 +67,38 @@ export default async function GalleryFeedPage() {
         gems={stats?.gems ?? 0}
       />
 
-      <main className="container max-w-2xl space-y-6 py-6">
-        <header className="flex items-end justify-between gap-3">
-          <div>
-            <h1 className="text-3xl font-black">Galeria</h1>
-            <p className="text-sm text-ink/60">
-              Fotos de aviões compartilhadas pela comunidade.
-            </p>
-          </div>
-          <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-            <Link href="/galeria/meus">
-              <Button variant="outline" size="sm">
-                <Camera size={14} />
-                Meus posts
-              </Button>
-            </Link>
-            <Link href="/galeria/novo">
-              <Button size="sm">
-                <ImagePlus size={14} />
-                Postar foto
-              </Button>
-            </Link>
-          </div>
-        </header>
+      <PullToRefresh className="relative">
+        <main className="container max-w-2xl space-y-6 py-6">
+          <header className="flex items-end justify-between gap-3">
+            <div>
+              <h1 className="text-3xl font-black dark:text-cloud">Galeria</h1>
+              <p className="text-sm text-ink/60 dark:text-cloud/60">
+                Fotos de aviões compartilhadas pela comunidade.
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+              <Link href="/galeria/meus">
+                <Button variant="outline" size="sm">
+                  <Camera size={14} />
+                  Meus posts
+                </Button>
+              </Link>
+              <Link href="/galeria/novo">
+                <Button size="sm">
+                  <ImagePlus size={14} />
+                  Postar foto
+                </Button>
+              </Link>
+            </div>
+          </header>
 
-        {items.length === 0 ? (
-          <EmptyGallery />
-        ) : (
-          <GalleryFeed items={items} />
-        )}
-      </main>
+          {items.length === 0 ? (
+            <EmptyGallery />
+          ) : (
+            <GalleryFeed items={items} />
+          )}
+        </main>
+      </PullToRefresh>
     </AppShell>
   );
 }
