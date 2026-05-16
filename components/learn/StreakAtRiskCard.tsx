@@ -3,7 +3,7 @@
 import { useState, useTransition } from "react";
 import { Flame, Snowflake } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useStreakFreeze } from "@/app/actions/useStreakFreeze";
+import { redeemStreakFreeze } from "@/app/actions/streakFreeze";
 
 export function StreakAtRiskCard({
   streak,
@@ -19,7 +19,7 @@ export function StreakAtRiskCard({
   function onUseFreeze() {
     setError(null);
     startTransition(async () => {
-      const result = await useStreakFreeze();
+      const result = await redeemStreakFreeze();
       if (result.ok) {
         setUsed(true);
       } else {

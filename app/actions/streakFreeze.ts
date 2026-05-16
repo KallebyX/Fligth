@@ -7,7 +7,7 @@ export type UseFreezeResult =
   | { ok: true; freezesLeft: number; current_streak: number }
   | { ok: false; error: string };
 
-export async function useStreakFreeze(): Promise<UseFreezeResult> {
+export async function redeemStreakFreeze(): Promise<UseFreezeResult> {
   const supabase = await createClient();
   const {
     data: { user },
