@@ -4,6 +4,7 @@ import "./globals.css";
 import { PwaRegister } from "@/components/pwa-register";
 import { BiometricGate } from "@/components/auth/BiometricGate";
 import { NativeOAuthListener } from "@/components/auth/NativeOAuthListener";
+import { ThemeProvider, NO_FLASH_SCRIPT } from "@/components/theme/ThemeProvider";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -75,11 +76,19 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={nunito.variable}>
-      <body className="min-h-screen bg-cloud font-sans text-ink antialiased">
-        <BiometricGate>{children}</BiometricGate>
-        <NativeOAuthListener />
-        <PwaRegister />
+    <html lang="pt-BR" className={nunito.variable} suppressHydrationWarning>
+      <head>
+        {/* Inline script runs before React hydrates and applies the
+            user's stored theme so the page never flashes white when
+            opening in dark mode. */}
+        <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
+      </head>
+      <body className="min-h-screen bg-cloud font-sans text-ink antialiased dark:bg-ink-deep dark:text-cloud">
+        <ThemeProvider>
+          <BiometricGate>{children}</BiometricGate>
+          <NativeOAuthListener />
+          <PwaRegister />
+        </ThemeProvider>
       </body>
     </html>
   );

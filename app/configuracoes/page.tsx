@@ -10,6 +10,7 @@ import {
   Info,
   Camera,
   Building2,
+  Palette,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,7 @@ import { NotificationPrefsSection } from "@/components/profile/NotificationPrefs
 import { SoundHapticToggles } from "@/components/settings/SoundHapticToggles";
 import { SoundMixerSection } from "@/components/settings/SoundMixerSection";
 import { PrivacySection } from "@/components/settings/PrivacySection";
+import { ThemePicker } from "@/components/settings/ThemePicker";
 import { computeHearts } from "@/lib/hearts";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 
@@ -102,6 +104,22 @@ export default async function SettingsPage() {
         <PrivacySection
           initialProfilePublic={profile?.profile_public ?? true}
         />
+
+        <SectionHeader
+          icon={<Palette size={18} />}
+          title="Aparência"
+          description="Claro, escuro ou automático (segue o sistema)."
+        />
+        <Card>
+          <CardTitle>Tema</CardTitle>
+          <CardDesc>
+            A escolha vale neste dispositivo. &ldquo;Automático&rdquo; muda
+            sozinho ao anoitecer se seu sistema usar tema noturno.
+          </CardDesc>
+          <div className="mt-4">
+            <ThemePicker />
+          </div>
+        </Card>
 
         <SectionHeader
           icon={<Languages size={18} />}
