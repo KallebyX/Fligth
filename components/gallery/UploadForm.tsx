@@ -107,7 +107,7 @@ export function UploadForm({ userId }: { userId: string }) {
       if (mainUp.error) throw mainUp.error;
       if (thumbUp.error) throw thumbUp.error;
 
-      setProgress("Salvando post…");
+      setProgress("Verificando imagem…");
       startTransition(async () => {
         const res = await createGalleryPost({
           imagePath: mainPath,
@@ -118,13 +118,14 @@ export function UploadForm({ userId }: { userId: string }) {
         });
         setProgress(null);
         if (!res.ok) {
-          setError(
-            res.error === "rate_limited"
-              ? "Limite diário (3) atingido. Tente amanhã."
-              : res.error === "caption_too_long"
-                ? "Legenda muito longa (máx 280)."
-                : "Erro ao salvar: " + res.error,
-          );
+          const map: Record<string, string> = {
+            rate_limited: "Limite diário (3) atingido. Tente amanhã.",
+            caption_too_long: "Legenda muito longa (máx 280).",
+            nsfw_blocked:
+              "Esta foto não passou no filtro de conteúdo. Envie uma imagem aeronáutica.",
+            unauthenticated: "Sua sessão expirou. Faça login novamente.",
+          };
+          setError(map[res.error] ?? "Erro ao salvar: " + res.error);
           return;
         }
         setDone(true);

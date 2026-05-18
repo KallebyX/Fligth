@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { checkImageNSFW, NSFW_BLOCK_THRESHOLD } from "@/lib/nsfw/check";
 
 export type GalleryUploadInput = {
   imagePath: string;         // storage path under gallery/{user_id}/...
@@ -52,6 +53,15 @@ export async function createGalleryPost(
   const imageUrl = publicUrl(supabase, input.imagePath);
   const thumbnailUrl = publicUrl(supabase, input.thumbnailPath);
 
+  // Server-side NSFW gate. If the Edge Function is unavailable or the API
+  // key is unconfigured, `score` comes back null and we accept the upload —
+  // the human moderation queue is the fallback. Hard-block only when we
+  // have a numeric score at or above NSFW_BLOCK_THRESHOLD.
+  const nsfw = await checkImageNSFW(imageUrl);
+  if (nsfw.blocked) {
+    return { ok: false, error: "nsfw_blocked" };
+  }
+
   const { data: post, error } = await supabase
     .from("gallery_posts")
     .insert({
@@ -63,6 +73,8 @@ export async function createGalleryPost(
       location: input.location?.trim() || null,
       taken_at: input.takenAt ?? null,
       status: "pending",
+      nsfw_score: nsfw.score,
+      nsfw_checked_at: nsfw.score !== null ? new Date().toISOString() : null,
     })
     .select("id")
     .single();
@@ -75,6 +87,10 @@ export async function createGalleryPost(
   revalidatePath("/galeria/meus");
   return { ok: true, postId: post.id };
 }
+
+// Re-export so client code can render an appropriate UI message when the
+// score is borderline (not blocked but elevated — pending takes longer).
+export { NSFW_BLOCK_THRESHOLD };
 
 export type ToggleLikeResult =
   | { ok: true; liked: boolean; likesCount: number }

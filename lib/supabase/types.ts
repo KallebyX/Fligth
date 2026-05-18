@@ -286,6 +286,8 @@ export type Database = {
         likes_count: number;
         comments_count: number;
         created_at: string;
+        nsfw_score: number | null;
+        nsfw_checked_at: string | null;
       }>;
       gallery_likes: Tbl<{
         user_id: string;
