@@ -71,7 +71,7 @@ function PostCard({ item }: { item: GalleryItem }) {
     : null;
 
   return (
-    <li className="overflow-hidden rounded-3xl border-2 border-cloud-deep bg-white">
+    <li className="overflow-hidden rounded-3xl border-2 border-cloud-deep bg-white dark:border-ink-light dark:bg-ink-mid">
       <div className="flex items-center gap-3 p-3">
         {item.poster?.avatar_url ? (
           <Image
@@ -79,10 +79,10 @@ function PostCard({ item }: { item: GalleryItem }) {
             alt={posterName}
             width={36}
             height={36}
-            className="h-9 w-9 rounded-full object-cover ring-2 ring-cloud-deep"
+            className="h-9 w-9 rounded-full object-cover ring-2 ring-cloud-deep dark:ring-ink-light"
           />
         ) : (
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cloud font-extrabold text-ink/70 ring-2 ring-cloud-deep">
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-cloud font-extrabold text-ink/70 ring-2 ring-cloud-deep dark:bg-ink-deep/60 dark:text-cloud/70 dark:ring-ink-light">
             {posterName.slice(0, 1).toUpperCase()}
           </span>
         )}
@@ -92,13 +92,13 @@ function PostCard({ item }: { item: GalleryItem }) {
               {posterName}
             </Link>
           ) : (
-            <span className="text-sm font-extrabold">{posterName}</span>
+            <span className="text-sm font-extrabold text-ink dark:text-cloud">{posterName}</span>
           )}
-          <p className="text-[11px] text-ink/50">{formatRelativeTime(item.created_at)}</p>
+          <p className="text-[11px] text-ink/50 dark:text-cloud/50">{formatRelativeTime(item.created_at)}</p>
         </div>
       </div>
 
-      <div className="relative aspect-square w-full overflow-hidden bg-cloud">
+      <div className="relative aspect-square w-full overflow-hidden bg-cloud dark:bg-ink-deep">
         <Image
           src={item.image_url}
           alt={item.caption ?? `Foto de ${posterName}`}
@@ -121,22 +121,22 @@ function PostCard({ item }: { item: GalleryItem }) {
               "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-extrabold transition-colors",
               liked
                 ? "bg-alert/15 text-alert"
-                : "bg-cloud/60 text-ink/70 hover:bg-cloud-deep/40",
+                : "bg-cloud/60 text-ink/70 hover:bg-cloud-deep/40 dark:bg-ink-deep/60 dark:text-cloud/70 dark:hover:bg-ink-light/40",
             )}
           >
             <Heart size={16} className={cn(liked && "fill-alert")} />
             {count}
           </button>
           {(item.aircraft_model || item.location) && (
-            <div className="flex flex-wrap gap-2 text-[11px] font-bold text-ink/60">
+            <div className="flex flex-wrap gap-2 text-[11px] font-bold text-ink/60 dark:text-cloud/60">
               {item.aircraft_model && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5">
+                <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5 dark:bg-ink-deep/60">
                   <Plane size={11} />
                   {item.aircraft_model}
                 </span>
               )}
               {item.location && (
-                <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5">
+                <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5 dark:bg-ink-deep/60">
                   <MapPin size={11} />
                   {item.location}
                 </span>
@@ -145,7 +145,7 @@ function PostCard({ item }: { item: GalleryItem }) {
           )}
         </div>
         {item.caption && (
-          <p className="text-sm leading-snug">
+          <p className="text-sm leading-snug text-ink dark:text-cloud">
             {posterHref ? (
               <Link href={posterHref} className="mr-1.5 font-extrabold hover:text-sky">
                 {posterName}

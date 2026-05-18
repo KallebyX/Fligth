@@ -49,7 +49,7 @@ export function SchoolFilters({
         <div className="relative flex-1">
           <Search
             size={16}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/40"
+            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-ink/40 dark:text-cloud/40"
           />
           <Input
             value={q}
@@ -65,7 +65,7 @@ export function SchoolFilters({
                 pickUf(currentUf);
                 router.push(buildUrl({ q: null }));
               }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-ink/40 hover:text-ink"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-ink/40 hover:text-ink dark:text-cloud/40 dark:hover:text-cloud"
               aria-label="Limpar busca"
             >
               <X size={14} />
@@ -105,6 +105,6 @@ function chipCls(active: boolean): string {
     "rounded-full border-2 px-3 py-1 text-xs font-extrabold transition-colors",
     active
       ? "border-sky bg-sky text-white"
-      : "border-cloud-deep bg-white text-ink/70 hover:bg-cloud/50",
+      : "border-cloud-deep bg-white text-ink/70 hover:bg-cloud/50 dark:border-ink-light dark:bg-ink-mid dark:text-cloud/70 dark:hover:bg-ink-mid/70",
   ].join(" ");
 }

@@ -28,15 +28,15 @@ export function UserCard({ user }: { user: DiscoverUser }) {
           <Mascot state="idle" size={56} />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-base font-extrabold">
+          <p className="truncate text-base font-extrabold text-ink dark:text-cloud">
             {user.display_name ?? handle}
           </p>
-          <p className="truncate text-xs text-ink/60">
+          <p className="truncate text-xs text-ink/60 dark:text-cloud/60">
             @{handle}
             {user.current_league && (
               <>
                 <span className="mx-1.5">·</span>
-                <span className="font-bold uppercase tracking-wider text-ink/70">
+                <span className="font-bold uppercase tracking-wider text-ink/70 dark:text-cloud/70">
                   {LEAGUE_LABELS[user.current_league] ?? user.current_league}
                 </span>
               </>

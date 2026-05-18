@@ -29,7 +29,7 @@ export function UserSearch() {
   return (
     <div>
       <div className="relative">
-        <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink/40">
+        <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink/40 dark:text-cloud/40">
           {pending ? (
             <Loader2 size={18} className="animate-spin" />
           ) : (
@@ -44,12 +44,12 @@ export function UserSearch() {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Buscar pilotos por @ ou nome…"
-          className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-4 text-base font-medium outline-none focus:border-sky"
+          className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-4 text-base font-medium outline-none focus:border-sky dark:border-ink-light dark:bg-ink-mid dark:text-cloud dark:placeholder:text-cloud/40"
         />
       </div>
 
       {touched && q.trim().length >= 2 && results.length === 0 && !pending && (
-        <p className="mt-3 text-center text-sm text-ink/60">
+        <p className="mt-3 text-center text-sm text-ink/60 dark:text-cloud/60">
           Ninguém encontrado com esse @.
         </p>
       )}
