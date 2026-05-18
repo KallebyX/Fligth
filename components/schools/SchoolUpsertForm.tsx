@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { upsertSchool, type SchoolUpsertInput, type CursoInput } from "@/app/actions/adminSchools";
 import { UFS } from "@/lib/validators";
+import { toSlug } from "@/lib/slug";
 
 export type Initial = Partial<SchoolUpsertInput>;
 
@@ -37,15 +38,7 @@ export function SchoolUpsertForm({ initial }: { initial?: Initial }) {
 
   function autoSlug(value: string) {
     if (slug) return;
-    setSlug(
-      value
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "")
-        .slice(0, 80),
-    );
+    setSlug(toSlug(value));
   }
 
   function addCurso() {

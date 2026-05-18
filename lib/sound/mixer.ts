@@ -202,3 +202,32 @@ export function getMixer(): SoundMixer {
   }
   return _mixer;
 }
+
+/**
+ * Warm-up helper: from inside a user gesture, create the AudioContext and
+ * play a 50ms silent gain ramp so the first real SFX doesn't click. iOS
+ * Safari especially needs this — the AudioContext starts in "suspended"
+ * state and the first scheduled node has audible attack artifacts.
+ *
+ * Call from useEffect on mount of components that will play SFX:
+ *   LessonRunner, OutfitRevealDialog, JackpotPanel, etc.
+ */
+export function warmupAudio(): void {
+  const mixer = getMixer();
+  const ctx = mixer.getCtx();
+  if (!ctx) return;
+  try {
+    const now = ctx.currentTime;
+    const silent = ctx.createGain();
+    silent.gain.setValueAtTime(0, now);
+    silent.gain.linearRampToValueAtTime(0.0001, now + 0.05);
+    silent.connect(ctx.destination);
+    const osc = ctx.createOscillator();
+    osc.frequency.value = 1; // sub-audible
+    osc.connect(silent);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  } catch {
+    // Nothing to do — warm-up is best-effort.
+  }
+}

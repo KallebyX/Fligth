@@ -8,7 +8,6 @@ import {
   Camera,
   HelpCircle,
   Layers,
-  ShieldAlert,
   Sparkles,
   Trophy,
   Users,
@@ -29,24 +28,12 @@ export default async function AdminPage() {
     .eq("id", user.id)
     .single();
 
+  // Match sub-admin routes (/admin/escolas, /admin/gallery/queue): redirect
+  // non-admins back to /learn rather than rendering an inline "Acesso
+  // restrito" card. Consistent UX + one fewer attack surface (no info leak
+  // about admin path existing).
   if (profile?.role !== "admin") {
-    return (
-      <main className="container max-w-xl py-10">
-        <Card className="text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-alert/15 text-alert">
-            <ShieldAlert size={26} />
-          </div>
-          <CardTitle>Acesso restrito</CardTitle>
-          <CardDesc className="mt-2">
-            Esta página é só para administradores. Se você é o dono da
-            plataforma, eleve o seu perfil no Supabase:
-          </CardDesc>
-          <pre className="mt-3 overflow-x-auto rounded-xl bg-cloud px-3 py-2 text-left text-xs">
-            <code>{`update profiles set role = 'admin' where id = '...';`}</code>
-          </pre>
-        </Card>
-      </main>
-    );
+    redirect("/learn");
   }
 
   const [
