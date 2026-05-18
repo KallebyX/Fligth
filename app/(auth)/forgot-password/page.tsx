@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +12,8 @@ import { CheckCircle2, Loader2 } from "lucide-react";
 
 export default function ForgotPasswordPage() {
   const t = useTranslations("auth.forgotPasswordPage");
+  const params = useSearchParams();
+  const expired = params.get("expired") === "1";
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +44,14 @@ export default function ForgotPasswordPage() {
           <div className="rounded-full bg-sky/10 p-2 ring-4 ring-sky/15">
             <Mascot state={sent ? "celebrate" : "thinking"} size={128} />
           </div>
+          {expired && !sent && (
+            <p
+              role="alert"
+              className="mt-4 w-full rounded-xl bg-alert/10 px-3 py-2 text-sm font-bold text-alert"
+            >
+              Seu link expirou. Pode pedir um novo agora mesmo.
+            </p>
+          )}
           <h1 className="mt-4 text-3xl font-black tracking-tight dark:text-cloud md:text-4xl">
             {sent ? t("titleSent") : t("title")}
           </h1>

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import Link from "next/link";
-import { Bell, Award, Trophy, UserPlus, Sparkles } from "lucide-react";
+import { AlertTriangle, Bell, Award, Trophy, UserPlus, Sparkles } from "lucide-react";
 import { listRecent, markAllRead, type NotificationItem } from "@/app/actions/notifications";
 import { cn } from "@/lib/utils";
 
@@ -16,23 +16,37 @@ export function NotificationsBell({
   const [open, setOpen] = useState(false);
   const [unread, setUnread] = useState(initialUnread);
   const [items, setItems] = useState<NotificationItem[]>(initialItems);
+  const [hasError, setHasError] = useState(false);
   const [, start] = useTransition();
   const ref = useRef<HTMLDivElement | null>(null);
+
+  const refresh = useCallback(() => {
+    start(async () => {
+      try {
+        const res = await listRecent();
+        if (!res.ok) {
+          setHasError(true);
+          return;
+        }
+        setHasError(false);
+        setItems(res.items);
+        if (res.unread > 0) {
+          const m = await markAllRead();
+          if (!m.ok) setHasError(true);
+        }
+        setUnread(0);
+      } catch {
+        // Network error / aborted fetch / etc.
+        setHasError(true);
+      }
+    });
+  }, []);
 
   // Refresh contents lazily on open.
   useEffect(() => {
     if (!open) return;
-    start(async () => {
-      const res = await listRecent();
-      if (res.ok) {
-        setItems(res.items);
-        if (res.unread > 0) {
-          await markAllRead();
-        }
-        setUnread(0);
-      }
-    });
-  }, [open]);
+    refresh();
+  }, [open, refresh]);
 
   // Click-outside to dismiss.
   useEffect(() => {
@@ -53,11 +67,19 @@ export function NotificationsBell({
         className="relative inline-flex h-11 w-11 items-center justify-center rounded-full text-ink/70 hover:bg-cloud"
       >
         <Bell size={18} />
-        {unread > 0 && (
+        {hasError ? (
+          <span
+            title="Falha ao carregar — toque para tentar"
+            aria-label="Erro ao carregar notificações"
+            className="absolute -right-0.5 -top-0.5 inline-flex h-4 w-4 items-center justify-center rounded-full bg-alert text-white"
+          >
+            <AlertTriangle size={10} />
+          </span>
+        ) : unread > 0 ? (
           <span className="absolute -right-0.5 -top-0.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full bg-alert px-1 text-[10px] font-extrabold text-white">
             {unread > 9 ? "9+" : unread}
           </span>
-        )}
+        ) : null}
       </button>
 
       {open && (
@@ -72,7 +94,20 @@ export function NotificationsBell({
               Ver feed
             </Link>
           </div>
-          {items.length === 0 ? (
+          {hasError ? (
+            <div className="space-y-2 p-4 text-center text-sm">
+              <p className="font-bold text-alert">
+                Não foi possível carregar as notificações.
+              </p>
+              <button
+                type="button"
+                onClick={refresh}
+                className="rounded-full bg-sky px-3 py-1.5 text-xs font-extrabold text-white hover:bg-sky-deep"
+              >
+                Tentar de novo
+              </button>
+            </div>
+          ) : items.length === 0 ? (
             <p className="p-4 text-center text-sm text-ink/60">
               Nada por aqui ainda.
             </p>

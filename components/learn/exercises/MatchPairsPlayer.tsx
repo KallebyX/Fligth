@@ -55,6 +55,7 @@ export function MatchPairsPlayer({
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
   const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
 
@@ -96,6 +97,7 @@ export function MatchPairsPlayer({
   async function check() {
     if (matches.length !== totalPairs || submitting) return;
     setSubmitting(true);
+    setErrorMessage(null);
     try {
       const res = await onSubmit(exercise.id, { matches });
       setFeedback({
@@ -107,7 +109,7 @@ export function MatchPairsPlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      // Parent shows error.
+      setErrorMessage("Erro de conexão — tente novamente.");
     } finally {
       setSubmitting(false);
     }
@@ -137,6 +139,7 @@ export function MatchPairsPlayer({
       gems={gems}
       onAbandon={onAbandon}
       isPractice={isPractice}
+      errorMessage={errorMessage}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

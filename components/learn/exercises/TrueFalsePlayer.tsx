@@ -27,12 +27,14 @@ export function TrueFalsePlayer({
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
   const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
 
   async function check() {
     if (pick == null || submitting) return;
     setSubmitting(true);
+    setErrorMessage(null);
     try {
       const res = await onSubmit(exercise.id, { bool: pick });
       setFeedback({
@@ -45,7 +47,7 @@ export function TrueFalsePlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      // Parent shows a full-screen error UI; we just stop the spinner.
+      setErrorMessage("Erro de conexão — tente novamente.");
     } finally {
       setSubmitting(false);
     }
@@ -80,6 +82,7 @@ export function TrueFalsePlayer({
       gems={gems}
       onAbandon={onAbandon}
       isPractice={isPractice}
+      errorMessage={errorMessage}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

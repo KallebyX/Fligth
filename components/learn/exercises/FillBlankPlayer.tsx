@@ -41,6 +41,7 @@ export function FillBlankPlayer({
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
   const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
 
@@ -59,6 +60,7 @@ export function FillBlankPlayer({
   async function check() {
     if (picked == null || submitting) return;
     setSubmitting(true);
+    setErrorMessage(null);
     try {
       const res = await onSubmit(exercise.id, { fillIndex: picked });
       setFeedback({
@@ -71,7 +73,7 @@ export function FillBlankPlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      // Parent shows error.
+      setErrorMessage("Erro de conexão — tente novamente.");
     } finally {
       setSubmitting(false);
     }
@@ -99,6 +101,7 @@ export function FillBlankPlayer({
       gems={gems}
       onAbandon={onAbandon}
       isPractice={isPractice}
+      errorMessage={errorMessage}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

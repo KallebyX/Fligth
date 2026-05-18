@@ -49,6 +49,7 @@ export function TapTilesPlayer({
   const [phase, setPhase] = useState<"answering" | "feedback">("answering");
   const [feedback, setFeedback] = useState<ExerciseShellFeedback | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
 
@@ -58,6 +59,7 @@ export function TapTilesPlayer({
   async function check() {
     if (picked.length !== totalTiles || submitting) return;
     setSubmitting(true);
+    setErrorMessage(null);
     try {
       const res = await onSubmit(exercise.id, { order: picked });
       const correctSentence = exercise.payload.correct
@@ -73,7 +75,7 @@ export function TapTilesPlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      // Parent shows error.
+      setErrorMessage("Erro de conexão — tente novamente.");
     } finally {
       setSubmitting(false);
     }
@@ -121,6 +123,7 @@ export function TapTilesPlayer({
       gems={gems}
       onAbandon={onAbandon}
       isPractice={isPractice}
+      errorMessage={errorMessage}
     >
       <motion.h2
         key={`stem-${exercise.id}`}

@@ -43,15 +43,50 @@ export async function submitAnswer(input: SubmitAnswerInput): Promise<SubmitAnsw
   // 1. Fetch the question with its correct answer + kind/payload.
   // The `questions` table has a deny-all RLS policy on SELECT, so this must
   // go through the service-role client server-side.
+  //
+  // Retry on transient failures (network blip, brief Postgres restart). The
+  // previous behavior was to immediately return question_not_found, which
+  // the client surfaced as "marked wrong" — costing the user a heart for
+  // a network problem they didn't cause.
   const service = createServiceClient();
-  const { data: question, error: qErr } = await service
-    .from("questions")
-    .select("id, correct, explanation_md, kind, payload")
-    .eq("id", input.questionId)
-    .single();
-  if (qErr || !question) {
-    console.error("[submitAnswer] question lookup failed", { id: input.questionId, qErr });
-    return { ok: false, error: "question_not_found" };
+  type QuestionRow = {
+    id: number;
+    correct: "A" | "B" | "C" | "D";
+    explanation_md: string | null;
+    kind: string;
+    payload: unknown;
+  };
+  let question: QuestionRow | null = null;
+  let qErr: unknown = null;
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const r = await service
+      .from("questions")
+      .select("id, correct, explanation_md, kind, payload")
+      .eq("id", input.questionId)
+      .single();
+    if (r.data) {
+      question = r.data as QuestionRow;
+      qErr = null;
+      break;
+    }
+    qErr = r.error;
+    // Backoff: 0ms, 75ms, 250ms. Don't backoff after the last attempt.
+    if (attempt < 2) {
+      await new Promise((res) => setTimeout(res, attempt === 0 ? 75 : 250));
+    }
+  }
+  if (!question) {
+    console.error("[submitAnswer] question lookup failed after 3 attempts", {
+      id: input.questionId,
+      qErr,
+    });
+    // Distinguish "row genuinely missing" (PGRST116) from infra failure so
+    // the client can offer "Tentar de novo" instead of treating it as wrong.
+    const isTransient =
+      typeof qErr === "object" && qErr !== null && "code" in qErr
+        ? (qErr as { code?: string }).code !== "PGRST116"
+        : true;
+    return { ok: false, error: isTransient ? "transient_failure" : "question_not_found" };
   }
 
   const kind = (question.kind ?? "multiple_choice") as ExerciseKind;

@@ -35,6 +35,7 @@ export function ExerciseShell({
   gems,
   onAbandon,
   isPractice = false,
+  errorMessage = null,
 }: {
   total: number;
   index: number;
@@ -52,6 +53,10 @@ export function ExerciseShell({
   gems?: number;
   onAbandon?: () => void;
   isPractice?: boolean;
+  /** Inline error message shown above the action bar. Use for transient
+   * failures (network blip, server 5xx) where the player kept the user's
+   * selection intact and they can retry. */
+  errorMessage?: string | null;
 }) {
   const progressPct = Math.round(((index + 1) / total) * 100);
   const showChrome = onAbandon != null || hearts != null || gems != null;
@@ -130,6 +135,15 @@ export function ExerciseShell({
           </div>
         )}
         {children}
+        {errorMessage && (
+          <div
+            role="alert"
+            aria-live="polite"
+            className="mt-4 rounded-2xl border-2 border-alert/40 bg-alert/10 px-3 py-2 text-sm font-bold text-alert"
+          >
+            {errorMessage}
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
