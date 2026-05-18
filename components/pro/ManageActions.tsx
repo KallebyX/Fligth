@@ -36,11 +36,15 @@ export function ManageActions({
         window.location.href = result.url;
       }
     } else {
-      setError(
-        result.error === "no_customer"
-          ? "Não encontramos sua conta no Stripe. Fale com o suporte."
-          : "Falha ao abrir o portal. Tente novamente.",
-      );
+      const map: Record<string, string> = {
+        no_active_subscription:
+          "Você não tem uma assinatura ativa pra gerenciar. Confira os planos abaixo.",
+        subscription_not_found_on_stripe:
+          "Sua assinatura sumiu do Stripe — fale com o suporte ou refaça o checkout.",
+        no_customer: "Não encontramos sua conta no Stripe. Fale com o suporte.",
+        unauthenticated: "Sua sessão expirou. Faça login novamente.",
+      };
+      setError(map[result.error] ?? "Falha ao abrir o portal. Tente novamente.");
       setBusy(false);
     }
   }
