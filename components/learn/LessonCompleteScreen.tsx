@@ -213,7 +213,7 @@ function Stat({
       transition={{ duration: 0.35 }}
       className="card-pop flex items-center justify-between gap-3 p-4"
     >
-      <span className="flex items-center gap-3 text-sm font-bold text-ink/70">
+      <span className="flex items-center gap-3 text-sm font-bold text-ink/70 dark:text-cloud/70">
         <span className={cn("flex h-8 w-8 items-center justify-center rounded-full", accent)}>
           {icon}
         </span>

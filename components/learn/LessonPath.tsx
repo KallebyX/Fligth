@@ -93,16 +93,16 @@ export function LessonPath({
                   : { duration: 0.4, delay: i * 0.07, type: "spring", stiffness: 200 }
               }
             >
-              <p className="absolute -top-5 left-1/2 max-w-[180px] -translate-x-1/2 truncate text-[10px] font-bold uppercase tracking-wider text-ink/50">
+              <p className="absolute -top-5 left-1/2 max-w-[180px] -translate-x-1/2 truncate text-[10px] font-bold uppercase tracking-wider text-ink/50 dark:text-cloud/50">
                 {n.unitTitle}
               </p>
 
               {n.state === "locked" ? (
                 <div
-                  className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-cloud-deep bg-cloud opacity-60"
+                  className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-cloud-deep bg-cloud opacity-60 dark:border-ink-light/60 dark:bg-ink-mid"
                   aria-label={`${n.title} (bloqueado)`}
                 >
-                  <Lock size={28} className="text-ink/40" />
+                  <Lock size={28} className="text-ink/40 dark:text-cloud/40" />
                 </div>
               ) : (
                 <Link
@@ -124,7 +124,7 @@ export function LessonPath({
                       transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                     />
                   )}
-                  <span className="pointer-events-none absolute -bottom-7 left-1/2 max-w-[180px] -translate-x-1/2 truncate rounded-full bg-white px-3 py-0.5 text-xs font-extrabold text-ink shadow-pop">
+                  <span className="pointer-events-none absolute -bottom-7 left-1/2 max-w-[180px] -translate-x-1/2 truncate rounded-full bg-white px-3 py-0.5 text-xs font-extrabold text-ink shadow-pop dark:bg-ink-mid dark:text-cloud dark:shadow-none">
                     {n.title}
                   </span>
                 </Link>

@@ -127,18 +127,20 @@ export function OutfitCard({
     >
       <div
         className={cn(
-          "mx-auto flex h-28 w-28 items-center justify-center rounded-2xl bg-cloud/60",
+          "mx-auto flex h-28 w-28 items-center justify-center rounded-2xl bg-cloud/60 dark:bg-ink-mid/60",
           !owned && "grayscale",
         )}
       >
         <Mascot state="happy" size={96} outfit={outfit.slug} />
       </div>
-      <p className="mt-2 text-sm font-extrabold text-ink">{outfit.name}</p>
-      <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50">
+      <p className="mt-2 text-sm font-extrabold text-ink dark:text-cloud">
+        {outfit.name}
+      </p>
+      <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50 dark:text-cloud/50">
         {RARITY_LABEL[outfit.rarity]}
       </p>
       {outfit.description && (
-        <p className="mt-1 line-clamp-2 text-[11px] text-ink/60">
+        <p className="mt-1 line-clamp-2 text-[11px] text-ink/60 dark:text-cloud/60">
           {outfit.description}
         </p>
       )}

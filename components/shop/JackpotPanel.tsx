@@ -93,15 +93,15 @@ export function JackpotPanel({
               <Crown size={12} />
               Épicos e lendários
             </p>
-            <h3 className="mt-2 text-xl font-black">Jackpot</h3>
-            <p className="mt-1 text-sm text-ink/70">
+            <h3 className="mt-2 text-xl font-black dark:text-cloud">Jackpot</h3>
+            <p className="mt-1 text-sm text-ink/70 dark:text-cloud/70">
               Cada giro custa{" "}
-              <strong className="text-ink">{JACKPOT_COST_GEMS} gems</strong> e
-              entrega outfits <strong className="text-ink">épicos</strong> ou{" "}
-              <strong className="text-ink">lendários</strong>. Cooldown: 1h.
+              <strong className="text-ink dark:text-cloud">{JACKPOT_COST_GEMS} gems</strong> e
+              entrega outfits <strong className="text-ink dark:text-cloud">épicos</strong> ou{" "}
+              <strong className="text-ink dark:text-cloud">lendários</strong>. Cooldown: 1h.
             </p>
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink/70">
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 font-extrabold">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink/70 dark:text-cloud/70">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 font-extrabold dark:bg-ink-mid dark:text-cloud">
                 <Gem size={12} className="text-sky" />
                 {gems}
               </span>

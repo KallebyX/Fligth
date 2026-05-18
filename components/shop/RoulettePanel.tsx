@@ -86,14 +86,14 @@ export function RoulettePanel({
               <Sparkles size={12} />
               Grátis · 1×/dia
             </p>
-            <h3 className="mt-2 text-xl font-black">Roleta diária</h3>
-            <p className="mt-1 text-sm text-ink/70">
+            <h3 className="mt-2 text-xl font-black dark:text-cloud">Roleta diária</h3>
+            <p className="mt-1 text-sm text-ink/70 dark:text-cloud/70">
               Cada giro entrega um outfit{" "}
-              <strong className="text-ink">comum</strong> ou{" "}
-              <strong className="text-ink">raro</strong>. Repetiu? Você ganha 20
+              <strong className="text-ink dark:text-cloud">comum</strong> ou{" "}
+              <strong className="text-ink dark:text-cloud">raro</strong>. Repetiu? Você ganha 20
               gems de consolação.
             </p>
-            <p className="mt-2 text-xs text-ink/60">
+            <p className="mt-2 text-xs text-ink/60 dark:text-cloud/60">
               {ready ? (
                 <span className="font-extrabold text-grass">
                   Disponível agora

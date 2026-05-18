@@ -70,7 +70,7 @@ export function LessonShell({
     <main className="container max-w-2xl pb-32 pt-4">
       <Link
         href="/learn"
-        className="mb-3 inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink"
+        className="mb-3 inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink dark:text-cloud/60 dark:hover:text-cloud"
       >
         <ChevronLeft size={16} />
         Voltar para as trilhas
@@ -123,10 +123,10 @@ export function LessonShell({
           transition={{ duration: 0.4, delay: 0.1 }}
           className="card-pop mt-5 p-5 md:p-6"
         >
-          <header className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-ink/55">
+          <header className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-ink/55 dark:text-cloud/55">
             <BookOpen size={14} />
             <span>O que estudar antes</span>
-            <span className="h-px flex-1 bg-cloud-deep/40" />
+            <span className="h-px flex-1 bg-cloud-deep/40 dark:bg-ink-light/40" />
           </header>
           <Markdown content={theory} />
         </motion.section>
@@ -142,11 +142,11 @@ export function LessonShell({
           <Mascot state="happy" size={72} outfit={mascotOutfit} />
         </div>
         <div className="flex-1">
-          <p className="flex items-center gap-1 text-base font-extrabold text-ink">
+          <p className="flex items-center gap-1 text-base font-extrabold text-ink dark:text-cloud">
             <Sparkles size={16} className="text-sky" />
             Vamos voar!
           </p>
-          <p className="mt-0.5 text-sm leading-snug text-ink/70">
+          <p className="mt-0.5 text-sm leading-snug text-ink/70 dark:text-cloud/70">
             Cada acerto vale XP. Erros descontam uma vida — você recupera 1 a
             cada 30 min. Acertou tudo? Voo perfeito + bônus.
           </p>

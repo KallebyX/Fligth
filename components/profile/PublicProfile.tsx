@@ -129,7 +129,7 @@ export function PublicProfile({
           <div className="mt-3">
             {isSelf ? (
               <Link href="/profile/edit">
-                <Button size="md" variant="outline" className="bg-white text-ink">
+                <Button size="md" variant="outline" className="bg-white text-ink dark:bg-ink-mid dark:text-cloud">
                   <Pencil size={16} />
                   Editar perfil
                 </Button>

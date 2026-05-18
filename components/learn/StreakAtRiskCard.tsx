@@ -36,9 +36,9 @@ export function StreakAtRiskCard({
 
   if (used) {
     return (
-      <div className="mb-6 flex items-center gap-3 rounded-3xl border-2 border-sky/40 bg-sky/10 p-4">
-        <Snowflake size={24} className="shrink-0 text-sky-deep" />
-        <p className="flex-1 text-sm font-bold text-sky-deep">
+      <div className="mb-6 flex items-center gap-3 rounded-3xl border-2 border-sky/40 bg-sky/10 p-4 dark:border-sky/50 dark:bg-sky/15">
+        <Snowflake size={24} className="shrink-0 text-sky-deep dark:text-sky" />
+        <p className="flex-1 text-sm font-bold text-sky-deep dark:text-sky">
           Escudo de gelo usado. Sua ofensiva de {streak} dia{streak === 1 ? "" : "s"}{" "}
           está protegida hoje. ❄️
         </p>
@@ -47,7 +47,7 @@ export function StreakAtRiskCard({
   }
 
   return (
-    <div className="mb-6 rounded-3xl border-2 border-sun/60 bg-gradient-to-br from-sun/15 to-gold/10 p-4">
+    <div className="mb-6 rounded-3xl border-2 border-sun/60 bg-gradient-to-br from-sun/15 to-gold/10 p-4 dark:border-sun/50 dark:from-sun/20 dark:to-gold/15">
       <div className="flex items-start gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-sun/25">
           <Flame size={28} className="fill-sun text-sun" />
@@ -56,10 +56,10 @@ export function StreakAtRiskCard({
           <p className="text-[11px] font-bold uppercase tracking-widest text-sun">
             Ofensiva em risco
           </p>
-          <h3 className="mt-0.5 text-base font-black leading-snug">
+          <h3 className="mt-0.5 text-base font-black leading-snug text-ink dark:text-cloud">
             Sua sequência de {streak} dia{streak === 1 ? "" : "s"} está prestes a quebrar.
           </h3>
-          <p className="mt-1 text-sm leading-snug text-ink/70">
+          <p className="mt-1 text-sm leading-snug text-ink/70 dark:text-cloud/70">
             Faça uma lição agora pra manter, ou use um escudo de gelo
             (você tem {freezes}).
           </p>
