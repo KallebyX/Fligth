@@ -167,7 +167,7 @@ function PrefRow({
         onClick={onChange}
         disabled={busy}
         className={cn(
-          "relative h-6 w-11 shrink-0 rounded-full transition-colors",
+          "relative h-6 w-11 shrink-0 rounded-full transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky focus-visible:ring-offset-2 focus-visible:ring-offset-cloud dark:focus-visible:ring-offset-ink-mid",
           value ? "bg-sky" : "bg-cloud-deep/60 dark:bg-ink-light/60",
           busy && "cursor-not-allowed",
         )}

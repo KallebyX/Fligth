@@ -28,7 +28,7 @@ export function ThemePicker() {
             onClick={() => setTheme(value)}
             aria-pressed={active}
             className={cn(
-              "flex flex-col items-start gap-2 rounded-2xl border-2 p-3 text-left transition-colors",
+              "flex flex-col items-start gap-2 rounded-2xl border-2 p-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky focus-visible:ring-offset-2 focus-visible:ring-offset-cloud dark:focus-visible:ring-offset-ink-deep",
               active
                 ? "border-sky bg-sky/10 dark:bg-sky/15"
                 : "border-cloud-deep bg-white hover:bg-cloud/40 dark:border-ink-light dark:bg-ink-mid dark:hover:bg-ink-mid/70",
