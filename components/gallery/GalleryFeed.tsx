@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, MapPin, Plane } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { toggleGalleryLike } from "@/app/actions/gallery";
 import { cn } from "@/lib/utils";
 
@@ -44,6 +45,7 @@ function PostCard({ item }: { item: GalleryItem }) {
   const [liked, setLiked] = useState(item.likedByMe);
   const [count, setCount] = useState(item.likes_count);
   const [busy, setBusy] = useState(false);
+  const tAria = useTranslations("common.aria");
 
   async function onLike() {
     if (busy) return;
@@ -114,7 +116,7 @@ function PostCard({ item }: { item: GalleryItem }) {
             onClick={onLike}
             disabled={busy}
             aria-pressed={liked}
-            aria-label={liked ? "Descurtir" : "Curtir"}
+            aria-label={liked ? tAria("unlike") : tAria("like")}
             className={cn(
               "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-extrabold transition-colors",
               liked

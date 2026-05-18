@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { PwaRegister } from "@/components/pwa-register";
 import { BiometricGate } from "@/components/auth/BiometricGate";
@@ -96,6 +97,7 @@ export default async function RootLayout({
             <PwaRegister />
           </ThemeProvider>
         </NextIntlClientProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

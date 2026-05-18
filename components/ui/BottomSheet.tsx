@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { motion, AnimatePresence, type PanInfo, useDragControls } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useReducedMotion } from "@/lib/motion";
 
 /**
@@ -35,6 +36,7 @@ export function BottomSheet({
   const sheetRef = useRef<HTMLDivElement | null>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
   const reducedMotion = useReducedMotion();
+  const tAria = useTranslations("common.aria");
   const dragControls = useDragControls();
 
   // Esc to close + body scroll lock + focus trap.
@@ -137,7 +139,7 @@ export function BottomSheet({
             <button
               type="button"
               onPointerDown={(e) => dragControls.start(e)}
-              aria-label="Arraste para fechar"
+              aria-label={tAria("dragHandle")}
               className="-mx-5 mb-2 flex w-[calc(100%+2.5rem)] items-center justify-center py-2 sm:hidden"
             >
               <span className="h-1.5 w-12 rounded-full bg-cloud-deep dark:bg-ink-light" />
