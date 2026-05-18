@@ -11,7 +11,50 @@
     "skip": "Saltar",
     "loading": "Cargando…",
     "tryAgain": "Reintentar",
-    "search": "Buscar"
+    "search": "Buscar",
+    "aria": {
+      "close": "Cerrar",
+      "back": "Volver",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "like": "Me gusta",
+      "unlike": "Ya no me gusta",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "notifications": "Notificaciones",
+      "settings": "Ajustes",
+      "search": "Buscar",
+      "clear": "Limpiar",
+      "expand": "Expandir",
+      "collapse": "Contraer",
+      "dragHandle": "Arrastra para cerrar"
+    }
+  },
+  "learn": {
+    "heroTitle": "Hora de volar",
+    "heroSubtitle": "Continúa donde lo dejaste.",
+    "continueLesson": "Continuar lección",
+    "startLesson": "Comenzar lección",
+    "perfect": "¡Perfecto!",
+    "lessonComplete": "Lección completa",
+    "xpAwarded": "+{xp} XP",
+    "goalHit": "¡Meta diaria alcanzada!",
+    "streakSaved": "Racha salvada ❄️",
+    "outOfHearts": "Sin corazones",
+    "waitOrPro": "Espera {minutes} min o suscríbete a Pro para corazones ilimitados.",
+    "exitLesson": "Salir de la lección",
+    "abandonTitle": "¿Salir sin terminar?",
+    "abandonBody": "Perderás el progreso de esta lección. Los corazones perdidos quedan descontados.",
+    "abandonStay": "Continuar lección",
+    "abandonLeave": "Salir de todos modos",
+    "verify": "Verificar",
+    "verifying": "Comprobando…",
+    "continue": "Continuar",
+    "transientError": "Error de conexión — vuelve a intentarlo.",
+    "practiceModeBadge": "Modo práctica"
+  },
+  "deleteAccount": {
+    "confirmPhrase": "ELIMINAR MI CUENTA"
   },
   "nav": {
     "learn": "Aprender",

@@ -11,7 +11,50 @@
     "skip": "Pular",
     "loading": "Carregando…",
     "tryAgain": "Tentar de novo",
-    "search": "Buscar"
+    "search": "Buscar",
+    "aria": {
+      "close": "Fechar",
+      "back": "Voltar",
+      "next": "Próximo",
+      "previous": "Anterior",
+      "like": "Curtir",
+      "unlike": "Descurtir",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "notifications": "Notificações",
+      "settings": "Configurações",
+      "search": "Buscar",
+      "clear": "Limpar",
+      "expand": "Expandir",
+      "collapse": "Recolher",
+      "dragHandle": "Arraste para fechar"
+    }
+  },
+  "learn": {
+    "heroTitle": "Hora de voar",
+    "heroSubtitle": "Continue de onde parou.",
+    "continueLesson": "Continuar lição",
+    "startLesson": "Começar lição",
+    "perfect": "Perfeito!",
+    "lessonComplete": "Lição completa",
+    "xpAwarded": "+{xp} XP",
+    "goalHit": "Meta diária batida!",
+    "streakSaved": "Ofensiva salva ❄️",
+    "outOfHearts": "Sem vidas",
+    "waitOrPro": "Espere {minutes} min ou assine Pro pra coração infinito.",
+    "exitLesson": "Sair da lição",
+    "abandonTitle": "Sair sem terminar?",
+    "abandonBody": "Você perde o progresso desta lição. As vidas perdidas continuam descontadas.",
+    "abandonStay": "Continuar lição",
+    "abandonLeave": "Sair mesmo assim",
+    "verify": "Verificar",
+    "verifying": "Conferindo…",
+    "continue": "Continuar",
+    "transientError": "Erro de conexão — tente novamente.",
+    "practiceModeBadge": "Modo prática"
+  },
+  "deleteAccount": {
+    "confirmPhrase": "EXCLUIR MINHA CONTA"
   },
   "nav": {
     "learn": "Aprender",

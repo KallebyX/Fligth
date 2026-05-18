@@ -11,7 +11,50 @@
     "skip": "Skip",
     "loading": "Loading…",
     "tryAgain": "Try again",
-    "search": "Search"
+    "search": "Search",
+    "aria": {
+      "close": "Close",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "like": "Like",
+      "unlike": "Unlike",
+      "approve": "Approve",
+      "reject": "Reject",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "search": "Search",
+      "clear": "Clear",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "dragHandle": "Drag to close"
+    }
+  },
+  "learn": {
+    "heroTitle": "Time to fly",
+    "heroSubtitle": "Pick up where you left off.",
+    "continueLesson": "Continue lesson",
+    "startLesson": "Start lesson",
+    "perfect": "Perfect!",
+    "lessonComplete": "Lesson complete",
+    "xpAwarded": "+{xp} XP",
+    "goalHit": "Daily goal hit!",
+    "streakSaved": "Streak saved ❄️",
+    "outOfHearts": "Out of hearts",
+    "waitOrPro": "Wait {minutes} min or get Pro for unlimited hearts.",
+    "exitLesson": "Exit lesson",
+    "abandonTitle": "Leave without finishing?",
+    "abandonBody": "You'll lose this lesson's progress. Hearts lost will stay deducted.",
+    "abandonStay": "Continue lesson",
+    "abandonLeave": "Leave anyway",
+    "verify": "Check",
+    "verifying": "Checking…",
+    "continue": "Continue",
+    "transientError": "Connection error — try again.",
+    "practiceModeBadge": "Practice mode"
+  },
+  "deleteAccount": {
+    "confirmPhrase": "DELETE MY ACCOUNT"
   },
   "nav": {
     "learn": "Learn",
