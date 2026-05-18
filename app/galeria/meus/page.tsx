@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronLeft, Clock, CheckCircle2, XCircle, ImagePlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HUD } from "@/components/hud/HUD";
@@ -90,10 +91,11 @@ export default async function MyGalleryPostsPage() {
                   key={p.id}
                   className="flex items-stretch gap-3 rounded-2xl border-2 border-cloud-deep bg-white p-3"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src={p.thumbnail_url}
                     alt={p.caption ?? "Post"}
+                    width={80}
+                    height={80}
                     className="h-20 w-20 shrink-0 rounded-xl object-cover"
                   />
                   <div className="flex-1 min-w-0">

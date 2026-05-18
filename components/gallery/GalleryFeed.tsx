@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Heart, MapPin, Plane } from "lucide-react";
 import { toggleGalleryLike } from "@/app/actions/gallery";
 import { cn } from "@/lib/utils";
@@ -71,10 +72,11 @@ function PostCard({ item }: { item: GalleryItem }) {
     <li className="overflow-hidden rounded-3xl border-2 border-cloud-deep bg-white">
       <div className="flex items-center gap-3 p-3">
         {item.poster?.avatar_url ? (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
+          <Image
             src={item.poster.avatar_url}
             alt={posterName}
+            width={36}
+            height={36}
             className="h-9 w-9 rounded-full object-cover ring-2 ring-cloud-deep"
           />
         ) : (
@@ -94,13 +96,16 @@ function PostCard({ item }: { item: GalleryItem }) {
         </div>
       </div>
 
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={item.image_url}
-        alt={item.caption ?? `Foto de ${posterName}`}
-        loading="lazy"
-        className="aspect-square w-full bg-cloud object-cover"
-      />
+      <div className="relative aspect-square w-full overflow-hidden bg-cloud">
+        <Image
+          src={item.image_url}
+          alt={item.caption ?? `Foto de ${posterName}`}
+          fill
+          sizes="(max-width: 768px) 100vw, 672px"
+          className="object-cover"
+          loading="lazy"
+        />
+      </div>
 
       <div className="space-y-2 p-3">
         <div className="flex items-center gap-3">

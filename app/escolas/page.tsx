@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronLeft, MapPin } from "lucide-react";
 import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
@@ -116,10 +117,11 @@ export default async function SchoolsPage(props: {
                   >
                     <div className="flex items-start gap-3">
                       {s.logo_url ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
+                        <Image
                           src={s.logo_url}
                           alt={s.name}
+                          width={56}
+                          height={56}
                           className="h-14 w-14 shrink-0 rounded-xl bg-cloud object-cover ring-1 ring-cloud-deep/40"
                         />
                       ) : (

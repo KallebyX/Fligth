@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import Image from "next/image";
 import { Check, X, Loader2, Plane, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { moderateGalleryPost } from "@/app/actions/gallery";
@@ -86,10 +87,11 @@ export function ModerationRow({
   return (
     <div className="card-soft overflow-hidden">
       <div className="flex gap-3 p-3">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
+        <Image
           src={thumbnailUrl}
           alt={caption ?? "Foto pendente"}
+          width={96}
+          height={96}
           className="h-24 w-24 shrink-0 rounded-xl bg-cloud object-cover"
         />
         <div className="min-w-0 flex-1">

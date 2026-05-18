@@ -1,3 +1,4 @@
+import * as React from "react";
 import Link from "next/link";
 import { Mascot } from "@/components/mascot/Mascot";
 import { Crown } from "lucide-react";
@@ -19,10 +20,13 @@ export function Podium({
   meId: string;
 }) {
   // Render slots in order [2nd, 1st, 3rd] so 1st sits in the middle/up.
-  const ordered = [top[1], top[0], top[2]];
-  // Pedestal heights tuned so the gold base is visibly taller without
-  // crowding the mascot above it on narrow screens.
-  const heights = ["h-24", "h-32", "h-20"];
+  // useMemo because Podium re-renders whenever the parent leaderboard
+  // ticks (every second on `/leagues` for the ResetTimer) — keep the
+  // ordered array referentially stable.
+  const ordered = React.useMemo(() => [top[1], top[0], top[2]], [top]);
+  // Pedestal heights scale with screen width — on iPhone SE (320 px)
+  // the 88 px gold pedestal would crowd the mascot above it.
+  const heights = ["h-16 sm:h-24", "h-20 sm:h-32", "h-12 sm:h-20"];
   // Mascot sizes scale down on mobile to fit the 320 px iPhone SE width.
   const sizesSm = [72, 96, 64];
   const sizesMd = [88, 112, 80];

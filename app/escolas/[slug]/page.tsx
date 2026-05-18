@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ChevronLeft,
   MapPin,
@@ -78,20 +79,25 @@ export default async function SchoolDetailPage(props: {
         </Link>
 
         {school.cover_url && (
-          /* eslint-disable-next-line @next/next/no-img-element */
-          <img
-            src={school.cover_url}
-            alt={school.name}
-            className="aspect-[5/2] w-full rounded-3xl bg-cloud object-cover ring-2 ring-cloud-deep/40"
-          />
+          <div className="relative aspect-[5/2] w-full overflow-hidden rounded-3xl bg-cloud ring-2 ring-cloud-deep/40">
+            <Image
+              src={school.cover_url}
+              alt={school.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 672px"
+              className="object-cover"
+              priority
+            />
+          </div>
         )}
 
         <header className="flex items-start gap-4">
           {school.logo_url ? (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
+            <Image
               src={school.logo_url}
               alt={school.name}
+              width={80}
+              height={80}
               className="h-20 w-20 shrink-0 rounded-2xl bg-white object-cover ring-2 ring-cloud-deep"
             />
           ) : (

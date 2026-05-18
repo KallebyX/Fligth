@@ -8,6 +8,17 @@ const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "2mb" },
   },
+  images: {
+    // User-uploaded photos live in Supabase Storage (public buckets:
+    // `avatars`, `gallery`). OAuth providers serve avatars on a couple
+    // well-known CDNs — whitelist them so `next/image` accepts the URLs.
+    remotePatterns: [
+      { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "*.supabase.in" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "avatars.githubusercontent.com" },
+    ],
+  },
   async headers() {
     return [
       {
