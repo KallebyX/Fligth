@@ -74,7 +74,37 @@
     "logout": "Sair",
     "forgotPassword": "Esqueceu a senha?",
     "email": "Email",
-    "password": "Senha"
+    "password": "Senha",
+    "loginPage": {
+      "title": "Bem-vindo de volta!",
+      "subtitle": "Entre na sua conta para continuar voando.",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "forgot": "Esqueci minha senha",
+      "noAccount": "Ainda não tem conta?",
+      "signupCta": "Cadastre-se grátis"
+    },
+    "signupPage": {
+      "title": "Comece a estudar grátis",
+      "subtitle": "5 trilhas, 25 lições, ofensiva diária. Sem cartão.",
+      "submit": "Criar conta",
+      "submitting": "Criando…",
+      "haveAccount": "Já tem conta?",
+      "loginCta": "Entrar"
+    },
+    "forgotPasswordPage": {
+      "title": "Esqueceu a senha?",
+      "titleSent": "Email enviado!",
+      "subtitle": "Te mandamos um link pra criar uma nova.",
+      "subtitleSent": "Confira sua caixa de entrada. O link expira em 1 hora.",
+      "emailLabel": "Email da conta",
+      "submit": "Enviar link",
+      "submitting": "Enviando…",
+      "remembered": "Lembrou?",
+      "backToLogin": "Voltar ao login",
+      "successTitle": "Tudo certo.",
+      "successBody": "Procure por um email do Supabase Auth e clique no link. Não recebeu? Verifique o spam ou tente outro email."
+    }
   },
   "hud": {
     "streak": "Ofensiva",

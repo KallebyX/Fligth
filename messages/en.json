@@ -74,7 +74,37 @@
     "logout": "Sign out",
     "forgotPassword": "Forgot password?",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "loginPage": {
+      "title": "Welcome back!",
+      "subtitle": "Sign in to keep flying.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "forgot": "Forgot my password",
+      "noAccount": "Don't have an account?",
+      "signupCta": "Sign up free"
+    },
+    "signupPage": {
+      "title": "Start studying — free",
+      "subtitle": "5 paths, 25 lessons, daily streak. No card.",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "haveAccount": "Already have an account?",
+      "loginCta": "Sign in"
+    },
+    "forgotPasswordPage": {
+      "title": "Forgot your password?",
+      "titleSent": "Email sent!",
+      "subtitle": "We'll send you a link to create a new one.",
+      "subtitleSent": "Check your inbox. The link expires in 1 hour.",
+      "emailLabel": "Account email",
+      "submit": "Send link",
+      "submitting": "Sending…",
+      "remembered": "Remembered it?",
+      "backToLogin": "Back to sign in",
+      "successTitle": "All set.",
+      "successBody": "Look for an email from Supabase Auth and click the link. Didn't get it? Check spam or try another email."
+    }
   },
   "hud": {
     "streak": "Streak",

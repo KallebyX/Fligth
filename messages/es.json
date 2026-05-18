@@ -74,7 +74,37 @@
     "logout": "Cerrar sesión",
     "forgotPassword": "¿Olvidaste tu contraseña?",
     "email": "Email",
-    "password": "Contraseña"
+    "password": "Contraseña",
+    "loginPage": {
+      "title": "¡Bienvenido de vuelta!",
+      "subtitle": "Inicia sesión para seguir volando.",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando…",
+      "forgot": "Olvidé mi contraseña",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "signupCta": "Regístrate gratis"
+    },
+    "signupPage": {
+      "title": "Empieza a estudiar — gratis",
+      "subtitle": "5 rutas, 25 lecciones, racha diaria. Sin tarjeta.",
+      "submit": "Crear cuenta",
+      "submitting": "Creando…",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "loginCta": "Iniciar sesión"
+    },
+    "forgotPasswordPage": {
+      "title": "¿Olvidaste tu contraseña?",
+      "titleSent": "¡Email enviado!",
+      "subtitle": "Te mandamos un enlace para crear una nueva.",
+      "subtitleSent": "Revisa tu bandeja de entrada. El enlace caduca en 1 hora.",
+      "emailLabel": "Email de la cuenta",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando…",
+      "remembered": "¿Lo recordaste?",
+      "backToLogin": "Volver al inicio de sesión",
+      "successTitle": "Todo listo.",
+      "successBody": "Busca un email de Supabase Auth y haz clic en el enlace. ¿No lo recibiste? Revisa spam o prueba con otro email."
+    }
   },
   "hud": {
     "streak": "Racha",

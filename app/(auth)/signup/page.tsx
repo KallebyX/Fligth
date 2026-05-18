@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +13,7 @@ import { CheckCircle2, Loader2, MailCheck } from "lucide-react";
 
 export default function SignupPage() {
   const router = useRouter();
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -88,11 +90,11 @@ export default function SignupPage() {
           <div className="rounded-full bg-grass/10 p-2 ring-4 ring-grass/20">
             <Mascot state="celebrate" size={128} />
           </div>
-          <h1 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-            Comece de graça
+          <h1 className="mt-4 text-3xl font-black tracking-tight dark:text-cloud md:text-4xl">
+            {t("signupPage.title")}
           </h1>
-          <p className="mt-1 text-sm text-ink/60">
-            Crie sua conta e prepare-se pra prova teórica da ANAC.
+          <p className="mt-1 text-sm text-ink/60 dark:text-cloud/60">
+            {t("signupPage.subtitle")}
           </p>
         </div>
 
@@ -112,8 +114,8 @@ export default function SignupPage() {
 
           <form className="space-y-3 pt-2" onSubmit={handleSubmit}>
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
-                Email
+              <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
+                {t("email")}
               </label>
               <Input
                 type="email"
@@ -126,8 +128,8 @@ export default function SignupPage() {
               />
             </div>
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
-                Senha (mín. 6)
+              <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
+                {t("password")}
               </label>
               <Input
                 type="password"
@@ -155,10 +157,10 @@ export default function SignupPage() {
               {loading ? (
                 <>
                   <Loader2 className="animate-spin" size={18} />
-                  Criando…
+                  {t("signupPage.submitting")}
                 </>
               ) : (
-                "Criar conta grátis"
+                t("signupPage.submit")
               )}
             </Button>
           </form>
@@ -166,10 +168,10 @@ export default function SignupPage() {
           <OAuthButtons next="/onboarding" />
         </div>
 
-        <p className="mt-5 text-center text-sm text-ink/60">
-          Já tem conta?{" "}
+        <p className="mt-5 text-center text-sm text-ink/60 dark:text-cloud/60">
+          {t("signupPage.haveAccount")}{" "}
           <Link href="/login" className="font-extrabold text-sky hover:underline">
-            Entrar
+            {t("signupPage.loginCta")}
           </Link>
         </p>
       </div>
