@@ -40,7 +40,7 @@ function RuleRow({
       </span>
       <span>
         <span className="block text-sm font-extrabold text-ink">{label}</span>
-        <span className="block text-xs text-ink/65">{desc}</span>
+        <span className="block text-xs text-ink/65 dark:text-cloud/65">{desc}</span>
       </span>
     </li>
   );
@@ -231,12 +231,12 @@ export function ExamRunner() {
 
   return (
     <main className="flex min-h-[100dvh] flex-col">
-      <header className="sticky top-0 z-30 border-b border-cloud-deep/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+      <header className="sticky top-0 z-30 border-b border-cloud-deep/40 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80 dark:border-ink-light/60 dark:bg-ink-deep/95 dark:supports-[backdrop-filter]:bg-ink-deep/80">
         <div className="container flex h-14 max-w-2xl items-center justify-between px-4">
           <span className="text-sm font-extrabold">
             <span className="text-ink">{index + 1}</span>
-            <span className="text-ink/40"> / {session.questions.length}</span>
-            <span className="ml-2 hidden text-xs font-bold uppercase tracking-wide text-ink/50 sm:inline">
+            <span className="text-ink/40 dark:text-cloud/40"> / {session.questions.length}</span>
+            <span className="ml-2 hidden text-xs font-bold uppercase tracking-wide text-ink/50 sm:inline dark:text-cloud/50">
               · {answered} respondidas
             </span>
           </span>
@@ -262,13 +262,15 @@ export function ExamRunner() {
                 style={{ WebkitTapHighlightColor: "transparent" }}
                 className={cn(
                   "flex min-h-[64px] items-center gap-4 rounded-2xl border-2 p-4 text-left touch-manipulation transition-colors active:scale-[0.99]",
-                  isSelected ? "border-sky bg-sky/10" : "border-cloud-deep bg-white hover:bg-cloud",
+                  isSelected
+                    ? "border-sky bg-sky/10 dark:bg-sky/15"
+                    : "border-cloud-deep bg-white hover:bg-cloud dark:border-ink-light dark:bg-ink-mid dark:hover:bg-ink-mid/70",
                 )}
               >
                 <span
                   className={cn(
                     "flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-base font-extrabold",
-                    isSelected ? "bg-sky text-white" : "bg-cloud text-ink/70",
+                    isSelected ? "bg-sky text-white" : "bg-cloud text-ink/70 dark:bg-ink-deep/60 dark:text-cloud/70",
                   )}
                 >
                   {letter}
@@ -280,7 +282,7 @@ export function ExamRunner() {
         </div>
       </div>
 
-      <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-cloud-deep/40 bg-white/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-white/85">
+      <footer className="fixed inset-x-0 bottom-0 z-30 border-t border-cloud-deep/40 bg-white/95 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur supports-[backdrop-filter]:bg-white/85 dark:border-ink-light/60 dark:bg-ink-deep/95 dark:supports-[backdrop-filter]:bg-ink-deep/85">
         <div className="container flex max-w-2xl items-center gap-2">
           <Button
             variant="outline"
