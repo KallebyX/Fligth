@@ -7,6 +7,7 @@ import { Podium, type PodiumEntry } from "@/components/leagues/Podium";
 import { LeaderboardRow } from "@/components/leagues/LeaderboardRow";
 import { ResetTimer } from "@/components/leagues/ResetTimer";
 import { LevelUpDialog, type Promotion } from "@/components/leagues/LevelUpDialog";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import {
   DIVISIONS,
   PROMOTE_TOP,
@@ -120,6 +121,7 @@ export default async function LeaguesPage() {
   const isBottomTier = division.tier === 1;
 
   return (
+    <PullToRefresh>
     <main className="container max-w-2xl space-y-5 py-6">
       <LevelUpDialog promo={promo} />
 
@@ -286,5 +288,6 @@ export default async function LeaguesPage() {
         </div>
       </Card>
     </main>
+    </PullToRefresh>
   );
 }

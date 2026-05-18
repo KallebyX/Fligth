@@ -5,6 +5,7 @@ import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PublicProfile, type PublicProfileData } from "@/components/profile/PublicProfile";
 import { PendingDeletionBanner } from "@/components/profile/PendingDeletionBanner";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import { SoundHapticToggles } from "@/components/settings/SoundHapticToggles";
 import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
@@ -89,6 +90,7 @@ export default async function ProfileIndex() {
   };
 
   return (
+    <PullToRefresh>
     <main className="container max-w-2xl space-y-6 py-6">
       {profile.deletion_executes_at && (
         <PendingDeletionBanner executesAt={profile.deletion_executes_at} />
@@ -230,6 +232,7 @@ export default async function ProfileIndex() {
         </form>
       </div>
     </main>
+    </PullToRefresh>
   );
 }
 

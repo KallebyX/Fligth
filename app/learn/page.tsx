@@ -8,6 +8,7 @@ import { HUD } from "@/components/hud/HUD";
 import { HeartsOutCard } from "@/components/hearts/HeartsOutCard";
 import { WelcomeBanner } from "@/components/learn/WelcomeBanner";
 import { StreakAtRiskCard } from "@/components/learn/StreakAtRiskCard";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import { OnboardingCoach } from "@/components/onboarding/OnboardingCoach";
 import { Suspense } from "react";
 import { getDivision } from "@/lib/leagues/divisions";
@@ -101,6 +102,7 @@ export default async function LearnPage({
         goalXp={goalXp}
         freezes={freezes}
       />
+      <PullToRefresh>
       <main className="container max-w-3xl py-6">
       <Suspense fallback={null}>
         <WelcomeBanner
@@ -210,6 +212,7 @@ export default async function LearnPage({
         })}
       </div>
       </main>
+      </PullToRefresh>
     </>
   );
 }
