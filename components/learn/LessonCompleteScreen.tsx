@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { maybePromptReview } from "@/lib/native/rateApp";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -56,6 +57,13 @@ export function LessonCompleteScreen({
     if (!isPractice) {
       sfx.play("lesson-complete");
       void notify("success");
+      // Apple HIG-compliant in-app review prompt. Triggers on the first
+      // perfect lesson (a moment of clear delight). Internal localStorage
+      // flag ensures we only ask once ever; Apple's SK throttle handles
+      // any duplicate attempts silently.
+      if (perfect) {
+        void maybePromptReview();
+      }
     }
     if (goalJustHit) {
       // Extra notify after the success haptic for the goal beat.
