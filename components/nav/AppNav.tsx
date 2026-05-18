@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   GraduationCap,
   Trophy,
@@ -13,7 +14,7 @@ import { cn } from "@/lib/utils";
 
 type Item = {
   href: string;
-  label: string;
+  labelKey: "learn" | "leagues" | "shop" | "friends" | "profile";
   Icon: typeof GraduationCap;
   /** Match the section if any of these prefixes are active. */
   match: (path: string) => boolean;
@@ -22,31 +23,31 @@ type Item = {
 const ITEMS: Item[] = [
   {
     href: "/learn",
-    label: "Aprender",
+    labelKey: "learn",
     Icon: GraduationCap,
     match: (p) => p.startsWith("/learn") || p.startsWith("/review") || p.startsWith("/exam"),
   },
   {
     href: "/leagues",
-    label: "Ligas",
+    labelKey: "leagues",
     Icon: Trophy,
     match: (p) => p.startsWith("/leagues"),
   },
   {
     href: "/shop/outfits",
-    label: "Loja",
+    labelKey: "shop",
     Icon: ShoppingBag,
     match: (p) => p.startsWith("/shop"),
   },
   {
     href: "/friends",
-    label: "Amigos",
+    labelKey: "friends",
     Icon: Users,
     match: (p) => p.startsWith("/friends"),
   },
   {
     href: "/profile",
-    label: "Perfil",
+    labelKey: "profile",
     Icon: UserCircle,
     match: (p) => p.startsWith("/profile") || p.startsWith("/pro"),
   },
@@ -54,6 +55,7 @@ const ITEMS: Item[] = [
 
 export function AppNav() {
   const pathname = usePathname() ?? "/";
+  const t = useTranslations("nav");
 
   // Hide the bottom tab bar (and the side nav) while a lesson is running —
   // it sits above the player's Verificar/Continuar bar on mobile and steals
@@ -90,7 +92,7 @@ export function AppNav() {
                   >
                     <item.Icon size={20} />
                   </span>
-                  {item.label}
+                  {t(item.labelKey)}
                 </Link>
               </li>
             );
@@ -132,7 +134,7 @@ export function AppNav() {
                   >
                     <item.Icon size={18} />
                   </span>
-                  {item.label}
+                  {t(item.labelKey)}
                 </Link>
               </li>
             );

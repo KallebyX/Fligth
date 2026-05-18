@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 import {
   ChevronLeft,
   Bell,
@@ -22,6 +23,7 @@ import { SoundHapticToggles } from "@/components/settings/SoundHapticToggles";
 import { SoundMixerSection } from "@/components/settings/SoundMixerSection";
 import { PrivacySection } from "@/components/settings/PrivacySection";
 import { ThemePicker } from "@/components/settings/ThemePicker";
+import { LanguagePicker } from "@/components/settings/LanguagePicker";
 import { computeHearts } from "@/lib/hearts";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 
@@ -33,6 +35,9 @@ export default async function SettingsPage() {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
+
+  const t = await getTranslations("settings");
+  const tCommon = await getTranslations("common");
 
   const [{ data: profile }, { data: stats }, notifPrefs] = await Promise.all([
     supabase
@@ -69,27 +74,27 @@ export default async function SettingsPage() {
           className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink dark:text-cloud/60 dark:hover:text-cloud"
         >
           <ChevronLeft size={16} />
-          Voltar
+          {tCommon("back")}
         </Link>
 
         <header>
-          <h1 className="text-3xl font-black">Configurações</h1>
-          <p className="text-sm text-ink/60">
-            Ajuste notificações, som, privacidade e idioma.
+          <h1 className="text-3xl font-black dark:text-cloud">{t("title")}</h1>
+          <p className="text-sm text-ink/60 dark:text-cloud/60">
+            {t("subtitle")}
           </p>
         </header>
 
         <SectionHeader
           icon={<Bell size={18} />}
-          title="Notificações"
-          description="Push e email — controle o que chega até você."
+          title={t("section.notifications")}
+          description={t("section.notificationsDesc")}
         />
         <NotificationPrefsSection initial={notifPrefs} />
 
         <SectionHeader
           icon={<Volume2 size={18} />}
-          title="Som & vibração"
-          description="Mixer e atalhos. Vale só pra este dispositivo."
+          title={t("section.sound")}
+          description={t("section.soundDesc")}
         />
         <Card>
           <SoundHapticToggles />
@@ -98,8 +103,8 @@ export default async function SettingsPage() {
 
         <SectionHeader
           icon={<Eye size={18} />}
-          title="Privacidade"
-          description="Quem pode ver seu perfil, XP e ofensivas."
+          title={t("section.privacy")}
+          description={t("section.privacyDesc")}
         />
         <PrivacySection
           initialProfilePublic={profile?.profile_public ?? true}
@@ -107,15 +112,12 @@ export default async function SettingsPage() {
 
         <SectionHeader
           icon={<Palette size={18} />}
-          title="Aparência"
-          description="Claro, escuro ou automático (segue o sistema)."
+          title={t("section.appearance")}
+          description={t("section.appearanceDesc")}
         />
         <Card>
-          <CardTitle>Tema</CardTitle>
-          <CardDesc>
-            A escolha vale neste dispositivo. &ldquo;Automático&rdquo; muda
-            sozinho ao anoitecer se seu sistema usar tema noturno.
-          </CardDesc>
+          <CardTitle>{t("theme.title")}</CardTitle>
+          <CardDesc>{t("theme.description")}</CardDesc>
           <div className="mt-4">
             <ThemePicker />
           </div>
@@ -123,23 +125,20 @@ export default async function SettingsPage() {
 
         <SectionHeader
           icon={<Languages size={18} />}
-          title="Idioma"
-          description="Interface do app (lições continuam em português)."
+          title={t("section.language")}
+          description={t("section.languageDesc")}
         />
         <Card>
-          <CardTitle>Idioma do app</CardTitle>
-          <CardDesc>
-            Suporte a Inglês e Espanhol vem em breve. Por enquanto, só PT-BR.
-          </CardDesc>
-          <div className="mt-3 inline-flex items-center gap-2 rounded-2xl border-2 border-sky/30 bg-sky/5 px-3 py-2 text-sm font-extrabold text-sky-deep">
-            🇧🇷 Português (Brasil)
+          <CardTitle>{t("language.current")}</CardTitle>
+          <div className="mt-4">
+            <LanguagePicker />
           </div>
         </Card>
 
         <SectionHeader
           icon={<User size={18} />}
-          title="Conta"
-          description="Perfil, segurança e dados pessoais."
+          title={t("section.account")}
+          description={t("section.accountDesc")}
         />
         <Card>
           <CardTitle>Editar perfil</CardTitle>
@@ -148,63 +147,63 @@ export default async function SettingsPage() {
           </CardDesc>
           <div className="mt-3">
             <Link href="/profile/edit">
-              <Button variant="outline">Abrir editor de perfil</Button>
+              <Button variant="outline">{tCommon("edit")}</Button>
             </Link>
           </div>
         </Card>
 
         <SectionHeader
           icon={<Camera size={18} />}
-          title="Explorar"
-          description="Galeria da comunidade e escolas de aviação."
+          title={t("section.explore")}
+          description={t("section.exploreDesc")}
         />
         <Card>
-          <ul className="divide-y divide-cloud-deep/30 text-sm">
+          <ul className="divide-y divide-cloud-deep/30 text-sm dark:divide-ink-light/60">
             <li className="flex items-center justify-between py-2.5">
-              <Link href="/galeria" className="flex items-center gap-2 font-extrabold text-ink hover:text-sky">
-                <Camera size={14} className="text-ink/60" />
-                Galeria de aviões
+              <Link href="/galeria" className="flex items-center gap-2 font-extrabold text-ink hover:text-sky dark:text-cloud">
+                <Camera size={14} className="text-ink/60 dark:text-cloud/60" />
+                Galeria
               </Link>
-              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+              <ChevronLeft size={16} className="rotate-180 text-ink/40 dark:text-cloud/40" />
             </li>
             <li className="flex items-center justify-between py-2.5">
-              <Link href="/escolas" className="flex items-center gap-2 font-extrabold text-ink hover:text-sky">
-                <Building2 size={14} className="text-ink/60" />
-                Escolas de aviação
+              <Link href="/escolas" className="flex items-center gap-2 font-extrabold text-ink hover:text-sky dark:text-cloud">
+                <Building2 size={14} className="text-ink/60 dark:text-cloud/60" />
+                Escolas
               </Link>
-              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+              <ChevronLeft size={16} className="rotate-180 text-ink/40 dark:text-cloud/40" />
             </li>
           </ul>
         </Card>
 
         <SectionHeader
           icon={<Info size={18} />}
-          title="Sobre"
-          description="Versão, termos e suporte."
+          title={t("section.about")}
+          description={t("section.aboutDesc")}
         />
         <Card>
-          <ul className="divide-y divide-cloud-deep/30 text-sm">
+          <ul className="divide-y divide-cloud-deep/30 text-sm dark:divide-ink-light/60">
             <li className="flex items-center justify-between py-2.5">
-              <span className="font-extrabold text-ink">Versão</span>
-              <span className="font-mono text-xs text-ink/60">{appVersion}</span>
+              <span className="font-extrabold text-ink dark:text-cloud">{t("about.version")}</span>
+              <span className="font-mono text-xs tabular-nums text-ink/60 dark:text-cloud/60">{appVersion}</span>
             </li>
             <li className="flex items-center justify-between py-2.5">
-              <Link href="/terms" className="font-extrabold text-ink hover:text-sky">
-                Termos de uso
+              <Link href="/terms" className="font-extrabold text-ink hover:text-sky dark:text-cloud">
+                {t("about.terms")}
               </Link>
-              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+              <ChevronLeft size={16} className="rotate-180 text-ink/40 dark:text-cloud/40" />
             </li>
             <li className="flex items-center justify-between py-2.5">
-              <Link href="/privacy" className="font-extrabold text-ink hover:text-sky">
-                Política de privacidade
+              <Link href="/privacy" className="font-extrabold text-ink hover:text-sky dark:text-cloud">
+                {t("about.privacy")}
               </Link>
-              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+              <ChevronLeft size={16} className="rotate-180 text-ink/40 dark:text-cloud/40" />
             </li>
             <li className="flex items-center justify-between py-2.5">
-              <Link href="/support" className="font-extrabold text-ink hover:text-sky">
-                Suporte
+              <Link href="/support" className="font-extrabold text-ink hover:text-sky dark:text-cloud">
+                {t("about.support")}
               </Link>
-              <ChevronLeft size={16} className="rotate-180 text-ink/40" />
+              <ChevronLeft size={16} className="rotate-180 text-ink/40 dark:text-cloud/40" />
             </li>
           </ul>
         </Card>

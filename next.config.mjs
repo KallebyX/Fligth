@@ -1,4 +1,7 @@
 import { withSentryConfig } from "@sentry/nextjs";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -37,7 +40,7 @@ const nextConfig = {
 // absent (e.g. local dev without keys), the runtime SDK simply doesn't init —
 // builds and routes work normally. Source-map upload only happens when
 // SENTRY_AUTH_TOKEN is set in CI / Vercel project env.
-export default withSentryConfig(nextConfig, {
+export default withSentryConfig(withNextIntl(nextConfig), {
   org: "oryum-tech",
   project: "fligth",
   silent: !process.env.CI,

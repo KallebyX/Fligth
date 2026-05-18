@@ -1,36 +1,25 @@
 "use client";
 
 import { Sun, Moon, Monitor } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useTheme, type Theme } from "@/components/theme/ThemeProvider";
 import { cn } from "@/lib/utils";
 
-const OPTIONS: Array<{ value: Theme; label: string; Icon: typeof Sun; description: string }> = [
-  {
-    value: "light",
-    label: "Claro",
-    Icon: Sun,
-    description: "Branco e leve — bom pra dia.",
-  },
-  {
-    value: "dark",
-    label: "Escuro",
-    Icon: Moon,
-    description: "Preto e calmo — bom pra noite.",
-  },
-  {
-    value: "auto",
-    label: "Automático",
-    Icon: Monitor,
-    description: "Segue o sistema (iOS / Android / browser).",
-  },
+const OPTIONS: Array<{ value: Theme; Icon: typeof Sun; labelKey: "light" | "dark" | "auto" }> = [
+  { value: "light", Icon: Sun,     labelKey: "light" },
+  { value: "dark",  Icon: Moon,    labelKey: "dark" },
+  { value: "auto",  Icon: Monitor, labelKey: "auto" },
 ];
 
 export function ThemePicker() {
   const { theme, setTheme } = useTheme();
+  const t = useTranslations("settings.theme");
 
   return (
     <div className="grid gap-2 sm:grid-cols-3">
-      {OPTIONS.map(({ value, label, Icon, description }) => {
+      {OPTIONS.map(({ value, Icon, labelKey }) => {
+        const label = t(labelKey);
+        const description = t(`${labelKey}Description`);
         const active = theme === value;
         return (
           <button

@@ -1,0 +1,89 @@
+{
+  "common": {
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "send": "Enviar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "skip": "Saltar",
+    "loading": "Cargando…",
+    "tryAgain": "Reintentar",
+    "search": "Buscar"
+  },
+  "nav": {
+    "learn": "Aprender",
+    "leagues": "Ligas",
+    "shop": "Tienda",
+    "friends": "Amigos",
+    "profile": "Perfil",
+    "settings": "Ajustes",
+    "gallery": "Galería",
+    "schools": "Escuelas"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Configura notificaciones, sonido, privacidad e idioma.",
+    "section": {
+      "notifications": "Notificaciones",
+      "notificationsDesc": "Push y email — controla lo que recibes.",
+      "sound": "Sonido y vibración",
+      "soundDesc": "Mezclador y atajos. Solo para este dispositivo.",
+      "privacy": "Privacidad",
+      "privacyDesc": "Quién puede ver tu perfil, XP y rachas.",
+      "appearance": "Apariencia",
+      "appearanceDesc": "Claro, oscuro o automático (sigue al sistema).",
+      "language": "Idioma",
+      "languageDesc": "Interfaz de la app (las lecciones siguen en portugués).",
+      "account": "Cuenta",
+      "accountDesc": "Perfil, seguridad y datos personales.",
+      "explore": "Explorar",
+      "exploreDesc": "Galería de la comunidad y escuelas de aviación.",
+      "about": "Acerca de",
+      "aboutDesc": "Versión, términos y soporte."
+    },
+    "theme": {
+      "title": "Tema",
+      "description": "La elección vale solo para este dispositivo. \"Automático\" cambia al anochecer si tu sistema usa modo oscuro.",
+      "light": "Claro",
+      "lightDescription": "Blanco y ligero — bueno para el día.",
+      "dark": "Oscuro",
+      "darkDescription": "Negro y tranquilo — bueno para la noche.",
+      "auto": "Automático",
+      "autoDescription": "Sigue al sistema (iOS / Android / navegador)."
+    },
+    "language": {
+      "current": "Idioma de la app",
+      "subcopy": "Elige el idioma de la interfaz. Las lecciones de examen permanecen en portugués (Brasil).",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "es": "Español"
+    },
+    "about": {
+      "version": "Versión",
+      "terms": "Términos de uso",
+      "privacy": "Política de privacidad",
+      "support": "Soporte"
+    }
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "logout": "Cerrar sesión",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "email": "Email",
+    "password": "Contraseña"
+  },
+  "hud": {
+    "streak": "Racha",
+    "xp": "XP",
+    "hearts": "Vidas",
+    "gems": "Gems",
+    "upgrade": "Mejorar"
+  },
+  "onboarding": {
+    "skipTutorial": "Saltar"
+  }
+}

@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Nunito } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import { PwaRegister } from "@/components/pwa-register";
 import { BiometricGate } from "@/components/auth/BiometricGate";
@@ -72,11 +74,14 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="pt-BR" className={nunito.variable} suppressHydrationWarning>
+    <html lang={locale} className={nunito.variable} suppressHydrationWarning>
       <head>
         {/* Inline script runs before React hydrates and applies the
             user's stored theme so the page never flashes white when
@@ -84,11 +89,13 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
       </head>
       <body className="min-h-screen bg-cloud font-sans text-ink antialiased dark:bg-ink-deep dark:text-cloud">
-        <ThemeProvider>
-          <BiometricGate>{children}</BiometricGate>
-          <NativeOAuthListener />
-          <PwaRegister />
-        </ThemeProvider>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ThemeProvider>
+            <BiometricGate>{children}</BiometricGate>
+            <NativeOAuthListener />
+            <PwaRegister />
+          </ThemeProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

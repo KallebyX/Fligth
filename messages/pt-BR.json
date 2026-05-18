@@ -1,0 +1,89 @@
+{
+  "common": {
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "send": "Enviar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "next": "Próximo",
+    "skip": "Pular",
+    "loading": "Carregando…",
+    "tryAgain": "Tentar de novo",
+    "search": "Buscar"
+  },
+  "nav": {
+    "learn": "Aprender",
+    "leagues": "Ligas",
+    "shop": "Loja",
+    "friends": "Amigos",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "gallery": "Galeria",
+    "schools": "Escolas"
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Ajuste notificações, som, privacidade e idioma.",
+    "section": {
+      "notifications": "Notificações",
+      "notificationsDesc": "Push e email — controle o que chega até você.",
+      "sound": "Som & vibração",
+      "soundDesc": "Mixer e atalhos. Vale só pra este dispositivo.",
+      "privacy": "Privacidade",
+      "privacyDesc": "Quem pode ver seu perfil, XP e ofensivas.",
+      "appearance": "Aparência",
+      "appearanceDesc": "Claro, escuro ou automático (segue o sistema).",
+      "language": "Idioma",
+      "languageDesc": "Interface do app (lições continuam em português).",
+      "account": "Conta",
+      "accountDesc": "Perfil, segurança e dados pessoais.",
+      "explore": "Explorar",
+      "exploreDesc": "Galeria da comunidade e escolas de aviação.",
+      "about": "Sobre",
+      "aboutDesc": "Versão, termos e suporte."
+    },
+    "theme": {
+      "title": "Tema",
+      "description": "A escolha vale neste dispositivo. \"Automático\" muda sozinho ao anoitecer se seu sistema usar tema noturno.",
+      "light": "Claro",
+      "lightDescription": "Branco e leve — bom pra dia.",
+      "dark": "Escuro",
+      "darkDescription": "Preto e calmo — bom pra noite.",
+      "auto": "Automático",
+      "autoDescription": "Segue o sistema (iOS / Android / browser)."
+    },
+    "language": {
+      "current": "Idioma do app",
+      "subcopy": "Escolha o idioma da interface. As lições da prova continuam em português.",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "es": "Español"
+    },
+    "about": {
+      "version": "Versão",
+      "terms": "Termos de uso",
+      "privacy": "Política de privacidade",
+      "support": "Suporte"
+    }
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Criar conta",
+    "logout": "Sair",
+    "forgotPassword": "Esqueceu a senha?",
+    "email": "Email",
+    "password": "Senha"
+  },
+  "hud": {
+    "streak": "Ofensiva",
+    "xp": "XP",
+    "hearts": "Vidas",
+    "gems": "Gems",
+    "upgrade": "Upgrade"
+  },
+  "onboarding": {
+    "skipTutorial": "Pular"
+  }
+}
