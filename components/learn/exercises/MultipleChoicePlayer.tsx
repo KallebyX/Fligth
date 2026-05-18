@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ExerciseShell, type ExerciseShellFeedback } from "./ExerciseShell";
 import type { ChoiceLetter, Exercise, PlayerProps } from "./types";
 import { cn } from "@/lib/utils";
@@ -29,6 +30,7 @@ export function MultipleChoicePlayer({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("learn");
 
   async function check() {
     if (!selected || submitting) return;
@@ -45,14 +47,10 @@ export function MultipleChoicePlayer({
       sfx.play(res.correct ? "correct" : "wrong");
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
-    } catch (err) {
+    } catch {
       // Server-side error (network blip, transient_failure from submitAnswer).
       // Keep the selection intact so the user can hit Verificar again.
-      setErrorMessage(
-        err instanceof Error && err.message
-          ? "Erro ao enviar — tente novamente."
-          : "Erro de conexão — tente novamente.",
-      );
+      setErrorMessage(t("transientError"));
     } finally {
       setSubmitting(false);
     }

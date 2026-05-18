@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Gem, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { Markdown } from "@/components/ui/markdown";
@@ -27,8 +28,8 @@ export function ExerciseShell({
   submitting,
   onCheck,
   onNext,
-  submitLabel = "Verificar",
-  continueLabel = "Continuar",
+  submitLabel,
+  continueLabel,
   children,
   mascotOutfit,
   hearts,
@@ -58,6 +59,7 @@ export function ExerciseShell({
    * selection intact and they can retry. */
   errorMessage?: string | null;
 }) {
+  const t = useTranslations("learn");
   const progressPct = Math.round(((index + 1) / total) * 100);
   const showChrome = onAbandon != null || hearts != null || gems != null;
 
@@ -72,7 +74,7 @@ export function ExerciseShell({
             <button
               type="button"
               onClick={onAbandon}
-              aria-label="Sair da lição"
+              aria-label={t("exitLesson")}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-ink/55 hover:bg-cloud-deep/15"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
@@ -188,7 +190,7 @@ export function ExerciseShell({
                 </div>
               </div>
               <Button size="lg" className="mt-4 w-full" onClick={onNext}>
-                {continueLabel}
+                {continueLabel ?? t("continue")}
               </Button>
             </div>
           </motion.div>
@@ -205,7 +207,7 @@ export function ExerciseShell({
               disabled={!canSubmit || submitting}
               variant={canSubmit ? "primary" : "outline"}
             >
-              {submitting ? "Conferindo..." : submitLabel}
+              {submitting ? t("verifying") : (submitLabel ?? t("verify"))}
             </Button>
           </div>
         </div>

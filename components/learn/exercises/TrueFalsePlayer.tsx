@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { Check, X } from "lucide-react";
 import { ExerciseShell, type ExerciseShellFeedback } from "./ExerciseShell";
 import type { Exercise, PlayerProps } from "./types";
@@ -30,6 +31,7 @@ export function TrueFalsePlayer({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("learn");
 
   async function check() {
     if (pick == null || submitting) return;
@@ -47,7 +49,7 @@ export function TrueFalsePlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      setErrorMessage("Erro de conexão — tente novamente.");
+      setErrorMessage(t("transientError"));
     } finally {
       setSubmitting(false);
     }

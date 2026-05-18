@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ExerciseShell, type ExerciseShellFeedback } from "./ExerciseShell";
 import type { Exercise, PlayerProps } from "./types";
 import { cn } from "@/lib/utils";
@@ -58,6 +59,7 @@ export function MatchPairsPlayer({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("learn");
 
   const totalPairs = exercise.payload.pairs.length;
   const leftDone = new Set(matches.map((m) => m.left));
@@ -109,7 +111,7 @@ export function MatchPairsPlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      setErrorMessage("Erro de conexão — tente novamente.");
+      setErrorMessage(t("transientError"));
     } finally {
       setSubmitting(false);
     }

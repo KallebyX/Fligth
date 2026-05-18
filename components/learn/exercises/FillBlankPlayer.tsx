@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ExerciseShell, type ExerciseShellFeedback } from "./ExerciseShell";
 import type { Exercise, PlayerProps } from "./types";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,7 @@ export function FillBlankPlayer({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("learn");
 
   // Bank order keyed by question id — same on every render for this question.
   const bankOrder = useMemo(
@@ -73,7 +75,7 @@ export function FillBlankPlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      setErrorMessage("Erro de conexão — tente novamente.");
+      setErrorMessage(t("transientError"));
     } finally {
       setSubmitting(false);
     }

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { CornerDownLeft } from "lucide-react";
 import { ExerciseShell, type ExerciseShellFeedback } from "./ExerciseShell";
 import type { Exercise, PlayerProps } from "./types";
@@ -52,6 +53,7 @@ export function TapTilesPlayer({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const sfx = useSfx();
   const reducedMotion = useReducedMotion();
+  const t = useTranslations("learn");
 
   const totalTiles = exercise.payload.words.length;
   const remaining = tileOrder.filter((i) => !picked.includes(i));
@@ -75,7 +77,7 @@ export function TapTilesPlayer({
       void notify(res.correct ? "success" : "warning");
       onHearts?.(res.hearts);
     } catch {
-      setErrorMessage("Erro de conexão — tente novamente.");
+      setErrorMessage(t("transientError"));
     } finally {
       setSubmitting(false);
     }
