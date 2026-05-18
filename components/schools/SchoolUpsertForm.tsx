@@ -7,8 +7,7 @@ import { Card, CardTitle, CardDesc } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { upsertSchool, type SchoolUpsertInput, type CursoInput } from "@/app/actions/adminSchools";
-
-const UFS = ["AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG","PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO"];
+import { UFS } from "@/lib/validators";
 
 export type Initial = Partial<SchoolUpsertInput>;
 

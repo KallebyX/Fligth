@@ -50,18 +50,19 @@ export async function listRecent(): Promise<ListResult> {
   return { ok: true, items, unread: count ?? 0 };
 }
 
-export async function markAllRead(): Promise<{ ok: boolean }> {
+export async function markAllRead(): Promise<{ ok: true } | { ok: false; error: string }> {
   const supabase = await createClient();
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return { ok: false };
+  if (!user) return { ok: false, error: "unauthenticated" };
 
-  await supabase
+  const { error } = await supabase
     .from("notifications")
     .update({ read_at: new Date().toISOString() })
     .eq("user_id", user.id)
     .is("read_at", null);
+  if (error) return { ok: false, error: error.message };
   revalidatePath("/", "layout");
   return { ok: true };
 }

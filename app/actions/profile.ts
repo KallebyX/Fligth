@@ -3,14 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import type { Database } from "@/lib/supabase/types";
+import { USERNAME_RE, isReservedUsername } from "@/lib/validators";
 
 type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
-
-const USERNAME_RE = /^[a-z0-9_]{3,20}$/;
-const RESERVED = new Set([
-  "admin", "root", "anac", "capitao", "lori", "support", "help", "api",
-  "fligth", "flight", "system", "official", "moderator", "mod",
-]);
 
 export type UpdateProfileInput = {
   display_name?: string | null;
@@ -84,7 +79,7 @@ export async function setUsername(
   const username = raw.trim().toLowerCase();
   if (!USERNAME_RE.test(username))
     return { ok: false, error: "username_invalid_format" };
-  if (RESERVED.has(username))
+  if (isReservedUsername(username))
     return { ok: false, error: "username_reserved" };
 
   // Case-insensitive uniqueness check happens at DB level via the

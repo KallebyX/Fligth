@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { createHash } from "node:crypto";
 import { createClient } from "@/lib/supabase/server";
+import { EMAIL_RE, PHONE_RE_BR as PHONE_RE } from "@/lib/validators";
 
 export type LeadInput = {
   schoolId: string;
@@ -24,11 +25,6 @@ export type LeadInput = {
 export type LeadResult =
   | { ok: true; leadId: string; reward: number }
   | { ok: false; error: string };
-
-const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-// PT-BR phone: 10–11 digits including DDD (e.g., 11999999999) or with
-// formatting characters. Accept up to 30 chars of digits + symbols.
-const PHONE_RE = /^[\d\s()+\-]{8,30}$/;
 
 export async function submitSchoolLead(input: LeadInput): Promise<LeadResult> {
   const supabase = await createClient();

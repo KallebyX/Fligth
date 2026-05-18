@@ -5,6 +5,7 @@ import { Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BottomSheet } from "@/components/ui/BottomSheet";
 import { createClient } from "@/lib/supabase/client";
+import { isEmail } from "@/lib/validators";
 
 export function EmailChangeDialog({
   open,
@@ -26,7 +27,7 @@ export function EmailChangeDialog({
     setError(null);
     try {
       const clean = email.trim().toLowerCase();
-      if (!clean || !clean.includes("@")) {
+      if (!isEmail(clean)) {
         setError("Email inválido.");
         return;
       }
