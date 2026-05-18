@@ -40,6 +40,9 @@ export type Database = {
         equipped_outfit_slug: string | null;
         // 0019_profile_completion_avatars
         avatar_url: string | null;
+        // 0024_account_deletion_soft_delete
+        deletion_requested_at: string | null;
+        deletion_executes_at: string | null;
       }>;
       subjects: Tbl<{
         id: number;

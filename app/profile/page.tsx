@@ -4,6 +4,7 @@ import { Award, ChevronLeft, LogOut, Settings, UserPlus2 } from "lucide-react";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PublicProfile, type PublicProfileData } from "@/components/profile/PublicProfile";
+import { PendingDeletionBanner } from "@/components/profile/PendingDeletionBanner";
 import { SoundHapticToggles } from "@/components/settings/SoundHapticToggles";
 import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
@@ -22,7 +23,7 @@ export default async function ProfileIndex() {
   const { data: profile } = await supabase
     .from("profiles")
     .select(
-      "id, username, display_name, bio, country_code, profile_color, profile_public, current_league, mascot_outfit, equipped_outfit_slug, joined_at",
+      "id, username, display_name, bio, country_code, profile_color, profile_public, current_league, mascot_outfit, equipped_outfit_slug, joined_at, deletion_executes_at",
     )
     .eq("id", user.id)
     .maybeSingle();
@@ -89,6 +90,9 @@ export default async function ProfileIndex() {
 
   return (
     <main className="container max-w-2xl space-y-6 py-6">
+      {profile.deletion_executes_at && (
+        <PendingDeletionBanner executesAt={profile.deletion_executes_at} />
+      )}
       {/* Top action bar — quick access to settings + edit profile */}
       <div className="flex items-center justify-end gap-2">
         <Link

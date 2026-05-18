@@ -6,8 +6,7 @@ import { AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BottomSheet } from "@/components/ui/BottomSheet";
-import { deleteAccount } from "@/app/actions/deleteAccount";
-import { setBiometricEnrolled } from "@/components/auth/BiometricGate";
+import { requestDeletion } from "@/app/actions/deleteAccount";
 
 const CONFIRM_PHRASE = "EXCLUIR MINHA CONTA";
 
@@ -27,7 +26,7 @@ export function DeleteAccountDialog({
     setBusy(true);
     setError(null);
     try {
-      const res = await deleteAccount({ confirmText });
+      const res = await requestDeletion({ confirmText });
       if (!res.ok) {
         setError(
           res.error === "confirm_text_mismatch"
@@ -36,8 +35,10 @@ export function DeleteAccountDialog({
         );
         return;
       }
-      setBiometricEnrolled(false);
-      router.push("/?deleted=1");
+      // Don't log the user out — they need to stay signed in to see the
+      // PendingDeletionBanner on /profile and cancel if they change their
+      // mind. router.refresh re-renders the server components.
+      onClose();
       router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "delete_failed");
@@ -62,9 +63,10 @@ export function DeleteAccountDialog({
             Excluir conta?
           </h2>
           <p className="mt-1 text-sm leading-snug text-ink/70 dark:text-cloud/70">
-            Vai apagar permanentemente seu perfil, ofensiva, XP, vidas,
-            outfits comprados e todo seu progresso. Essa ação não pode
-            ser desfeita.
+            Vai agendar a exclusão em <strong>24 horas</strong>. Durante esse
+            tempo, você pode cancelar a qualquer momento entrando na sua
+            conta. Após 24h, todo o seu progresso (XP, ofensiva, vidas,
+            outfits comprados) será apagado permanentemente.
           </p>
         </div>
       </div>
@@ -103,7 +105,7 @@ export function DeleteAccountDialog({
           className="w-full"
           disabled={busy}
         >
-          Cancelar
+          Voltar
         </Button>
         <Button
           onClick={handleDelete}
@@ -112,7 +114,11 @@ export function DeleteAccountDialog({
           className="w-full"
           disabled={busy || confirmText !== CONFIRM_PHRASE}
         >
-          {busy ? <Loader2 size={14} className="animate-spin" /> : "Excluir tudo"}
+          {busy ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            "Agendar exclusão"
+          )}
         </Button>
       </div>
     </BottomSheet>
