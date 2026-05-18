@@ -16,6 +16,7 @@ import { Mascot, type MascotState } from "@/components/mascot/Mascot";
 import { Button } from "@/components/ui/button";
 import { useReducedMotion } from "@/lib/motion";
 import { impact } from "@/lib/haptics";
+import { CoachSpotlight } from "./CoachSpotlight";
 
 const STORAGE_KEY = "lori.onboarding.coach_seen.v1";
 
@@ -79,6 +80,7 @@ const STEPS: Step[] = [
 export function OnboardingCoach() {
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
+  const [spotlightActive, setSpotlightActive] = useState(false);
   const reducedMotion = useReducedMotion();
 
   // Check on mount whether the coach has been seen.
@@ -108,6 +110,9 @@ export function OnboardingCoach() {
     void impact("light");
     markSeen();
     setOpen(false);
+    // Don't trigger the spotlight when the user explicitly skipped — they
+    // signaled "leave me alone". Save the spotlight for users who completed
+    // the intro modal happy-path.
   }
 
   function next() {
@@ -117,6 +122,7 @@ export function OnboardingCoach() {
     } else {
       markSeen();
       setOpen(false);
+      setSpotlightActive(true);
     }
   }
 
@@ -125,6 +131,11 @@ export function OnboardingCoach() {
   const Icon = current?.Icon;
 
   return (
+    <>
+    <CoachSpotlight
+      active={spotlightActive}
+      onFinish={() => setSpotlightActive(false)}
+    />
     <AnimatePresence>
       {open && current && (
         <motion.div
@@ -246,5 +257,6 @@ export function OnboardingCoach() {
         </motion.div>
       )}
     </AnimatePresence>
+    </>
   );
 }

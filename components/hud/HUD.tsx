@@ -90,13 +90,23 @@ export async function HUD({
           )}
         </Link>
         <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
-          <StreakBadge days={streak} freezes={freezes} />
+          <span data-coach="streak">
+            <StreakBadge days={streak} freezes={freezes} />
+          </span>
           {todayXp != null && goalXp != null && (
-            <DailyGoalRing todayXp={todayXp} goalXp={goalXp} />
+            <span data-coach="goal">
+              <DailyGoalRing todayXp={todayXp} goalXp={goalXp} />
+            </span>
           )}
-          <GemsBadge gems={gems} />
+          <span data-coach="gems">
+            <GemsBadge gems={gems} />
+          </span>
           <XPBar xp={xp} />
-          {!isPro && <HeartsBar hearts={hearts} />}
+          {!isPro && (
+            <span data-coach="hearts">
+              <HeartsBar hearts={hearts} />
+            </span>
+          )}
           {!isPro && (
             <Link
               href="/pro"
