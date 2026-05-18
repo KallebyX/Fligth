@@ -112,6 +112,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
                   e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""),
                 )
               }
+              autoComplete="username"
               maxLength={20}
               placeholder="seu_at"
               className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-3 text-base font-medium outline-none transition-colors focus:border-sky"
@@ -157,6 +158,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
               onChange={(e) => setDisplayName(e.target.value)}
               maxLength={40}
               placeholder="Capitão Lorí"
+              autoComplete="name"
               className="mt-1 h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white px-3 text-base font-medium outline-none focus:border-sky"
             />
           </div>
@@ -171,6 +173,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
               onChange={(e) => setBio(e.target.value.slice(0, 280))}
               rows={3}
               placeholder="Pretendo virar piloto privado em..."
+              autoComplete="off"
               className="mt-1 w-full resize-none rounded-2xl border-2 border-cloud-deep bg-white p-3 text-base font-medium outline-none focus:border-sky"
             />
           </div>

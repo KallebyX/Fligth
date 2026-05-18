@@ -114,6 +114,7 @@ function PostCard({ item }: { item: GalleryItem }) {
             onClick={onLike}
             disabled={busy}
             aria-pressed={liked}
+            aria-label={liked ? "Descurtir" : "Curtir"}
             className={cn(
               "flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-extrabold transition-colors",
               liked

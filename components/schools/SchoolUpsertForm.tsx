@@ -115,6 +115,7 @@ export function SchoolUpsertForm({ initial }: { initial?: Initial }) {
                 autoSlug(e.target.value);
               }}
               required
+              autoComplete="organization"
               className="mt-1"
             />
           </div>
@@ -157,7 +158,7 @@ export function SchoolUpsertForm({ initial }: { initial?: Initial }) {
           <div className="grid gap-3 sm:grid-cols-[2fr,1fr]">
             <div>
               <Label>Cidade</Label>
-              <Input value={city} onChange={(e) => setCity(e.target.value)} required className="mt-1" />
+              <Input autoComplete="address-level2" value={city} onChange={(e) => setCity(e.target.value)} required className="mt-1" />
             </div>
             <div>
               <Label>UF</Label>
@@ -187,17 +188,17 @@ export function SchoolUpsertForm({ initial }: { initial?: Initial }) {
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <Label>Email (recebe leads)</Label>
-              <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1" />
+              <Input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="mt-1" />
             </div>
             <div>
               <Label>Telefone</Label>
-              <Input value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1" />
+              <Input type="tel" inputMode="tel" autoComplete="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1" />
             </div>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             <div>
               <Label>WhatsApp</Label>
-              <Input value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="5511..." className="mt-1" />
+              <Input type="tel" inputMode="tel" autoComplete="tel" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="5511..." className="mt-1" />
             </div>
             <div>
               <Label>Instagram</Label>
@@ -205,7 +206,7 @@ export function SchoolUpsertForm({ initial }: { initial?: Initial }) {
             </div>
             <div>
               <Label>Site</Label>
-              <Input value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://…" className="mt-1" />
+              <Input type="url" inputMode="url" autoComplete="url" value={website} onChange={(e) => setWebsite(e.target.value)} placeholder="https://…" className="mt-1" />
             </div>
           </div>
         </div>
