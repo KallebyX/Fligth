@@ -46,6 +46,8 @@ The app deploys to Vercel from the `main` branch automatically. Feature branches
 - **Extension in public schema** (`http`, `pg_net`): used by `notify_streak_risk` to call Edge Functions via vault secrets. Migrating to a private schema requires renaming all callers — backlog.
 - **Public bucket allows listing** (`avatars`, `gallery`): we serve public URLs to avatars/gallery thumbnails directly. Listing is enabled because that's how Supabase Storage is configured for the bucket; we'd need to add a deny-list-but-allow-read policy. Tracking but low priority — file names are UUIDs so enumeration leaks no PII.
 - **Leaked password protection disabled**: enable in Dashboard → Auth → Password Security → "Check against HaveIBeenPwned". Free, recommended pre-launch.
+- **~44 auth_rls_initplan findings on cooler-path tables** (notifications, push_tokens, mock_exam_attempts, follows, user_outfits, user_badges, gallery_*, schools, school_leads, products, subscriptions, purchases, user_activities, notification_prefs). Hot-path tables (profiles, user_progress, user_question_attempts, user_stats, league_members) were rewritten with `(select auth.uid())` in migration `rls_initplan_hot_path`. Remaining tables can be done with the same mechanical pattern when traffic grows; current row counts are too low for the per-row eval to matter.
+- **15 unused_index findings**: pre-existing indexes the planner hasn't hit yet. Kept because admin / moderator query paths will use them. Re-evaluate quarterly.
 
 ## Monitoring & alerts
 

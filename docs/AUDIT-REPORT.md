@@ -17,7 +17,9 @@ The app is **substantially production-ready**. Build is green, type-check is cle
 - 🟡 11/11 medium findings **closed**.
 - ⚠️ 9 deferred gaps: 7 closed, 2 partially shipped (i18n + dark-mode tails — scaffolding + top surfaces done, full migration deferred).
 - Bonus: 2 ERROR-level Supabase advisor findings closed during PR 14.
-- Test coverage: 31 vitest tests + CI workflow (D2 + D5). E2E Playwright (D1) + RLS (D3) + migration smoke (D4) still pending dedicated test-infra.
+- Bonus: 11 unindexed foreign keys + 9 hot-path RLS initplan optimizations closed in post-merge perf wave.
+- Bonus: all 5 Edge Functions deployed live (`safesearch`, `send-daily-reminder`, `dispatch-school-leads`, `send-push`, `apply-auth-config`).
+- Test coverage: 74 vitest tests + CI workflow (D2 + D5). E2E Playwright (D1) + RLS (D3) + migration smoke (D4) still pending dedicated test-infra.
 
 ---
 
