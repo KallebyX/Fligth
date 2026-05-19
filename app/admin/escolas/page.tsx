@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 const STATUS_TINT: Record<string, string> = {
   active:    "bg-grass/15 text-grass-deep",
   suspended: "bg-sun/15 text-sun",
-  inactive:  "bg-cloud-deep/30 text-ink/55",
+  inactive:  "bg-cloud-deep/30 text-ink/55 dark:bg-ink-light/30 dark:text-cloud/55",
 };
 
 export default async function AdminSchoolsListPage() {
@@ -41,7 +41,7 @@ export default async function AdminSchoolsListPage() {
     <main className="container max-w-3xl space-y-6 py-8">
       <Link
         href="/admin"
-        className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink"
+        className="inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink dark:text-cloud/60 dark:hover:text-cloud"
       >
         <ChevronLeft size={16} />
         Voltar ao admin
@@ -53,7 +53,7 @@ export default async function AdminSchoolsListPage() {
             <Building2 size={26} className="text-sky" />
             Escolas
           </h1>
-          <p className="text-sm text-ink/60">
+          <p className="text-sm text-ink/60 dark:text-cloud/60">
             {schools?.length ?? 0} escolas cadastradas · {leadCount ?? 0} leads
             recebidos
           </p>
@@ -87,7 +87,7 @@ export default async function AdminSchoolsListPage() {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-ink/60">
+                  <p className="text-xs text-ink/60 dark:text-cloud/60">
                     {s.city} · {s.state} ·{" "}
                     <span
                       className={cn(
@@ -103,7 +103,7 @@ export default async function AdminSchoolsListPage() {
                   <Link
                     href={`/escolas/${s.slug}`}
                     target="_blank"
-                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ink/50 hover:bg-cloud-deep/15 hover:text-ink"
+                    className="inline-flex h-9 w-9 items-center justify-center rounded-full text-ink/50 hover:bg-cloud-deep/15 hover:text-ink dark:text-cloud/50 dark:hover:bg-ink-light/30 dark:hover:text-cloud"
                     aria-label="Ver página pública"
                   >
                     <ExternalLink size={14} />

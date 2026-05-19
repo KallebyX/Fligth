@@ -95,7 +95,7 @@ export function ModerationRow({
           className="h-24 w-24 shrink-0 rounded-xl bg-cloud object-cover"
         />
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-bold text-ink/60">
+          <p className="text-xs font-bold text-ink/60 dark:text-cloud/60">
             {posterDisplayName ?? posterUsername ?? "Piloto"} ·{" "}
             <time className="tabular-nums">
               {new Date(createdAt).toLocaleString("pt-BR", {
@@ -107,17 +107,17 @@ export function ModerationRow({
             </time>
           </p>
           {caption && (
-            <p className="mt-1 line-clamp-2 text-sm text-ink/80">{caption}</p>
+            <p className="mt-1 line-clamp-2 text-sm text-ink/80 dark:text-cloud/80">{caption}</p>
           )}
           <div className="mt-1 flex flex-wrap gap-1.5">
             {aircraftModel && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5 text-[11px] font-bold text-ink/70">
+              <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5 text-[11px] font-bold text-ink/70 dark:bg-ink-deep/60 dark:text-cloud/70">
                 <Plane size={10} />
                 {aircraftModel}
               </span>
             )}
             {location && (
-              <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5 text-[11px] font-bold text-ink/70">
+              <span className="inline-flex items-center gap-1 rounded-full bg-cloud px-2 py-0.5 text-[11px] font-bold text-ink/70 dark:bg-ink-deep/60 dark:text-cloud/70">
                 <MapPin size={10} />
                 {location}
               </span>
@@ -158,8 +158,8 @@ export function ModerationRow({
       </div>
 
       {showRejectMenu && (
-        <div className="border-t border-cloud-deep/30 bg-white p-3">
-          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-ink/55">
+        <div className="border-t border-cloud-deep/30 bg-white p-3 dark:border-ink-light/30 dark:bg-ink-mid">
+          <p className="mb-2 text-xs font-bold uppercase tracking-wider text-ink/55 dark:text-cloud/55">
             Motivo da rejeição
           </p>
           <ul className="space-y-1">

@@ -1,0 +1,82 @@
+name: scheduled-edge-functions
+
+# Hits the Supabase Edge Functions on a schedule. Replaces ops setup of
+# EasyCron / cron-job.org / etc — keeps the schedule source-of-truth in
+# the repo + visible in the Actions tab.
+#
+# Required GitHub repo secrets:
+#   SUPABASE_PROJECT_REF   = ggveduxfkljidzkrmmoo
+#   SUPABASE_SERVICE_ROLE_KEY = <service role JWT>  (rotate periodically)
+#
+# Verify both are set: Settings → Secrets and variables → Actions.
+
+on:
+  schedule:
+    # send-daily-reminder: top of every hour. The Edge Function itself
+    # filters by user-local hour via the daily_reminder_targets RPC, so
+    # we just need to invoke once per UTC hour and Postgres handles the
+    # rest.
+    - cron: "0 * * * *"
+    # dispatch-school-leads: every 5 minutes. Lightweight idempotent.
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    # Manual trigger from the Actions UI for testing / backfill.
+    inputs:
+      function:
+        description: "Which function to invoke"
+        type: choice
+        required: true
+        default: send-daily-reminder
+        options:
+          - send-daily-reminder
+          - dispatch-school-leads
+          - safesearch
+
+concurrency:
+  # Don't pile up if a previous run is still going.
+  group: scheduled-edge-${{ github.event.schedule || github.event.inputs.function }}
+  cancel-in-progress: false
+
+jobs:
+  invoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Resolve function name from schedule or input
+        id: which
+        run: |
+          if [ -n "${{ github.event.inputs.function }}" ]; then
+            FN="${{ github.event.inputs.function }}"
+          elif [ "${{ github.event.schedule }}" = "0 * * * *" ]; then
+            FN="send-daily-reminder"
+          elif [ "${{ github.event.schedule }}" = "*/5 * * * *" ]; then
+            FN="dispatch-school-leads"
+          else
+            echo "Unknown trigger" >&2
+            exit 1
+          fi
+          echo "fn=$FN" >> "$GITHUB_OUTPUT"
+          echo "Will invoke: $FN"
+
+      - name: POST to Edge Function
+        env:
+          PROJECT_REF: ${{ secrets.SUPABASE_PROJECT_REF }}
+          SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FN: ${{ steps.which.outputs.fn }}
+        run: |
+          if [ -z "$PROJECT_REF" ] || [ -z "$SERVICE_KEY" ]; then
+            echo "Missing required secrets: SUPABASE_PROJECT_REF / SUPABASE_SERVICE_ROLE_KEY" >&2
+            exit 1
+          fi
+          URL="https://${PROJECT_REF}.supabase.co/functions/v1/${FN}"
+          echo "POST $URL"
+          # -f fails on 4xx/5xx so the workflow run flags failure for us.
+          # Send an empty {} body to keep the function happy if it parses
+          # JSON (safesearch will 400 — only use it via workflow_dispatch
+          # with a custom curl extension).
+          curl -fsS -X POST "$URL" \
+            -H "Authorization: Bearer ${SERVICE_KEY}" \
+            -H "Content-Type: application/json" \
+            --max-time 60 \
+            -d '{}' | head -c 4096
+          echo ""
