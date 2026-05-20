@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Star } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
 
 const STORAGE_KEY = "lori.hud.last_xp";
 
@@ -48,15 +49,12 @@ export function XPBar({ xp }: { xp: number }) {
 
   const label = shown.toLocaleString("pt-BR");
   return (
-    <div
-      className="flex items-center gap-1.5 rounded-full bg-gold/15 px-2.5 py-1"
-      aria-label={`${label} XP`}
-    >
-      <Star size={16} className="fill-gold text-gold" />
-      <span className="text-sm font-extrabold tabular-nums text-ink">
+    <Badge tone="gold" size="md" aria-label={`${label} XP`}>
+      <Star size={13} aria-hidden className="shrink-0 fill-gold text-gold" />
+      <span className="text-ink dark:text-cloud">
         {label}
-        <span className="ml-1 hidden text-ink/55 sm:inline">XP</span>
+        <span className="ml-1 hidden text-ink/55 dark:text-cloud/55 sm:inline">XP</span>
       </span>
-    </div>
+    </Badge>
   );
 }

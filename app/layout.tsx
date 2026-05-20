@@ -8,6 +8,7 @@ import { PwaRegister } from "@/components/pwa-register";
 import { BiometricGate } from "@/components/auth/BiometricGate";
 import { NativeOAuthListener } from "@/components/auth/NativeOAuthListener";
 import { ThemeProvider, NO_FLASH_SCRIPT } from "@/components/theme/ThemeProvider";
+import { A11yProvider, A11Y_NO_FLASH_SCRIPT } from "@/components/a11y/A11yProvider";
 
 const nunito = Nunito({
   subsets: ["latin"],
@@ -126,13 +127,16 @@ export default async function RootLayout({
             user's stored theme so the page never flashes white when
             opening in dark mode. */}
         <script dangerouslySetInnerHTML={{ __html: NO_FLASH_SCRIPT }} />
+        <script dangerouslySetInnerHTML={{ __html: A11Y_NO_FLASH_SCRIPT }} />
       </head>
       <body className="min-h-screen bg-cloud font-sans text-ink antialiased dark:bg-ink-deep dark:text-cloud">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
-            <BiometricGate>{children}</BiometricGate>
-            <NativeOAuthListener />
-            <PwaRegister />
+            <A11yProvider>
+              <BiometricGate>{children}</BiometricGate>
+              <NativeOAuthListener />
+              <PwaRegister />
+            </A11yProvider>
           </ThemeProvider>
         </NextIntlClientProvider>
         <SpeedInsights />

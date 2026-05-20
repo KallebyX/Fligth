@@ -6,6 +6,7 @@ import { GemsBadge } from "./GemsBadge";
 import { DailyGoalRing } from "./DailyGoalRing";
 import { NotificationsBell } from "./NotificationsBell";
 import { Crown } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
 import { createClient } from "@/lib/supabase/server";
 import type { Json } from "@/lib/supabase/types";
 import type { NotificationItem } from "@/app/actions/notifications";
@@ -74,43 +75,44 @@ export async function HUD({
       className="sticky top-0 z-40 border-b border-cloud-deep/40 bg-white/85 shadow-soft backdrop-blur supports-[backdrop-filter]:bg-white/75 dark:border-ink-light/60 dark:bg-ink-mid/80 dark:supports-[backdrop-filter]:bg-ink-mid/70"
       style={{ paddingTop: "env(safe-area-inset-top)" }}
     >
-      <div className="container flex min-h-14 items-center justify-between gap-2 px-3 py-1.5 sm:px-4 sm:py-2">
+      <div className="container flex min-h-14 items-center justify-between gap-2 px-3 py-2 sm:px-4">
         <Link
           href="/learn"
-          className="flex shrink-0 items-center gap-1.5 text-lg font-extrabold tracking-tight text-sky"
+          aria-label="Início — CMTE Lorí"
+          className="flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-1 text-lg font-extrabold tracking-tight text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky focus-visible:ring-offset-2 focus-visible:ring-offset-cloud dark:focus-visible:ring-offset-ink-deep"
         >
-          <span aria-hidden className="text-xl">✈</span>
-          <span className="hidden sm:inline">Capitão Lorí</span>
-          <span className="sm:hidden">Lorí</span>
+          <span aria-hidden className="text-xl leading-none">✈</span>
+          <span className="hidden leading-none sm:inline">CMTE Lorí</span>
+          <span className="leading-none sm:hidden">Lorí</span>
           {isPro && (
-            <span className="flex items-center gap-0.5 rounded-full bg-gold/15 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-gold">
-              <Crown size={10} />
+            <Badge tone="gold" size="xs" className="ml-0.5 uppercase tracking-wider">
+              <Crown size={9} aria-hidden className="shrink-0" />
               Pro
-            </span>
+            </Badge>
           )}
         </Link>
-        <div className="flex min-w-0 items-center gap-1.5 sm:gap-3">
-          <span data-coach="streak">
+        <div className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+          <span data-coach="streak" className="flex">
             <StreakBadge days={streak} freezes={freezes} />
           </span>
           {todayXp != null && goalXp != null && (
-            <span data-coach="goal">
+            <span data-coach="goal" className="flex">
               <DailyGoalRing todayXp={todayXp} goalXp={goalXp} />
             </span>
           )}
-          <span data-coach="gems">
+          <span data-coach="gems" className="flex">
             <GemsBadge gems={gems} />
           </span>
           <XPBar xp={xp} />
           {!isPro && (
-            <span data-coach="hearts">
+            <span data-coach="hearts" className="flex">
               <HeartsBar hearts={hearts} />
             </span>
           )}
           {!isPro && (
             <Link
               href="/pro"
-              className="hidden rounded-full bg-gold/15 px-3 py-1 text-[11px] font-extrabold uppercase tracking-wide text-gold sm:inline-flex"
+              className="hidden h-7 items-center rounded-full bg-gold px-3 text-[11px] font-extrabold uppercase tracking-wider text-ink shadow-pop transition-colors hover:bg-gold-deep hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 focus-visible:ring-offset-cloud dark:focus-visible:ring-offset-ink-deep sm:inline-flex"
             >
               Upgrade
             </Link>

@@ -120,6 +120,8 @@
       "privacyDesc": "Who can see your profile, XP and streaks.",
       "appearance": "Appearance",
       "appearanceDesc": "Light, dark or automatic (follows your system).",
+      "accessibility": "Accessibility",
+      "accessibilityDesc": "Larger text, high contrast and reduced motion.",
       "language": "Language",
       "languageDesc": "App interface (lessons remain in Portuguese).",
       "account": "Account",
@@ -145,6 +147,28 @@
       "ptBR": "Português (Brasil)",
       "en": "English",
       "es": "Español"
+    },
+    "accessibility": {
+      "textSize": {
+        "title": "Text size",
+        "description": "Scales the entire app — chips and buttons grow together.",
+        "default": "Default",
+        "large": "Larger",
+        "xlarge": "Extra large"
+      },
+      "motion": {
+        "title": "Motion",
+        "description": "Reduce or force animations. \"System\" follows your iOS / Android preference.",
+        "system": "System",
+        "reduce": "Reduce",
+        "allow": "Allow"
+      },
+      "contrast": {
+        "title": "High contrast",
+        "description": "Thickens text and borders for easier reading.",
+        "default": "Default",
+        "high": "Increase"
+      }
     },
     "about": {
       "version": "Version",

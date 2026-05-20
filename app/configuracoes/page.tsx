@@ -12,6 +12,7 @@ import {
   Camera,
   Building2,
   Palette,
+  Accessibility,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
@@ -24,6 +25,7 @@ import { SoundMixerSection } from "@/components/settings/SoundMixerSection";
 import { PrivacySection } from "@/components/settings/PrivacySection";
 import { ThemePicker } from "@/components/settings/ThemePicker";
 import { LanguagePicker } from "@/components/settings/LanguagePicker";
+import { AccessibilitySection } from "@/components/settings/AccessibilitySection";
 import { computeHearts } from "@/lib/hearts";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 
@@ -122,6 +124,13 @@ export default async function SettingsPage() {
             <ThemePicker />
           </div>
         </Card>
+
+        <SectionHeader
+          icon={<Accessibility size={18} />}
+          title={t("section.accessibility")}
+          description={t("section.accessibilityDesc")}
+        />
+        <AccessibilitySection />
 
         <SectionHeader
           icon={<Languages size={18} />}

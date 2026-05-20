@@ -104,6 +104,57 @@
   }
 }
 
+/* ------------------------------------------------------------------ */
+/* Accessibility overrides — toggled by A11yProvider via classes on    */
+/* <html>. Kept in @layer base so they win over component utilities    */
+/* without `!important` spam.                                          */
+/* ------------------------------------------------------------------ */
+@layer base {
+  /* "Larger text" scales the root font-size. Tailwind's `rem` units
+     ride this scale automatically, so every chip/badge grows in
+     proportion — no per-component changes needed. */
+  html.a11y-text-large {
+    font-size: 112.5%; /* 16 → 18 */
+  }
+  html.a11y-text-xlarge {
+    font-size: 125%;   /* 16 → 20 */
+  }
+
+  /* "High contrast" — boost text floors (avoid `text-ink/40` etc.
+     looking washed out), thicken borders, kill faded surfaces. */
+  html.a11y-contrast-high {
+    --tw-text-opacity-min: 0.85;
+  }
+  html.a11y-contrast-high :where(.text-ink\/40, .text-ink\/45, .text-ink\/50, .text-ink\/55, .text-ink\/60, .text-ink\/65, .text-ink\/70) {
+    color: rgb(15 23 42 / 0.92);
+  }
+  html.a11y-contrast-high.dark :where(.text-cloud\/40, .text-cloud\/45, .text-cloud\/50, .text-cloud\/55, .text-cloud\/60, .text-cloud\/65, .text-cloud\/70) {
+    color: rgb(241 245 249 / 0.95);
+  }
+  html.a11y-contrast-high :where(.border-cloud-deep\/40, .border-cloud-deep\/30, .divide-cloud-deep\/30, .divide-cloud-deep\/40) {
+    border-color: rgb(15 23 42 / 0.45);
+  }
+  html.a11y-contrast-high.dark :where(.border-ink-light\/60, .divide-ink-light\/60) {
+    border-color: rgb(241 245 249 / 0.55);
+  }
+  html.a11y-contrast-high *:focus-visible {
+    outline: 3px solid #0EA5E9;
+    outline-offset: 2px;
+  }
+
+  /* Force-reduce motion — overrides OS pref if user explicitly chose
+     "Reduzir movimento" in app settings. Mirrors the
+     prefers-reduced-motion: reduce block but is class-gated. */
+  html.a11y-motion-reduce *,
+  html.a11y-motion-reduce *::before,
+  html.a11y-motion-reduce *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 @layer utilities {
   .pt-safe {
     padding-top: env(safe-area-inset-top);

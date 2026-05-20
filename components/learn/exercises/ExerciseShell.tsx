@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Gem, X } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/Badge";
 import { Mascot } from "@/components/mascot/Mascot";
 import { Markdown } from "@/components/ui/markdown";
 import { cn } from "@/lib/utils";
@@ -97,22 +98,21 @@ export function ExerciseShell({
             </div>
           </div>
           {hearts != null && (
-            <span
-              className="flex h-9 items-center gap-1 rounded-full bg-alert/10 px-2.5 text-sm font-extrabold text-alert tabular-nums"
-              aria-label={`${hearts} vidas restantes`}
-            >
-              <Heart size={16} fill="currentColor" />
-              {hearts}
-            </span>
+            <Badge tone="alert" size="lg" aria-label={`${hearts} vidas restantes`}>
+              <Heart size={15} aria-hidden fill="currentColor" />
+              <span>{hearts}</span>
+            </Badge>
           )}
           {gems != null && (
-            <span
-              className="hidden h-9 items-center gap-1 rounded-full bg-sun/15 px-2.5 text-sm font-extrabold text-sun tabular-nums sm:flex"
+            <Badge
+              tone="sky"
+              size="lg"
+              className="hidden sm:inline-flex"
               aria-label={`${gems} gemas`}
             >
-              <Gem size={16} />
-              {gems}
-            </span>
+              <Gem size={15} aria-hidden />
+              <span>{gems}</span>
+            </Badge>
           )}
         </div>
         {!showChrome && (

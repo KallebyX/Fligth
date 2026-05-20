@@ -120,6 +120,8 @@
       "privacyDesc": "Quién puede ver tu perfil, XP y rachas.",
       "appearance": "Apariencia",
       "appearanceDesc": "Claro, oscuro o automático (sigue al sistema).",
+      "accessibility": "Accesibilidad",
+      "accessibilityDesc": "Texto más grande, alto contraste y movimiento reducido.",
       "language": "Idioma",
       "languageDesc": "Interfaz de la app (las lecciones siguen en portugués).",
       "account": "Cuenta",
@@ -145,6 +147,28 @@
       "ptBR": "Português (Brasil)",
       "en": "English",
       "es": "Español"
+    },
+    "accessibility": {
+      "textSize": {
+        "title": "Tamaño de texto",
+        "description": "Escala toda la app — chips y botones crecen juntos.",
+        "default": "Estándar",
+        "large": "Grande",
+        "xlarge": "Muy grande"
+      },
+      "motion": {
+        "title": "Movimiento",
+        "description": "Reduce o fuerza animaciones. \"Sistema\" sigue tu ajuste de iOS / Android.",
+        "system": "Sistema",
+        "reduce": "Reducir",
+        "allow": "Permitir"
+      },
+      "contrast": {
+        "title": "Alto contraste",
+        "description": "Engrosa textos y bordes para facilitar la lectura.",
+        "default": "Estándar",
+        "high": "Aumentar"
+      }
     },
     "about": {
       "version": "Versión",

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Target, Trophy } from "lucide-react";
+import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/lib/utils";
 import { useReducedMotion } from "@/lib/motion";
 
@@ -59,11 +60,9 @@ export function DailyGoalRing({
   const offset = circumference - (pct / 100) * circumference;
 
   return (
-    <div
-      className={cn(
-        "flex items-center gap-1.5 rounded-full px-2 py-1 transition-colors",
-        done ? "bg-gold/20" : "bg-sky/15",
-      )}
+    <Badge
+      tone={done ? "gold" : "sky"}
+      size="md"
       aria-label={
         done
           ? `Meta diária batida — ${shown} XP de ${goalXp}`
@@ -71,8 +70,8 @@ export function DailyGoalRing({
       }
       title={done ? "Meta diária batida! Faz mais uma?" : `${pct}% da meta diária`}
     >
-      <div className="relative h-5 w-5 shrink-0">
-        <svg viewBox="0 0 16 16" className="h-5 w-5 -rotate-90">
+      <div className="relative h-4 w-4 shrink-0">
+        <svg viewBox="0 0 16 16" className="h-4 w-4 -rotate-90" aria-hidden>
           <circle
             cx="8"
             cy="8"
@@ -101,21 +100,16 @@ export function DailyGoalRing({
         </svg>
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
           {done ? (
-            <Trophy size={10} className="text-gold" fill="currentColor" />
+            <Trophy size={9} className="text-gold" fill="currentColor" aria-hidden />
           ) : (
-            <Target size={10} className="text-sky" />
+            <Target size={9} className="text-sky" aria-hidden />
           )}
         </div>
       </div>
-      <span
-        className={cn(
-          "text-xs font-extrabold tabular-nums",
-          done ? "text-gold" : "text-sky-deep",
-        )}
-      >
+      <span className={done ? "text-gold-deep dark:text-gold-soft" : "text-sky-deep dark:text-sky-soft"}>
         {shown}
-        <span className="text-ink/45">/{goalXp}</span>
+        <span className="text-ink/45 dark:text-cloud/45">/{goalXp}</span>
       </span>
-    </div>
+    </Badge>
   );
 }
