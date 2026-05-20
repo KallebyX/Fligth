@@ -82,8 +82,29 @@ Deno.serve(async (req: Request) => {
     mailer_autoconfirm: false,
     mailer_secure_email_change_enabled: true,
     password_min_length: 6,
+    // Block reuse of passwords that appear in the HaveIBeenPwned breach
+    // corpus (Supabase advisor `auth_leaked_password_protection`).
+    password_hibp_enabled: true,
     mailer_otp_exp: 3600,
+
+    // ---- Session policy: "log in once per device" -----------------------
+    // Access token is short-lived (1 h) so revocations propagate quickly,
+    // but the refresh token chain is effectively eternal — only revoked
+    // when the user taps "Sair" or an admin disables the account. The
+    // NativeSessionPersistence component refreshes proactively so the
+    // user never sees a re-auth prompt mid-flow.
     jwt_exp: 3600,
+    // Refresh tokens rotate on each use (security) but the chain itself
+    // doesn't expire on inactivity.
+    refresh_token_rotation_enabled: true,
+    // 10 s window during which the old refresh token still works —
+    // covers parallel requests racing during a foreground resume.
+    security_refresh_token_reuse_interval: 10,
+    // 0 = no inactivity timeout. The user stays signed in until they
+    // explicitly sign out or their account is disabled. Default is
+    // typically a few weeks; we want sessions to survive long gaps
+    // between app opens (e.g. a study break between exam periods).
+    inactivity_timeout: 0,
   };
 
   if (body.oauth?.google) {
