@@ -25,10 +25,16 @@ export default function SignupPage() {
     setError(null);
     setLoading(true);
     const supabase = createClient();
+    // Forward the referral code (if any) through the email confirmation
+    // round-trip so the callback can attach it once the session exists.
+    const refParam = new URLSearchParams(window.location.search).get("ref");
+    const refSuffix = refParam ? `&ref=${encodeURIComponent(refParam)}` : "";
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${location.origin}/callback?next=/onboarding` },
+      options: {
+        emailRedirectTo: `${location.origin}/callback?next=/onboarding${refSuffix}`,
+      },
     });
     setLoading(false);
     if (error) {

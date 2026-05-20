@@ -43,6 +43,50 @@ export type Database = {
         // 0024_account_deletion_soft_delete
         deletion_requested_at: string | null;
         deletion_executes_at: string | null;
+        // 0027_seasons_referrals_social_p2w
+        referral_code: string | null;
+        referred_by: string | null;
+      }>;
+      seasons: Tbl<{
+        id: number;
+        slug: string;
+        name: string;
+        theme: string | null;
+        starts_at: string;
+        ends_at: string;
+        cover_url: string | null;
+        color: string;
+        created_at: string;
+      }>;
+      missions: Tbl<{
+        id: number;
+        season_id: number;
+        slug: string;
+        title: string;
+        description: string | null;
+        goal_kind: string;
+        goal_target: number;
+        reward_gems: number;
+        reward_xp: number;
+        reward_outfit_slug: string | null;
+        tier: number;
+        order_index: number;
+        created_at: string;
+      }>;
+      user_mission_progress: Tbl<{
+        user_id: string;
+        mission_id: number;
+        progress: number;
+        completed_at: string | null;
+        claimed_at: string | null;
+        updated_at: string;
+      }>;
+      referral_credits: Tbl<{
+        id: number;
+        referrer_id: string;
+        referred_id: string;
+        granted_at: string;
+        pro_days_granted: number;
       }>;
       subjects: Tbl<{
         id: number;

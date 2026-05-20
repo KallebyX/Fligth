@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
   const tokenHash = url.searchParams.get("token_hash");
   const type = url.searchParams.get("type") as EmailOtpType | null;
   const nextParam = url.searchParams.get("next") ?? "/learn";
+  const refCode = url.searchParams.get("ref"); // optional referral code
 
   if (!code && !tokenHash) {
     return NextResponse.redirect(new URL("/login", request.url));
@@ -52,6 +53,18 @@ export async function GET(request: NextRequest) {
       .select("username")
       .eq("id", user.id)
       .maybeSingle();
+
+    // Stamp referral relationship if this user came in via a ?ref= link.
+    // The actual Pro grant happens later (after the 3rd lesson) — see
+    // maybeGrantReferralReward in app/actions/completeLesson.ts.
+    if (refCode) {
+      try {
+        const { attachReferral } = await import("@/app/actions/referrals");
+        await attachReferral(refCode);
+      } catch {
+        // Don't block sign-in on a bad referral attribution.
+      }
+    }
 
     if (!profile?.username && nextParam !== "/onboarding" && nextParam !== "/reset-password") {
       return NextResponse.redirect(new URL("/onboarding", request.url));

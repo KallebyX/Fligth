@@ -2,6 +2,7 @@ import type { Exercise } from "@/components/learn/exercises/types";
 import type {
   FillBlankPayload,
   MatchPairsPayload,
+  MultipleChoicePayload,
   TapTilesPayload,
   TheoryStepPayload,
   TrueFalsePayload,
@@ -37,6 +38,7 @@ export function toExercise(row: QuestionRow): Exercise | null {
           C: row.choice_c,
           D: row.choice_d,
         },
+        payload: (row.payload as MultipleChoicePayload | null) ?? null,
       };
     case "match_pairs":
       return row.payload

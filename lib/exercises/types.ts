@@ -36,8 +36,18 @@ export type TheoryStepPayload = {
   verify?: { type: "true_false"; statement: string; correct: boolean };
 };
 
+// Multiple-choice payload is optional — when present, lets the question
+// surface a media asset above the stem. Used for aircraft-identification
+// quizzes and any other visual question kind.
+export type MultipleChoicePayload = {
+  image_url?: string;
+  image_alt?: string;
+  /** Caption shown under the image. */
+  image_caption?: string;
+};
+
 export type ExercisePayload =
-  | { kind: "multiple_choice"; payload: null }
+  | { kind: "multiple_choice"; payload: MultipleChoicePayload | null }
   | { kind: "match_pairs"; payload: MatchPairsPayload }
   | { kind: "fill_blank"; payload: FillBlankPayload }
   | { kind: "true_false"; payload: TrueFalsePayload }

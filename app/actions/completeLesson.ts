@@ -166,6 +166,28 @@ export async function completeLesson(input: CompleteLessonInput): Promise<Comple
     has_mixed_kinds: input.hasMixedKinds ?? false,
   });
 
+  // Battle Pass progress — fire-and-forget for the mission-kinds this
+  // event maps to. The action is internally safe to await without
+  // affecting the user-facing latency materially (one extra DB roundtrip).
+  try {
+    const { bumpMissionProgress } = await import("@/app/actions/seasons");
+    await bumpMissionProgress("lessons_completed", 1);
+    await bumpMissionProgress("xp_earned", xpAwarded);
+    if (perfect) await bumpMissionProgress("perfect_lessons", 1);
+    if (newStreak > 0) await bumpMissionProgress("streak_days", 1);
+  } catch {
+    // Never break a lesson completion because mission bookkeeping failed.
+  }
+
+  // Referral payout — if this is the user's 3rd lifetime lesson AND they
+  // were referred, the referrer gets 30 days of Pro stacked.
+  try {
+    const { maybeGrantReferralReward } = await import("@/app/actions/referrals");
+    await maybeGrantReferralReward();
+  } catch {
+    // Same fire-and-forget contract.
+  }
+
   revalidatePath("/learn");
   return { ok: true, xpAwarded, newStreak, perfect, theoryCount, goalJustHit };
 }

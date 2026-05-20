@@ -87,6 +87,36 @@ export function MultipleChoicePlayer({
       isPractice={isPractice}
       errorMessage={errorMessage}
     >
+      {/* Optional image — populated for aircraft-identification quizzes
+          and any other visual question. Payload.image_url is the source
+          of truth; alt + caption fall back to sensible defaults. */}
+      {exercise.payload && "image_url" in exercise.payload && exercise.payload.image_url ? (
+        <motion.figure
+          key={`img-${exercise.id}`}
+          initial={reducedMotion ? false : { opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25 }}
+          className="mb-4 overflow-hidden rounded-2xl border-2 border-cloud-deep bg-cloud dark:border-ink-light dark:bg-ink-deep"
+        >
+          {/* Use a plain <img> so unknown remote hosts don't need a
+              next.config.js whitelist update per content drop. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={exercise.payload.image_url}
+            alt={
+              ("image_alt" in exercise.payload && exercise.payload.image_alt) ||
+              "Imagem da pergunta"
+            }
+            loading="lazy"
+            className="aspect-video w-full object-cover"
+          />
+          {"image_caption" in exercise.payload && exercise.payload.image_caption && (
+            <figcaption className="px-3 py-1.5 text-center text-[11px] font-bold uppercase tracking-wider text-ink/55 dark:text-cloud/55">
+              {exercise.payload.image_caption}
+            </figcaption>
+          )}
+        </motion.figure>
+      ) : null}
       <motion.h2
         key={`stem-${exercise.id}`}
         initial={reducedMotion ? false : { opacity: 0, y: 8 }}

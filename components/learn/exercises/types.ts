@@ -5,6 +5,7 @@
 import type {
   FillBlankPayload,
   MatchPairsPayload,
+  MultipleChoicePayload,
   TapTilesPayload,
   TheoryStepPayload,
   TrueFalsePayload,
@@ -18,6 +19,8 @@ export type Exercise =
       kind: "multiple_choice";
       stem: string;
       choices: { A: string; B: string; C: string; D: string };
+      /** Optional media payload (used by aircraft-identification quizzes). */
+      payload: MultipleChoicePayload | null;
     }
   | { id: number; kind: "match_pairs"; stem: string; payload: MatchPairsPayload }
   | { id: number; kind: "fill_blank"; stem: string; payload: FillBlankPayload }
