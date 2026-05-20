@@ -13,6 +13,8 @@ import {
   Camera,
   Building2,
   Crown,
+  Sparkles,
+  Gift,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,7 +27,9 @@ type LabelKey =
   | "profile"
   | "gallery"
   | "schools"
-  | "pro";
+  | "pro"
+  | "season"
+  | "invite";
 
 type Item = {
   href: string;
@@ -74,6 +78,18 @@ const ITEMS: Item[] = [
     match: (p) => p.startsWith("/profile") || p.startsWith("/pro"),
   },
   // Side-nav only (desktop has room; mobile keeps 5-slot tap targets ≥ 44pt).
+  {
+    href: "/season",
+    labelKey: "season",
+    Icon: Sparkles,
+    match: (p) => p.startsWith("/season"),
+  },
+  {
+    href: "/invite",
+    labelKey: "invite",
+    Icon: Gift,
+    match: (p) => p.startsWith("/invite"),
+  },
   {
     href: "/friends",
     labelKey: "friends",

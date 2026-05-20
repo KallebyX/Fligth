@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Award, ChevronLeft, LogOut, Settings, UserPlus2 } from "lucide-react";
+import { Award, ChevronLeft, Gift, LogOut, Settings, Sparkles, UserPlus2 } from "lucide-react";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PublicProfile, type PublicProfileData } from "@/components/profile/PublicProfile";
@@ -96,7 +96,21 @@ export default async function ProfileIndex() {
         <PendingDeletionBanner executesAt={profile.deletion_executes_at} />
       )}
       {/* Top action bar — quick access to settings + edit profile */}
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-2">
+        <Link
+          href="/season"
+          className="inline-flex items-center gap-1.5 rounded-2xl border-2 border-amethyst bg-amethyst/10 px-3 py-2 text-xs font-extrabold text-amethyst-deep hover:bg-amethyst/15 dark:text-amethyst"
+        >
+          <Sparkles size={14} />
+          Temporada
+        </Link>
+        <Link
+          href="/invite"
+          className="inline-flex items-center gap-1.5 rounded-2xl border-2 border-grass bg-grass/10 px-3 py-2 text-xs font-extrabold text-grass-deep hover:bg-grass/15 dark:text-grass"
+        >
+          <Gift size={14} />
+          Indicar (+1 mês Pro)
+        </Link>
         <Link
           href="/configuracoes"
           className="inline-flex items-center gap-1.5 rounded-2xl border-2 border-cloud-deep bg-white px-3 py-2 text-xs font-extrabold text-ink hover:bg-cloud/40 dark:border-ink-light dark:bg-ink-mid dark:text-cloud dark:hover:bg-ink-mid/70"

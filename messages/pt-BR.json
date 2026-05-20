@@ -104,7 +104,9 @@
     "settings": "Configurações",
     "gallery": "Galeria",
     "schools": "Escolas",
-    "pro": "Pro"
+    "pro": "Pro",
+    "season": "Temporada",
+    "invite": "Indicar"
   },
   "settings": {
     "title": "Configurações",

@@ -7,7 +7,63 @@ The format is loosely based on [Keep a Changelog](https://keepachangelog.com/),
 adapted to this repo's reality (no separate "released" line — every merge
 to `main` ships to Vercel; iOS goes to TestFlight via the GitHub workflow).
 
-## [Unreleased] — post-audit polish cycle
+## [Unreleased] — Season 1 + Battle Pass + referrals + new content
+
+### Added — content
+- **Comunicações & ICAO** new subject (id 6). Full A-Z phonetic alphabet
+  with pronunciation guide, 4 R/T phraseology questions (Cleared to
+  land, Wilco vs Roger, Go around, Mayday/Pan-Pan).
+- **Identificação de Aeronaves** new subject (id 7). 6 multiple-choice
+  questions with Wikimedia images: Cessna 172, Piper PA-28, Diamond
+  DA20, Spitfire, Concorde, Boeing 747.
+- **Image support for `multiple_choice`** kind — payload accepts
+  image_url + image_alt + image_caption.
+
+### Added — Battle Pass / Seasons
+- `seasons`, `missions`, `user_mission_progress` tables with RLS.
+- Season 1 "Decolagem" — 8 weeks, 6 missions across 3 tiers
+  (Iniciante/Intermediário/Lendário). Rewards: gems, XP, outfits.
+- `/season` page with hero, countdown, mission rows grouped by tier.
+- Claim CTA on completed missions; idempotent via `claimed_at`.
+- Hook into `completeLesson` increments lessons_completed +
+  perfect_lessons + xp_earned + streak_days mission kinds.
+
+### Added — Referrals
+- `profiles.referral_code` (6-char base32 auto-generated) + `referred_by`.
+- `referral_credits` table tracking who got rewarded.
+- `/invite` page with share link, native Share API, copy button, placard.
+- Stamp on `/callback` from `?ref=`, payout after 3rd lesson via
+  `maybeGrantReferralReward` (30 days Pro stacked on `pro_until`).
+
+### Added — UX discovery
+- Feed in main nav (mobile bottom bar + desktop side bar).
+- Side nav expanded: Friends, Gallery, Schools, Pro, **Season, Invite** —
+  9 items total (was 5).
+- Profile page CTAs: "Temporada" + "Indicar (+1 mês Pro)" buttons in
+  the top action bar.
+
+### Added — P2W consumables in `products`
+- `heart_pack_5` (R$1.99) — instant 5 hearts.
+- `heart_unlimited_24h` (R$4.99) — 24h unlimited hearts.
+- `streak_freeze_pack_3` (R$2.99) — 3 freeze shields.
+
+### Added — Social linking helper
+- View `public.user_linked_providers` (security_invoker) aggregates
+  auth.identities by provider.
+- `getLinkedProviders()` server action reads identities from current
+  user — ready to wire into `/profile/edit`.
+
+### Added — SEO
+- `app/sitemap.ts`: static + dynamic (per-school) entries, hourly
+  revalidation.
+- `app/robots.ts`: allow public pages, block authenticated app surfaces,
+  point to sitemap.
+- `app/layout.tsx`: metadataBase, title.template, alternates.languages
+  (hreflang), Twitter image, Open Graph image, googleBot rules.
+- `app/escolas/[slug]/page.tsx::generateMetadata` for per-school OG.
+- JSON-LD MobileApplication + EducationalOrganization on landing.
+
+## [Audit cycle] — post-audit polish cycle
 
 Closes the comprehensive E2E audit catalogued in `docs/AUDIT-REPORT.md`.
 27 actionable items planned (7 critical + 11 medium + 9 deferred gaps);
