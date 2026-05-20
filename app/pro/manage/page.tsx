@@ -71,7 +71,7 @@ export default async function ProManagePage() {
           <CardTitle>Você não é Pro ainda</CardTitle>
           <CardDesc>
             Assine pra ter vidas ilimitadas, simulados extras e o outfit Pro
-            Dourado do Capitão Lorí.
+            Dourado do Comandante Lorí.
           </CardDesc>
           <Link href="/pro" className="mt-4 inline-block">
             <Button size="md">Ver planos</Button>

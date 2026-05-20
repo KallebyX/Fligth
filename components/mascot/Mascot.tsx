@@ -85,7 +85,7 @@ export function Mascot({
       height={size}
       viewBox="0 0 120 140"
       animate={reducedMotion ? undefined : animations[state]}
-      aria-label={`Capitão Lorí ${state}`}
+      aria-label={`Comandante Lorí ${state}`}
     >
       {/* Wings (behind body) with subtle flap */}
       <motion.path

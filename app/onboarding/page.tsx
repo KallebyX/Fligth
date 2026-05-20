@@ -276,7 +276,7 @@ export default function Onboarding() {
               <div className="text-center">
                 <h2 className="text-2xl font-black">Última coisa</h2>
                 <p className="mt-1 text-sm text-ink/60">
-                  <strong>7 dias grátis</strong> do Capitão Lorí Pro. Cancele a
+                  <strong>7 dias grátis</strong> do CMTE Lorí Pro. Cancele a
                   qualquer momento, sem cobrança no trial.
                 </p>
               </div>

@@ -157,7 +157,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               maxLength={40}
-              placeholder="Capitão Lorí"
+              placeholder="Comandante Lorí"
               autoComplete="name"
               className="mt-1 h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white px-3 text-base font-medium outline-none focus:border-sky dark:border-ink-light dark:bg-ink-mid dark:text-cloud"
             />

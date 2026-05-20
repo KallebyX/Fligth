@@ -3,33 +3,33 @@ import { Card, CardTitle, CardDesc } from "@/components/ui/card";
 import { Mail, MessageCircle, ShieldAlert, FileQuestion } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Suporte — Capitão Lorí",
-  description: "Como entrar em contato com a equipe do Capitão Lorí.",
+  title: "Suporte — CMTE Lorí",
+  description: "Como entrar em contato com a equipe do CMTE Lorí.",
 };
 
 const channels = [
   {
     icon: <Mail className="text-sky" size={28} />,
     title: "Suporte geral",
-    href: "mailto:suporte@capitaolori.app",
+    href: "mailto:suporte@capitaolori.com",
     body: "Dúvidas sobre o app, problemas técnicos, sugestões. Respondemos em até 48h úteis.",
   },
   {
     icon: <ShieldAlert className="text-alert" size={28} />,
     title: "Privacidade e dados",
-    href: "mailto:privacidade@capitaolori.app",
+    href: "mailto:privacidade@capitaolori.com",
     body: "Solicitar acesso, correção, exclusão ou portabilidade dos seus dados (LGPD).",
   },
   {
     icon: <FileQuestion className="text-grass" size={28} />,
     title: "Conteúdo das lições",
-    href: "mailto:conteudo@capitaolori.app",
+    href: "mailto:conteudo@capitaolori.com",
     body: "Apontar erro técnico/regulamentar em uma questão ou lição. Incluir a referência da fonte ajuda muito.",
   },
   {
     icon: <MessageCircle className="text-sun" size={28} />,
     title: "Imprensa e parcerias",
-    href: "mailto:contato@capitaolori.app",
+    href: "mailto:contato@capitaolori.com",
     body: "Aeroclubes, instrutores e veículos de imprensa.",
   },
 ];
@@ -67,7 +67,7 @@ export default function SupportPage() {
         <CardDesc>Antes de escrever, talvez seja uma destas:</CardDesc>
         <ul className="mt-3 space-y-3 text-sm">
           <li>
-            <strong>Posso usar para fazer a prova real?</strong> Capitão Lorí é apoio ao estudo. A
+            <strong>Posso usar para fazer a prova real?</strong> CMTE Lorí é apoio ao estudo. A
             prova oficial é feita exclusivamente nos centros aplicadores credenciados pela ANAC.
           </li>
           <li>
@@ -81,10 +81,10 @@ export default function SupportPage() {
           </li>
           <li>
             <strong>Quero excluir minha conta.</strong> Pelo perfil ou enviando e-mail para
-            privacidade@capitaolori.app. Apagamos em até 30 dias.
+            privacidade@capitaolori.com. Apagamos em até 30 dias.
           </li>
           <li>
-            <strong>Encontrei um erro numa questão.</strong> Manda pra conteudo@capitaolori.app com
+            <strong>Encontrei um erro numa questão.</strong> Manda pra conteudo@capitaolori.com com
             a referência regulatória. Corrigimos rápido.
           </li>
         </ul>

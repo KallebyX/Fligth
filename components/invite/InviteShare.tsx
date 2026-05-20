@@ -7,7 +7,7 @@ import { Copy, Share2, Check } from "lucide-react";
 import { impact, notify } from "@/lib/haptics";
 
 const SHARE_BODY = (url: string) =>
-  `Cadastre-se no Capitão Lorí pelo meu link e ganhe vidas extras pra estudar pro PPA: ${url}`;
+  `Cadastre-se no Comandante Lorí pelo meu link e ganhe vidas extras pra estudar pro PPA: ${url}`;
 
 export function InviteShare({ code, url }: { code: string; url: string }) {
   const [copied, setCopied] = useState(false);
@@ -35,7 +35,7 @@ export function InviteShare({ code, url }: { code: string; url: string }) {
   async function share() {
     void impact("medium");
     const data = {
-      title: "Capitão Lorí",
+      title: "Comandante Lorí",
       text: SHARE_BODY(url),
       url,
     };

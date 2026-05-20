@@ -35,7 +35,7 @@ const STEPS: Step[] = [
     Icon: GraduationCap,
     tint: "bg-sky/15 text-sky-deep",
     eyebrow: "Boas-vindas",
-    title: "Oi, eu sou o Capitão Lorí!",
+    title: "Oi, eu sou o Comandante Lorí!",
     description:
       "Vou te ajudar a passar na prova teórica de Piloto Privado da ANAC. 5 minutos por dia, do seu jeito.",
   },

@@ -25,12 +25,12 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://capitaolori.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
-    template: "%s · Capitão Lorí",
+    default: "Comandante Lorí — Estudo para Piloto Privado (PPA)",
+    template: "%s · Comandante Lorí",
   },
   description:
     "Estude para a prova teórica de Piloto Privado com lições curtas, ofensiva diária, simulado no formato da banca e muita aviação. Não filiado à ANAC.",
-  applicationName: "Capitão Lorí",
+  applicationName: "Comandante Lorí",
   keywords: [
     "ANAC",
     "piloto privado",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     "ICAO alfabeto fonético",
     "comunicações aeronáuticas",
   ],
-  authors: [{ name: "Capitão Lorí" }],
+  authors: [{ name: "Comandante Lorí" }],
   category: "education",
   alternates: {
     canonical: SITE_URL,
@@ -59,9 +59,9 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: "Capitão Lorí",
+    siteName: "Comandante Lorí",
     url: SITE_URL,
-    title: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
+    title: "Comandante Lorí — Estudo para Piloto Privado (PPA)",
     description:
       "Lições curtas, ofensiva diária, repetição espaçada e simulado no formato da banca (100q · 3h · 70 % por matéria). Aprovação com hábito.",
     locale: "pt_BR",
@@ -70,13 +70,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Capitão Lorí — app de estudo para Piloto Privado",
+        alt: "Comandante Lorí — app de estudo para Piloto Privado",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Capitão Lorí — Estudo para Piloto Privado",
+    title: "Comandante Lorí — Estudo para Piloto Privado",
     description:
       "5 trilhas, 25 lições, 100 questões e simulado no formato da banca. Estude 5 min/dia. Não filiado à ANAC.",
     images: ["/og.png"],
@@ -102,7 +102,7 @@ export const metadata: Metadata = {
   },
   appleWebApp: {
     capable: true,
-    title: "Capitão Lorí",
+    title: "Comandante Lorí",
     statusBarStyle: "default",
   },
 };

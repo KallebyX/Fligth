@@ -2,17 +2,17 @@ import type { Metadata } from "next";
 import { Markdown } from "@/components/ui/markdown";
 
 export const metadata: Metadata = {
-  title: "Termos de Uso — Capitão Lorí",
-  description: "Termos e condições de uso do app Capitão Lorí.",
+  title: "Termos de Uso — CMTE Lorí",
+  description: "Termos e condições de uso do app CMTE Lorí.",
 };
 
 const CONTENT = `## Termos de Uso
 
 **Última atualização:** 11 de maio de 2026.
 
-Ao criar uma conta e usar o **Capitão Lorí** ("app"), você concorda com estes termos. Se discordar, por favor não use o app.
+Ao criar uma conta e usar o **CMTE Lorí** ("app"), você concorda com estes termos. Se discordar, por favor não use o app.
 
-### 1. O que é o Capitão Lorí
+### 1. O que é o CMTE Lorí
 
 Aplicativo independente de **apoio ao estudo** para a prova teórica de Piloto Privado de Avião (PPA). Oferece lições, questões, simulado no formato da banca, gamificação (XP, streaks, ligas) e revisão espaçada.
 
@@ -70,7 +70,7 @@ Hoje o app é gratuito. Caso introduzamos planos pagos:
 
 ### 9. Encerramento
 
-Você pode **excluir a conta a qualquer momento** pela página de perfil ou enviando e-mail para suporte@capitaolori.app. Os dados serão apagados em até 30 dias, salvo obrigação legal de retenção.
+Você pode **excluir a conta a qualquer momento** pela página de perfil ou enviando e-mail para suporte@capitaolori.com. Os dados serão apagados em até 30 dias, salvo obrigação legal de retenção.
 
 Podemos suspender o serviço caso o app deixe de ser viável; nesse caso, daremos 30 dias de aviso e exportação dos seus dados.
 
@@ -80,7 +80,7 @@ Estes termos são regidos pelas leis brasileiras. Fica eleito o **foro da comarc
 
 ### 11. Contato
 
-Dúvidas, sugestões ou solicitações: **suporte@capitaolori.app**`;
+Dúvidas, sugestões ou solicitações: **suporte@capitaolori.com**`;
 
 export default function TermsPage() {
   return (

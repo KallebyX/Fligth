@@ -107,7 +107,7 @@ export default async function EditProfilePage() {
       />
 
       <Card>
-        <CardTitle>Outfit do Capitão Lorí</CardTitle>
+        <CardTitle>Outfit do Comandante Lorí</CardTitle>
         <CardDesc>
           O outfit equipado aparece em todo lugar onde seu mascote é mostrado.
         </CardDesc>

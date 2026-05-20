@@ -43,7 +43,7 @@ const STRUCTURED_DATA = {
   "@graph": [
     {
       "@type": "MobileApplication",
-      name: "Capitão Lorí",
+      name: "Comandante Lorí",
       applicationCategory: "EducationalApplication",
       operatingSystem: "iOS, Android, Web",
       description:
@@ -61,7 +61,7 @@ const STRUCTURED_DATA = {
     },
     {
       "@type": "EducationalOrganization",
-      name: "Capitão Lorí",
+      name: "Comandante Lorí",
       url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://capitaolori.com",
       sameAs: [],
       description:
@@ -170,7 +170,7 @@ export default function Landing() {
           <Feature
             icon={<Star className="text-gold" size={28} />}
             title="Conquistas e outfits"
-            body="Badges, gems pra gastar na loja, outfits para customizar o Capitão Lorí. Motivo pra voltar amanhã."
+            body="Badges, gems pra gastar na loja, outfits para customizar o Comandante Lorí. Motivo pra voltar amanhã."
           />
         </div>
       </section>
@@ -193,7 +193,7 @@ export default function Landing() {
       <footer className="border-t border-cloud-deep/40 bg-white/40">
         <div className="container max-w-3xl space-y-4 py-8 text-center">
           <p className="text-xs leading-relaxed text-ink/50">
-            <strong>Capitão Lorí</strong> é um projeto de estudo independente.{" "}
+            <strong>Comandante Lorí</strong> é um projeto de estudo independente.{" "}
             <strong>Não filiado, endossado ou patrocinado pela ANAC</strong>. Conteúdo educacional
             redigido a partir de fontes públicas (RBAC 91, ICA 100-12, MCA 100-1, AIP-Brasil) —
             sempre consulte os manuais e instruções oficiais da agência reguladora antes de operar.

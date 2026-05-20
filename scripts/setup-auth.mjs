@@ -74,12 +74,12 @@ const payload = {
   uri_allow_list: REDIRECT_URLS.join(","),
 
   // ─── Subjects ─────────────────────────────────────────────────────────
-  mailer_subjects_confirmation: "Confirme seu email — Capitão Lorí",
-  mailer_subjects_recovery: "Criar nova senha — Capitão Lorí",
-  mailer_subjects_magic_link: "Seu link de acesso — Capitão Lorí",
-  mailer_subjects_email_change: "Confirme seu novo email — Capitão Lorí",
-  mailer_subjects_invite: "Você foi convidado — Capitão Lorí",
-  mailer_subjects_reauthentication: "Confirme sua identidade — Capitão Lorí",
+  mailer_subjects_confirmation: "Confirme seu email — Comandante Lorí",
+  mailer_subjects_recovery: "Criar nova senha — Comandante Lorí",
+  mailer_subjects_magic_link: "Seu link de acesso — Comandante Lorí",
+  mailer_subjects_email_change: "Confirme seu novo email — Comandante Lorí",
+  mailer_subjects_invite: "Você foi convidado — Comandante Lorí",
+  mailer_subjects_reauthentication: "Confirme sua identidade — Comandante Lorí",
 
   // ─── HTML bodies ──────────────────────────────────────────────────────
   mailer_templates_confirmation_content: loadTemplate("confirmation"),

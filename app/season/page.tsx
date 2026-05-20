@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 export const metadata = {
   title: "Temporada",
   description:
-    "Missões da temporada atual no Capitão Lorí — complete desafios e ganhe gems, XP e outfits exclusivos.",
+    "Missões da temporada atual no Comandante Lorí — complete desafios e ganhe gems, XP e outfits exclusivos.",
 };
 
 function formatRemaining(endsAt: string): string {

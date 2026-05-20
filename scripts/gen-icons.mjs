@@ -9,7 +9,7 @@ const IOS_OUT = join(ROOT, "ios/App/App/Assets.xcassets/AppIcon.appiconset");
 mkdirSync(WEB_OUT, { recursive: true });
 mkdirSync(IOS_OUT, { recursive: true });
 
-// Inline Capitão Lorí SVG (matches components/mascot/Mascot.tsx visual identity).
+// Inline Comandante Lorí SVG (matches components/mascot/Mascot.tsx visual identity).
 function svgMascot({ size, bg = "#0EA5E9", maskable = false }) {
   const padding = maskable ? size * 0.18 : 0; // safe zone for maskable
   const inner = size - padding * 2;

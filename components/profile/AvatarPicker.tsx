@@ -82,7 +82,7 @@ export function AvatarPicker({
           <p className="mt-0.5 text-xs text-ink/65">
             {url
               ? "Sua foto aparece no ranking, perfil público e feed."
-              : "Sem foto, mostramos seu Capitão Lorí."}
+              : "Sem foto, mostramos seu Comandante Lorí."}
           </p>
         </div>
       </div>
