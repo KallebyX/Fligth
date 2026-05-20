@@ -55,6 +55,29 @@ platform :ios do
     match(**match_args)
   end
 
+  desc "Regenerate signing artifacts after adding a new capability (Sign In with Apple, Push, etc.) to the App ID. RUN LOCAL ONLY — pushes a new profile to the match git repo."
+  lane :regenerate_certs do
+    UI.user_error!("Don't run this in CI — set CI=false and run locally.") if ENV["CI"] == "true"
+    api_key = asc_api_key
+    # `force: true` forces match to re-create the provisioning profile even
+    # if one already exists, picking up any new capabilities the App ID has
+    # gained since the last run. Use after enabling a capability (e.g. Sign
+    # In with Apple, Push Notifications) on the Apple Developer Portal.
+    match(
+      type: "appstore",
+      app_identifier: "br.com.capitaolori.app",
+      team_id: ENV["APPLE_TEAM_ID"],
+      api_key: api_key,
+      readonly: false,
+      force: true,
+      git_url: ENV.fetch("MATCH_GIT_URL"),
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
+      keychain_name: "login.keychain",
+      verbose: ENV["FASTLANE_VERBOSE"] == "true",
+    )
+    UI.success("Profile regenerated + pushed to match git repo. Re-run the GitHub Actions iOS workflow now.")
+  end
+
   desc "Bump CFBundleVersion to (latest TestFlight build + 1)"
   lane :bump_build do
     api_key = asc_api_key

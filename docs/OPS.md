@@ -147,6 +147,50 @@ where schemaname = 'public' and idx_scan = 0;
 - iOS push: Apple revokes tokens silently if app was uninstalled. The `push_tokens` table has `revoked_at` — set to `now()` from the Edge Function when APNs returns 410.
 - App version bumps: increment `CFBundleShortVersionString` + `CFBundleVersion` in `ios/App/App/Info.plist`. Archive in Xcode → Distribute → TestFlight.
 
+### Provisioning profile out of sync (adding a capability)
+
+Symptom (in `iOS → TestFlight` workflow logs):
+
+```
+error: Provisioning profile "match AppStore br.com.capitaolori.app 1778520305"
+  doesn't include the Sign In with Apple capability.
+error: Provisioning profile ... doesn't include the com.apple.developer.applesignin entitlement.
+```
+
+Root cause: the app's `App.entitlements` and `App.xcodeproj` declare a
+capability the App ID doesn't have yet, OR the App ID has the capability
+but the profile in the match git repo was generated before that capability
+was added.
+
+`match` runs `readonly` in CI by design — it won't try to regenerate
+profiles automatically (race-condition prevention). The fix is a one-time
+local action.
+
+**Steps:**
+
+1. **Apple Developer Portal** — enable the capability on the App ID:
+   - Open https://developer.apple.com/account/resources/identifiers/list
+   - Find `br.com.capitaolori.app`
+   - Click Edit → check the missing capability (e.g. "Sign In with Apple",
+     "Push Notifications", "Associated Domains")
+   - Click Save
+
+2. **Regenerate the provisioning profile via match locally**:
+   ```bash
+   # Make sure your fastlane env vars are set (.env or shell):
+   #   APP_STORE_CONNECT_KEY_ID, APP_STORE_CONNECT_ISSUER_ID,
+   #   APP_STORE_CONNECT_KEY, APPLE_TEAM_ID,
+   #   MATCH_GIT_URL, MATCH_GIT_BASIC_AUTHORIZATION, MATCH_PASSWORD
+   bundle exec fastlane ios regenerate_certs
+   ```
+   This forces match to create a new profile that includes the freshly-
+   enabled capability, encrypts it, and pushes it to the match git repo.
+
+3. **Re-run the GitHub Actions workflow**: Actions → iOS → TestFlight →
+   Run workflow → pick the branch → green.
+
+For more capability-specific notes, the [Sign In with Apple docs](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_overview) explain the App Review requirement: any app offering third-party social login (Google, Facebook, etc.) MUST also offer Sign In with Apple. Don't remove this capability before App Store submission.
+
 ## Adding a new env var
 
 1. Add to `.env.local.example` (template, no secret values) so contributors know it exists.
