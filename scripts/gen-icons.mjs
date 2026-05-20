@@ -109,6 +109,53 @@ async function buildIos() {
   console.log("✓ ios/Contents.json");
 }
 
+// Open Graph / Twitter card image. 1200×630 is the canonical aspect for
+// social previews — used by Twitter, Facebook, LinkedIn, iMessage.
+async function buildOgImage() {
+  const w = 1200;
+  const h = 630;
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#0369A1"/>
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="url(#bg)"/>
+  <g transform="translate(80, 165) scale(2.5)">
+    <ellipse cx="60" cy="72" rx="38" ry="34" fill="#10B981"/>
+    <ellipse cx="60" cy="80" rx="22" ry="20" fill="#FDE68A"/>
+    <circle cx="60" cy="42" r="28" fill="#10B981"/>
+    <path d="M32 38 Q60 14 88 38 L86 46 Q60 34 34 46 Z" fill="#0F172A"/>
+    <rect x="34" y="40" width="52" height="6" fill="#FBBF24"/>
+    <circle cx="48" cy="42" r="8" fill="#0F172A"/>
+    <circle cx="72" cy="42" r="8" fill="#0F172A"/>
+    <circle cx="48" cy="42" r="6" fill="#A7F3D0" opacity="0.4"/>
+    <circle cx="72" cy="42" r="6" fill="#A7F3D0" opacity="0.4"/>
+    <circle cx="48" cy="42" r="2" fill="#0F172A"/>
+    <circle cx="72" cy="42" r="2" fill="#0F172A"/>
+    <path d="M54 56 L66 56 L60 64 Z" fill="#F97316"/>
+  </g>
+  <text x="500" y="280" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="900" fill="#ffffff">
+    Comandante Lorí
+  </text>
+  <text x="500" y="340" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="700" fill="#BAE6FD">
+    Estude para a prova teórica
+  </text>
+  <text x="500" y="380" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="700" fill="#BAE6FD">
+    de Piloto Privado da ANAC.
+  </text>
+  <rect x="500" y="445" width="240" height="60" rx="30" fill="#FBBF24"/>
+  <text x="620" y="485" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="24" font-weight="800" fill="#0F172A">
+    Começar grátis
+  </text>
+</svg>`;
+  const path = join(ROOT, "public/og.png");
+  await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path);
+  console.log("✓ public/og.png");
+}
+
 async function buildWeb() {
   const targets = [
     { name: "icon-192.png", size: 192, maskable: false },
@@ -130,6 +177,7 @@ async function buildWeb() {
 
 async function main() {
   await buildWeb();
+  await buildOgImage();
   await buildIos();
 }
 

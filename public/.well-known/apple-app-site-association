@@ -2,7 +2,7 @@
   "applinks": {
     "details": [
       {
-        "appIDs": ["REPLACE_TEAM_ID.br.com.capitaolori.app"],
+        "appIDs": ["FWVSMZ9APG.br.com.capitaolori.app"],
         "components": [
           { "/": "/learn*" },
           { "/": "/review*" },
@@ -14,6 +14,6 @@
     ]
   },
   "webcredentials": {
-    "apps": ["REPLACE_TEAM_ID.br.com.capitaolori.app"]
+    "apps": ["FWVSMZ9APG.br.com.capitaolori.app"]
   }
 }

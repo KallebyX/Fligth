@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "Capitão Lorí — Piloto Privado",
-  "short_name": "Capitão Lorí",
+  "name": "Comandante Lorí — Piloto Privado",
+  "short_name": "CMTE Lorí",
   "description": "Estude para a prova teórica de Piloto Privado em 5 minutos por dia. Lições curtas, ofensiva diária e simulado no formato da banca.",
   "start_url": "/learn",
   "scope": "/",

@@ -8,6 +8,7 @@ import { PwaRegister } from "@/components/pwa-register";
 import { BiometricGate } from "@/components/auth/BiometricGate";
 import { NativeOAuthListener } from "@/components/auth/NativeOAuthListener";
 import { NativeSessionPersistence } from "@/components/auth/NativeSessionPersistence";
+import { NativeProSync } from "@/components/pro/NativeProSync";
 import { ThemeProvider, NO_FLASH_SCRIPT } from "@/components/theme/ThemeProvider";
 import { A11yProvider, A11Y_NO_FLASH_SCRIPT } from "@/components/a11y/A11yProvider";
 
@@ -135,6 +136,7 @@ export default async function RootLayout({
           <ThemeProvider>
             <A11yProvider>
               <NativeSessionPersistence />
+              <NativeProSync />
               <BiometricGate>{children}</BiometricGate>
               <NativeOAuthListener />
               <PwaRegister />
