@@ -10,6 +10,10 @@ on:
   push:
     branches:
       - main
+      # Allow the active feature branch to also trigger TestFlight builds
+      # so we can test mid-PR without merging. Remove once the branch is
+      # merged.
+      - "claude/anac-pilot-training-app-sVhHF"
     paths:
       - "ios/**"
       - "capacitor.config.ts"
