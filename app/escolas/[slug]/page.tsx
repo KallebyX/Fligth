@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -12,6 +12,7 @@ import {
   MessageCircle,
 } from "lucide-react";
 import { Card, CardTitle, CardDesc } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { HUD } from "@/components/hud/HUD";
 import { AppShell } from "@/components/nav/AppShell";
 import { LeadForm } from "@/components/schools/LeadForm";
@@ -60,6 +61,10 @@ export async function generateMetadata(props: {
   };
 }
 
+// Public school detail — crawlers see the content (sitemap lists every
+// slug), authenticated users see the LeadForm. Lead submission requires
+// auth via the server action; non-logged-in visitors get a "Sign in to
+// contact" CTA instead of the form.
 export default async function SchoolDetailPage(props: {
   params: Promise<{ slug: string }>;
 }) {
@@ -68,23 +73,29 @@ export default async function SchoolDetailPage(props: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
 
-  const [{ data: school }, { data: stats }] = await Promise.all([
-    supabase
-      .from("schools")
-      .select(
-        "id, slug, name, legal_name, description, logo_url, cover_url, city, state, address, phone, email, website, instagram, whatsapp, cursos, anac_codigo, featured",
-      )
-      .eq("slug", slug)
-      .eq("status", "active")
-      .maybeSingle(),
-    supabase
-      .from("user_stats")
-      .select("total_xp, current_streak, hearts, hearts_regen_at, gems")
-      .eq("user_id", user.id)
-      .single(),
-  ]);
+  // Service role for the schools read so unauthenticated crawlers can
+  // load this without depending on RLS.
+  const service = createServiceClient();
+  const { data: school } = await service
+    .from("schools")
+    .select(
+      "id, slug, name, legal_name, description, logo_url, cover_url, city, state, address, phone, email, website, instagram, whatsapp, cursos, anac_codigo, featured",
+    )
+    .eq("slug", slug)
+    .eq("status", "active")
+    .maybeSingle();
+
+  // User stats only matter for the HUD chrome — fetch only if signed in.
+  const stats = user
+    ? (
+        await supabase
+          .from("user_stats")
+          .select("total_xp, current_streak, hearts, hearts_regen_at, gems")
+          .eq("user_id", user.id)
+          .single()
+      ).data
+    : null;
 
   if (!school) notFound();
 
@@ -103,12 +114,14 @@ export default async function SchoolDetailPage(props: {
 
   return (
     <AppShell>
-      <HUD
-        xp={stats?.total_xp ?? 0}
-        streak={stats?.current_streak ?? 0}
-        hearts={refreshed.hearts}
-        gems={stats?.gems ?? 0}
-      />
+      {user && (
+        <HUD
+          xp={stats?.total_xp ?? 0}
+          streak={stats?.current_streak ?? 0}
+          hearts={refreshed.hearts}
+          gems={stats?.gems ?? 0}
+        />
+      )}
 
       <main className="container max-w-2xl space-y-6 py-6">
         <Link
@@ -232,13 +245,35 @@ export default async function SchoolDetailPage(props: {
           </ul>
         </Card>
 
-        <LeadForm
-          schoolId={school.id}
-          schoolName={school.name}
-          cursos={cursos
-            .map((c) => c.nome ?? c.slug)
-            .filter((s): s is string => Boolean(s))}
-        />
+        {user ? (
+          <LeadForm
+            schoolId={school.id}
+            schoolName={school.name}
+            cursos={cursos
+              .map((c) => c.nome ?? c.slug)
+              .filter((s): s is string => Boolean(s))}
+          />
+        ) : (
+          <Card className="space-y-3">
+            <CardTitle>Entre em contato pela plataforma</CardTitle>
+            <CardDesc>
+              Faça login pra enviar uma mensagem direto pra escola. Você ainda
+              ganha vidas extras e acesso ao app de estudos pra prova teórica.
+            </CardDesc>
+            <div className="flex flex-wrap gap-2">
+              <Link href={`/signup?next=/escolas/${slug}`}>
+                <Button size="md" variant="primary">
+                  Criar conta grátis
+                </Button>
+              </Link>
+              <Link href={`/login?next=/escolas/${slug}`}>
+                <Button size="md" variant="outline">
+                  Entrar
+                </Button>
+              </Link>
+            </div>
+          </Card>
+        )}
       </main>
     </AppShell>
   );

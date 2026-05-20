@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronLeft, MapPin } from "lucide-react";
@@ -7,13 +6,24 @@ import { AppShell } from "@/components/nav/AppShell";
 import { SchoolFilters } from "@/components/schools/SchoolFilters";
 import { Mascot } from "@/components/mascot/Mascot";
 import { PullToRefresh } from "@/components/ui/PullToRefresh";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { computeHearts } from "@/lib/hearts";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Escolas de aviação",
+  description:
+    "Diretório de escolas de aviação no Brasil. Encontre uma próxima da sua cidade e fale direto com elas.",
+  alternates: { canonical: "/escolas" },
+};
+
 type Search = { uf?: string; q?: string };
 
+// Public listing — crawlers and visitors WITHOUT auth must see the school
+// cards. Sitemap.xml advertises this URL and /escolas/[slug] for SEO; if
+// we auth-walled them, the bot would index /login instead. The HUD only
+// renders for authenticated users.
 export default async function SchoolsPage(props: {
   searchParams: Promise<Search>;
 }) {
@@ -22,19 +32,22 @@ export default async function SchoolsPage(props: {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) redirect("/login");
 
-  const [{ data: stats }, baseQuery] = await Promise.all([
-    supabase
-      .from("user_stats")
-      .select("total_xp, current_streak, hearts, hearts_regen_at, gems")
-      .eq("user_id", user.id)
-      .single(),
-    Promise.resolve(null),
-  ]);
-  void baseQuery;
+  // Stats query is per-user — skip cleanly when anonymous.
+  const stats = user
+    ? (
+        await supabase
+          .from("user_stats")
+          .select("total_xp, current_streak, hearts, hearts_regen_at, gems")
+          .eq("user_id", user.id)
+          .single()
+      ).data
+    : null;
 
-  let q = supabase
+  // Use service-role for the public schools read so crawlers (which have
+  // no JWT) can still see the rows even if anon RLS tightens later.
+  const service = createServiceClient();
+  let q = service
     .from("schools")
     .select(
       "id, slug, name, city, state, logo_url, cover_url, description, featured, cursos",
@@ -49,7 +62,7 @@ export default async function SchoolsPage(props: {
 
   const { data: schools } = await q;
 
-  const { data: allUfs } = await supabase
+  const { data: allUfs } = await service
     .from("schools")
     .select("state")
     .eq("status", "active");
@@ -61,12 +74,14 @@ export default async function SchoolsPage(props: {
 
   return (
     <AppShell>
-      <HUD
-        xp={stats?.total_xp ?? 0}
-        streak={stats?.current_streak ?? 0}
-        hearts={refreshed.hearts}
-        gems={stats?.gems ?? 0}
-      />
+      {user && (
+        <HUD
+          xp={stats?.total_xp ?? 0}
+          streak={stats?.current_streak ?? 0}
+          hearts={refreshed.hearts}
+          gems={stats?.gems ?? 0}
+        />
+      )}
 
       <PullToRefresh className="relative">
       <main className="container max-w-3xl space-y-6 py-6">
