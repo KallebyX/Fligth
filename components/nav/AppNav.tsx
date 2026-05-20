@@ -9,15 +9,32 @@ import {
   ShoppingBag,
   Users,
   UserCircle,
+  Newspaper,
+  Camera,
+  Building2,
+  Crown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+type LabelKey =
+  | "learn"
+  | "feed"
+  | "leagues"
+  | "shop"
+  | "friends"
+  | "profile"
+  | "gallery"
+  | "schools"
+  | "pro";
+
 type Item = {
   href: string;
-  labelKey: "learn" | "leagues" | "shop" | "friends" | "profile";
+  labelKey: LabelKey;
   Icon: typeof GraduationCap;
   /** Match the section if any of these prefixes are active. */
   match: (path: string) => boolean;
+  /** Show in the mobile bottom tab bar (5-slot, capped). */
+  mobile?: boolean;
 };
 
 const ITEMS: Item[] = [
@@ -25,33 +42,65 @@ const ITEMS: Item[] = [
     href: "/learn",
     labelKey: "learn",
     Icon: GraduationCap,
+    mobile: true,
     match: (p) => p.startsWith("/learn") || p.startsWith("/review") || p.startsWith("/exam"),
+  },
+  {
+    href: "/friends/feed",
+    labelKey: "feed",
+    Icon: Newspaper,
+    mobile: true,
+    match: (p) => p.startsWith("/friends/feed"),
   },
   {
     href: "/leagues",
     labelKey: "leagues",
     Icon: Trophy,
+    mobile: true,
     match: (p) => p.startsWith("/leagues"),
   },
   {
     href: "/shop/outfits",
     labelKey: "shop",
     Icon: ShoppingBag,
+    mobile: true,
     match: (p) => p.startsWith("/shop"),
-  },
-  {
-    href: "/friends",
-    labelKey: "friends",
-    Icon: Users,
-    match: (p) => p.startsWith("/friends"),
   },
   {
     href: "/profile",
     labelKey: "profile",
     Icon: UserCircle,
+    mobile: true,
     match: (p) => p.startsWith("/profile") || p.startsWith("/pro"),
   },
+  // Side-nav only (desktop has room; mobile keeps 5-slot tap targets ≥ 44pt).
+  {
+    href: "/friends",
+    labelKey: "friends",
+    Icon: Users,
+    match: (p) => p === "/friends" || p.startsWith("/friends?"),
+  },
+  {
+    href: "/galeria",
+    labelKey: "gallery",
+    Icon: Camera,
+    match: (p) => p.startsWith("/galeria"),
+  },
+  {
+    href: "/escolas",
+    labelKey: "schools",
+    Icon: Building2,
+    match: (p) => p.startsWith("/escolas"),
+  },
+  {
+    href: "/pro",
+    labelKey: "pro",
+    Icon: Crown,
+    match: (p) => p === "/pro" || p.startsWith("/pro/"),
+  },
 ];
+
+const MOBILE_ITEMS = ITEMS.filter((i) => i.mobile);
 
 export function AppNav() {
   const pathname = usePathname() ?? "/";
@@ -73,7 +122,7 @@ export function AppNav() {
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <ul className="container grid grid-cols-5 gap-1 px-1 py-1.5">
-          {ITEMS.map((item) => {
+          {MOBILE_ITEMS.map((item) => {
             const active = item.match(pathname);
             return (
               <li key={item.href}>
@@ -112,7 +161,7 @@ export function AppNav() {
           <span aria-hidden>✈</span>
           <span>Lorí</span>
         </Link>
-        <ul className="flex flex-1 flex-col gap-1 p-3">
+        <ul className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">
           {ITEMS.map((item) => {
             const active = item.match(pathname);
             return (

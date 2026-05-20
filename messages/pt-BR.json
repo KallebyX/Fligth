@@ -96,13 +96,15 @@
   },
   "nav": {
     "learn": "Aprender",
+    "feed": "Feed",
     "leagues": "Ligas",
     "shop": "Loja",
     "friends": "Amigos",
     "profile": "Perfil",
     "settings": "Configurações",
     "gallery": "Galeria",
-    "schools": "Escolas"
+    "schools": "Escolas",
+    "pro": "Pro"
   },
   "settings": {
     "title": "Configurações",

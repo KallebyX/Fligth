@@ -18,8 +18,14 @@ const nunito = Nunito({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://capitaolori.com";
+
 export const metadata: Metadata = {
-  title: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
+    template: "%s · Capitão Lorí",
+  },
   description:
     "Estude para a prova teórica de Piloto Privado com lições curtas, ofensiva diária, simulado no formato da banca e muita aviação. Não filiado à ANAC.",
   applicationName: "Capitão Lorí",
@@ -27,30 +33,62 @@ export const metadata: Metadata = {
     "ANAC",
     "piloto privado",
     "PPA",
-    "prova teórica",
+    "prova teórica ANAC",
+    "simulado ANAC PP",
     "aviação",
-    "simulado",
-    "regulamentos",
-    "meteorologia",
+    "aprender a voar",
+    "escola de aviação",
+    "regulamentos de tráfego aéreo",
+    "meteorologia aeronáutica",
     "navegação aérea",
     "teoria de voo",
+    "ICAO alfabeto fonético",
+    "comunicações aeronáuticas",
   ],
   authors: [{ name: "Capitão Lorí" }],
+  category: "education",
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "pt-BR": SITE_URL,
+      en: SITE_URL,
+      es: SITE_URL,
+    },
+  },
   openGraph: {
     type: "website",
     siteName: "Capitão Lorí",
+    url: SITE_URL,
     title: "Capitão Lorí — Estudo para Piloto Privado (PPA)",
     description:
       "Lições curtas, ofensiva diária, repetição espaçada e simulado no formato da banca (100q · 3h · 70 % por matéria). Aprovação com hábito.",
     locale: "pt_BR",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Capitão Lorí — app de estudo para Piloto Privado",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Capitão Lorí — Estudo para Piloto Privado",
     description:
       "5 trilhas, 25 lições, 100 questões e simulado no formato da banca. Estude 5 min/dia. Não filiado à ANAC.",
+    images: ["/og.png"],
   },
-  robots: { index: true, follow: true },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [

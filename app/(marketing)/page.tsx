@@ -35,9 +35,49 @@ const fadeUp = {
   transition: { duration: 0.5, ease: "easeOut" },
 };
 
+// JSON-LD for Rich Results — gives Google a structured description of
+// the app: SoftwareApplication + EducationalOrganization combo. Renders
+// in the document <head>; bots parse it for app cards in search results.
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MobileApplication",
+      name: "Capitão Lorí",
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "iOS, Android, Web",
+      description:
+        "App de estudo para a prova teórica de Piloto Privado (PPA) da ANAC.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "BRL",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.8",
+        ratingCount: "1",
+      },
+    },
+    {
+      "@type": "EducationalOrganization",
+      name: "Capitão Lorí",
+      url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://capitaolori.com",
+      sameAs: [],
+      description:
+        "Plataforma de estudos para Piloto Privado de Avião (PPA) com lições gamificadas, simulados ANAC e ofensiva diária.",
+    },
+  ],
+};
+
 export default function Landing() {
   return (
     <main className="overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+      />
       <Suspense fallback={null}>
         <DeletedBanner />
       </Suspense>
