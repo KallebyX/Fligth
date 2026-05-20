@@ -26,6 +26,8 @@ import { PrivacySection } from "@/components/settings/PrivacySection";
 import { ThemePicker } from "@/components/settings/ThemePicker";
 import { LanguagePicker } from "@/components/settings/LanguagePicker";
 import { AccessibilitySection } from "@/components/settings/AccessibilitySection";
+import { RestoreButton } from "@/components/pro/RestoreButton";
+import { NativeOnly } from "@/components/pro/NativeOnly";
 import { computeHearts } from "@/lib/hearts";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 
@@ -160,6 +162,21 @@ export default async function SettingsPage() {
             </Link>
           </div>
         </Card>
+
+        {/* Restore Purchases — App Store Review Guideline 3.1.1 requires
+            this be available in app settings, not just the paywall. */}
+        <NativeOnly>
+          <Card>
+            <CardTitle>Restaurar compras</CardTitle>
+            <CardDesc>
+              Já comprou Pro nesse Apple ID em outro dispositivo? Toque pra
+              reaplicar tudo agora.
+            </CardDesc>
+            <div className="mt-3">
+              <RestoreButton variant="outline" />
+            </div>
+          </Card>
+        </NativeOnly>
 
         <SectionHeader
           icon={<Camera size={18} />}

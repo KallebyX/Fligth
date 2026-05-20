@@ -224,5 +224,30 @@
   },
   "onboarding": {
     "skipTutorial": "Pular"
+  },
+  "pro": {
+    "restore": {
+      "button": "Restaurar compras",
+      "restoring": "Restaurando…",
+      "foundPro": "Pro restaurado! Atualizando…",
+      "restoredCount": "{count, plural, one {# entitlement restaurado} other {# entitlements restaurados}}",
+      "nothingToRestore": "Nenhuma compra pra restaurar.",
+      "failed": "Falha ao restaurar. Verifique sua conta Apple ID e tente novamente."
+    },
+    "disclosures": {
+      "ariaLabel": "Termos e condições da assinatura",
+      "autoRenew": {
+        "title": "Renovação automática.",
+        "body": "Pro Mensal e Pro Anual renovam automaticamente até serem cancelados. A renovação acontece dentro de 24h antes do fim do período pago."
+      },
+      "billing": "O valor cobrado é o exibido na tela de compra, na sua moeda local, e é descontado pela Apple (ou Google) na conta do seu Apple ID / Google Play.",
+      "cancel": "Você pode cancelar a qualquer momento em Ajustes → seu nome → Assinaturas (iOS) ou no app do Google Play (Android). O cancelamento mantém seu acesso até o fim do período atual.",
+      "appleDisclaimer": "Apple Inc. e Google LLC não são patrocinadoras nem responsáveis pelo conteúdo do CMTE Lorí.",
+      "links": {
+        "terms": "Termos de uso",
+        "privacy": "Política de privacidade",
+        "eula": "EULA padrão da Apple"
+      }
+    }
   }
 }

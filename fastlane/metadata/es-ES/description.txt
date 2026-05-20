@@ -1,0 +1,26 @@
+Comandante Lorí (CMTE Lori) es la app gamificada para estudiar el
+examen teórico de Piloto Privado de la ANAC (Brasil). Lecciones cortas,
+racha diaria, ligas semanales y mucha aviación — al estilo Duolingo,
+hecho para pilotos en formación.
+
+POR QUÉ FUNCIONA
+• Lecciones de 5 minutos enfocadas en lo que cae en el examen
+• Repetición espaciada (SRS): repasas lo que olvidaste, no lo que ya
+  sabes
+• Racha diaria para crear hábito
+• Simulacro completo en formato oficial: 60 preguntas, 3 horas
+
+CONTENIDO
+7 materias completas: Reglamentos, Meteorología, Navegación, Teoría
+de Vuelo, Conocimientos Técnicos, Comunicaciones y Aeronaves.
+
+GAMIFICACIÓN
+Vidas, gemas, outfits para la mascota, ligas (Bronce → Diamante),
+ruleta diaria, jackpot semanal y 30+ logros desbloqueables.
+
+CMTE LORI PRO (opcional)
+Vidas ilimitadas, simulacros extras, estadísticas avanzadas, sin
+anuncios, outfit Pro Dorado. 7 días gratis, cancela cuando quieras.
+
+Nota: contenido de lecciones en portugués brasileño. Interfaz en
+español, inglés y portugués.

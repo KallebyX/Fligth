@@ -1,0 +1,43 @@
+# fastlane deliver configuration — uploads metadata + screenshots to
+# App Store Connect.
+#
+# Run after `bundle exec fastlane snapshot` to push everything:
+#
+#   bundle exec fastlane deliver --force
+#
+# `--force` skips the HTML review browser prompt. Drop it if you want
+# to inspect the upload before it lands.
+
+app_identifier("br.com.capitaolori.app")
+
+# Use App Store Connect API Key (same one used in Fastfile for beta).
+api_key_path_env_var = "APP_STORE_CONNECT_KEY_PATH"
+
+# Metadata source. Files go in fastlane/metadata/<locale>/<field>.txt
+metadata_path("./fastlane/metadata")
+
+# Screenshots come from snapshot (Snapfile output directory).
+screenshots_path("./fastlane/screenshots")
+
+# Don't auto-submit for review — we want the chance to eyeball the
+# uploaded assets in ASC before clicking "Submit". Set to true once the
+# workflow is battle-tested.
+submit_for_review(false)
+
+# Skip steps individually depending on what changed.
+# By default deliver tries to push EVERYTHING — that's overkill when
+# you're just updating screenshots.
+skip_binary_upload(true)
+skip_app_version_update(false)
+force(true)
+
+# Localized metadata is checked into fastlane/metadata/<locale>/.
+# locale codes Apple expects:
+#   - pt-BR  → primary
+#   - en-US
+#   - es-ES
+languages(["pt-BR", "en-US", "es-ES"])
+
+# IAPs are managed via App Store Connect UI for now, not via deliver.
+# (Toolchain `precheck` would require more setup; punt to manual.)
+precheck_include_in_app_purchases(false)
