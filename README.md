@@ -1,4 +1,4 @@
-# Capitão Lorí — Duolingo da ANAC para Piloto Privado
+# Comandante Lorí — Duolingo da ANAC para Piloto Privado
 
 Web app gamificado, mobile-first, para estudar a prova teórica da ANAC de Piloto Privado de Avião (PPA). Inspirado no Duolingo: lições curtas, ofensiva diária, vidas, repetição espaçada (SRS), simulado oficial e ligas semanais.
 
@@ -38,7 +38,7 @@ components/
   hud/                      # HeartsBar, XPBar, StreakBadge, HUD
   learn/                    # LessonPath, QuestionPlayer, LessonRunner, ReviewRunner
   exam/                     # ExamRunner, MockExamTimer
-  mascot/                   # Capitão Lorí (papagaio aviador)
+  mascot/                   # Comandante Lorí (papagaio aviador)
 
 lib/
   supabase/                 # server, client, middleware, types
@@ -136,7 +136,7 @@ Testes cobrem a lógica crítica isolada da UI/banco:
 
 ## 🦜 Mascote
 
-**Capitão Lorí** é um papagaio aviador SVG inline (`components/mascot/Mascot.tsx`) com 5 estados animados via Framer Motion: `idle`, `happy`, `sad`, `celebrate`, `sleeping`.
+**Comandante Lorí** é um papagaio aviador SVG inline (`components/mascot/Mascot.tsx`) com 5 estados animados via Framer Motion: `idle`, `happy`, `sad`, `celebrate`, `sleeping`.
 
 ## 🎵 Sons
 
@@ -228,4 +228,4 @@ npm run mobile:run:android # build + run em emulador/device Android
 
 ## ⚖️ Licença e conteúdo
 
-Capitão Lorí é um projeto independente de estudo. **Não filiado, endossado ou patrocinado pela ANAC.** Conteúdo redigido a partir de fontes públicas (RBAC, ICA, MCA, AIP-Brasil). Não há cópia de bancos comerciais. Sempre consulte os manuais oficiais antes de operar. Use, edite e contribua.
+Comandante Lorí é um projeto independente de estudo. **Não filiado, endossado ou patrocinado pela ANAC.** Conteúdo redigido a partir de fontes públicas (RBAC, ICA, MCA, AIP-Brasil). Não há cópia de bancos comerciais. Sempre consulte os manuais oficiais antes de operar. Use, edite e contribua.

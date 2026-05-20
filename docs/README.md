@@ -1,6 +1,6 @@
 # Fligth — Documentation Index
 
-Comprehensive end-to-end documentation for the Capitão Lorí (Fligth) Brazilian Private Pilot training app.
+Comprehensive end-to-end documentation for the Comandante Lorí (Fligth) Brazilian Private Pilot training app.
 
 ## Documents
 
@@ -43,7 +43,7 @@ Cross-check against **AUDIT-REPORT.md** known findings — make sure the PR isn'
 | Streak freeze | Consumable item that "pauses" a streak for one missed day |
 | Hearts | Lives system — 5 max, lose 1 per wrong answer, regen 30min |
 | Gems | Soft currency — earned via lessons, spent on outfits / jackpot |
-| Outfit | Cosmetic for the Capitão Lorí mascot |
+| Outfit | Cosmetic for the Comandante Lorí mascot |
 | Roulette | Free daily spin — common / rare outfit |
 | Jackpot | 50-gem spin — epic / legendary outfit |
 | Theory step | Mini-lesson exercise (markdown content + "Entendi!" CTA, no scoring) |
@@ -51,7 +51,7 @@ Cross-check against **AUDIT-REPORT.md** known findings — make sure the PR isn'
 | HUD | Heads-up display — top bar with XP, streak, hearts, gems, notifications |
 | RLS | Row Level Security — Postgres feature enforcing access via SQL predicates |
 | Service role | Supabase admin key used in webhooks + exam pool + account-delete |
-| Mascot | Capitão Lorí — the green parrot-mascot |
+| Mascot | Comandante Lorí — the green parrot-mascot |
 
 ## Stats at a glance
 

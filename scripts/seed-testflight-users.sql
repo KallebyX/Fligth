@@ -61,7 +61,7 @@ begin
       bio = case
         when t[4] = 'review' then 'Apple Review test account — feel free to log in.'
         when t[4] = 'demo'   then 'Conta de demonstração — use livremente.'
-        else 'Conta de teste interno do Capitão Lorí.'
+        else 'Conta de teste interno do Comandante Lorí.'
       end
     where id = new_id;
 

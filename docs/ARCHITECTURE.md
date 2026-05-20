@@ -1,4 +1,4 @@
-# Architecture — Capitão Lorí (Fligth)
+# Architecture — Comandante Lorí (Fligth)
 
 Aviation theory training app for Brazilian Private Pilot (PPA) license. Duolingo-style with 5 subjects, 25 lessons, 100-question mock exams, leaderboards, gems shop, and a community gallery.
 

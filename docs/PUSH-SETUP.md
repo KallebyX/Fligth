@@ -99,7 +99,7 @@ curl -X POST 'https://ggveduxfkljidzkrmmoo.supabase.co/functions/v1/send-push' \
   -H "Content-Type: application/json" \
   -d '{
     "user_id": "<seu-uuid>",
-    "title": "Capitão Lorí",
+    "title": "Comandante Lorí",
     "body": "Funcionou!"
   }'
 ```

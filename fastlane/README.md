@@ -1,4 +1,4 @@
-# Fastlane — Capitão Lorí iOS
+# Fastlane — Comandante Lorí iOS
 
 Lanes:
 

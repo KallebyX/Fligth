@@ -23,7 +23,7 @@ Zero Xcode. Você só precisa de **1 setup inicial de ~10 minutos**.
 Sem isso o `upload_to_testflight` não tem alvo.
 
 1. https://appstoreconnect.apple.com → **My Apps → + → New App**.
-2. Platforms: iOS · Name: `Capitão Lorí — Piloto` · Primary Language: Portuguese (Brazil) · Bundle ID: `br.com.capitaolori.app` · SKU: `capitaolori-001` · Full Access · **Create**.
+2. Platforms: iOS · Name: `Comandante Lorí — Piloto` · Primary Language: Portuguese (Brazil) · Bundle ID: `br.com.capitaolori.app` · SKU: `capitaolori-001` · Full Access · **Create**.
 
 ### B) Criar App Store Connect API Key (P8)
 
