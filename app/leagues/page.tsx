@@ -63,12 +63,37 @@ export default async function LeaguesPage() {
   const division = getDivision(profile?.current_league ?? "bronze");
   const week = isoWeek();
 
-  const { data: league } = await supabase
+  // Ensure the league row + user's membership exist for the current week.
+  // Without this, brand-new users (or returning users who haven't earned
+  // XP yet this week) see an empty leaderboard. awardXP() does the same
+  // lazy creation, but this gives instant visual feedback the moment the
+  // user opens the tab.
+  let { data: league } = await supabase
     .from("leagues")
     .select("id")
     .eq("iso_week", week)
     .eq("division", division.slug)
     .maybeSingle();
+
+  if (!league) {
+    const { data: created } = await supabase
+      .from("leagues")
+      .insert({ iso_week: week, division: division.slug })
+      .select("id")
+      .single();
+    league = created ?? null;
+  }
+
+  if (league) {
+    // upsert membership with 0 weekly_xp (insert-only — never zeroes out
+    // an existing score).
+    await supabase
+      .from("league_members")
+      .upsert(
+        { league_id: league.id, user_id: user.id, weekly_xp: 0 },
+        { onConflict: "league_id,user_id", ignoreDuplicates: true },
+      );
+  }
 
   let board: {
     user_id: string;

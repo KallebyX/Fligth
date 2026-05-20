@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>pt-BR</string>
 	<key>CFBundleDisplayName</key>
-	<string>Capitão Lorí</string>
+	<string>CMTE Lorí</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -74,7 +74,7 @@
 	     calls LAContext / Local Authentication. Used by BiometricGate +
 	     BiometricEnrollPrompt to ungate the WebView after first login. -->
 	<key>NSFaceIDUsageDescription</key>
-	<string>O Capitão Lorí usa Face ID para desbloquear sua conta rapidamente, sem precisar digitar a senha toda vez.</string>
+	<string>O CMTE Lorí usa Face ID para desbloquear sua conta rapidamente, sem precisar digitar a senha toda vez.</string>
 
 	<!-- Disable file sharing and document browser by default. -->
 	<key>UIFileSharingEnabled</key>
@@ -87,10 +87,11 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 
-	<!-- Force Light appearance until a real dark palette ships. Avoids the
-	     half-styled look when iOS user has system dark mode on. -->
+	<!-- Automatic: respects the user's iOS theme preference. The WebView
+	     in turn defers to our ThemeProvider, which reads system pref when
+	     theme="auto" (default for new users). -->
 	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
+	<string>Automatic</string>
 
 	<!-- App Store category. Required for proper placement and review. -->
 	<key>LSApplicationCategoryType</key>

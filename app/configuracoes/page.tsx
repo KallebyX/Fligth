@@ -28,6 +28,7 @@ import { LanguagePicker } from "@/components/settings/LanguagePicker";
 import { AccessibilitySection } from "@/components/settings/AccessibilitySection";
 import { RestoreButton } from "@/components/pro/RestoreButton";
 import { NativeOnly } from "@/components/pro/NativeOnly";
+import { BiometricSection } from "@/components/settings/BiometricSection";
 import { computeHearts } from "@/lib/hearts";
 import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
 
@@ -162,6 +163,10 @@ export default async function SettingsPage() {
             </Link>
           </div>
         </Card>
+
+        {/* Face ID / Touch ID — visible only on native. Without enrolling
+            here, the BiometricGate falls back to the password screen. */}
+        <BiometricSection />
 
         {/* Restore Purchases — App Store Review Guideline 3.1.1 requires
             this be available in app settings, not just the paywall. */}

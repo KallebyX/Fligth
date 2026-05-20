@@ -7,7 +7,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "br.com.capitaolori.app",
-  appName: "Capitão Lorí",
+  appName: "CMTE Lorí",
   webDir: "public", // unused at runtime — server.url takes precedence
   server: {
     url: process.env.CAPACITOR_SERVER_URL ?? "https://fligth.vercel.app",

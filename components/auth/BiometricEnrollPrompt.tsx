@@ -51,7 +51,7 @@ export function BiometricEnrollPrompt() {
     try {
       const mod = await import("@aparajita/capacitor-biometric-auth");
       await mod.BiometricAuth.authenticate({
-        reason: "Ative o desbloqueio rápido do Capitão Lorí",
+        reason: "Ative o desbloqueio rápido do CMTE Lorí",
         cancelTitle: "Agora não",
         allowDeviceCredential: true,
         iosFallbackTitle: "Usar senha",

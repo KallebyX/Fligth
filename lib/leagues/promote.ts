@@ -9,6 +9,7 @@ import {
   type DivisionSlug,
 } from "@/lib/leagues/divisions";
 import { recordActivity } from "@/lib/activities";
+import { notifyUser } from "@/lib/notifications";
 import { getDropPool, pickWeighted } from "@/lib/outfits/catalog";
 
 type DB = ReturnType<typeof createServiceClient>;
@@ -118,6 +119,12 @@ export async function promoteWeek(
         rank,
         gems,
         outfit: awardedOutfit,
+      });
+      await notifyUser(uid, "league_promoted", {
+        from: division.slug,
+        to: target,
+        rank,
+        gems,
       });
     }
 

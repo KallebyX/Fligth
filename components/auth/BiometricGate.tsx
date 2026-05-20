@@ -48,18 +48,42 @@ export function BiometricGate({ children }: { children: React.ReactNode }) {
     if (state !== "checking") return;
     let cancelled = false;
 
-    async function boot() {
+    async function waitForSession(maxMs = 1500): Promise<boolean> {
       const supabase = createClient();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
+      const { data } = await supabase.auth.getSession();
+      if (data.session) return true;
+
+      // The NativeSessionPersistence component restores from Capacitor
+      // Preferences asynchronously. Listen for SIGNED_IN / TOKEN_REFRESHED
+      // for a short window before deciding to skip.
+      return new Promise((resolve) => {
+        let resolved = false;
+        const finish = (ok: boolean) => {
+          if (resolved) return;
+          resolved = true;
+          sub.subscription.unsubscribe();
+          clearTimeout(timer);
+          resolve(ok);
+        };
+        const { data: sub } = supabase.auth.onAuthStateChange((event, session) => {
+          if (event === "SIGNED_IN" || event === "TOKEN_REFRESHED") {
+            if (session) finish(true);
+          }
+        });
+        const timer = setTimeout(() => finish(false), maxMs);
+      });
+    }
+
+    async function boot() {
+      const hasSession = await waitForSession();
+      if (cancelled) return;
+      if (!hasSession) {
         // Nothing to gate — user is anonymous, let them hit /login normally.
-        if (!cancelled) setState("skipped");
+        setState("skipped");
         return;
       }
 
-      if (!cancelled) setState("locked");
+      setState("locked");
       await promptBiometric().then(
         () => !cancelled && setState("unlocked"),
         (err) => {
@@ -85,11 +109,11 @@ export function BiometricGate({ children }: { children: React.ReactNode }) {
       throw new Error("Biometria não disponível neste dispositivo.");
     }
     await mod.BiometricAuth.authenticate({
-      reason: "Desbloquear o Capitão Lorí",
+      reason: "Desbloquear o CMTE Lorí",
       cancelTitle: "Usar senha",
       allowDeviceCredential: true,
       iosFallbackTitle: "Usar senha",
-      androidTitle: "Desbloquear Capitão Lorí",
+      androidTitle: "Desbloquear CMTE Lorí",
       androidSubtitle: "Confirme sua identidade",
       androidConfirmationRequired: false,
     });
@@ -143,7 +167,7 @@ export function BiometricGate({ children }: { children: React.ReactNode }) {
       >
         <Mascot state="happy" size={120} />
         <h1 id="biometric-title" className="mt-4 text-2xl font-black">
-          Desbloqueie o Capitão Lorí
+          Desbloqueie o CMTE Lorí
         </h1>
         <p className="mt-1 max-w-xs text-sm text-ink/65">
           Use Face ID, Touch ID ou seu PIN para continuar.

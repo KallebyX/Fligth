@@ -7,6 +7,7 @@ import "./globals.css";
 import { PwaRegister } from "@/components/pwa-register";
 import { BiometricGate } from "@/components/auth/BiometricGate";
 import { NativeOAuthListener } from "@/components/auth/NativeOAuthListener";
+import { NativeSessionPersistence } from "@/components/auth/NativeSessionPersistence";
 import { ThemeProvider, NO_FLASH_SCRIPT } from "@/components/theme/ThemeProvider";
 import { A11yProvider, A11Y_NO_FLASH_SCRIPT } from "@/components/a11y/A11yProvider";
 
@@ -133,6 +134,7 @@ export default async function RootLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ThemeProvider>
             <A11yProvider>
+              <NativeSessionPersistence />
               <BiometricGate>{children}</BiometricGate>
               <NativeOAuthListener />
               <PwaRegister />
