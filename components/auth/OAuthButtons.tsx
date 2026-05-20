@@ -30,7 +30,16 @@ export function OAuthButtons({
       // Native iOS + Apple: use the SignInWithApple plugin so users get the
       // native Apple sheet (Face ID / Touch ID), not a Safari View. App Store
       // guideline 4.8 requires this when other social logins are offered.
-      if (native && provider === "apple") {
+      //
+      // Gated behind NEXT_PUBLIC_APPLE_SIGN_IN_ENABLED because the App ID
+      // at developer.apple.com needs the "Sign In with Apple" capability
+      // enabled AND a fresh provisioning profile from `fastlane match`.
+      // Without that, the plugin throws at runtime AND the archive itself
+      // fails to sign. Re-enable by setting the env var to "1" + restoring
+      // the entitlement (see ios/App/App/App.entitlements for the checklist).
+      const appleNativeEnabled =
+        process.env.NEXT_PUBLIC_APPLE_SIGN_IN_ENABLED === "1";
+      if (native && provider === "apple" && appleNativeEnabled) {
         const isIOS =
           typeof navigator !== "undefined" &&
           /iPad|iPhone|iPod/.test(navigator.userAgent);

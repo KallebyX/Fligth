@@ -4,9 +4,31 @@
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
-	<key>com.apple.developer.applesignin</key>
-	<array>
-		<string>Default</string>
-	</array>
+	<!--
+		REQUIRED FOR APP STORE SUBMISSION — see docs/OPS.md
+		"Provisioning profile out of sync" before re-enabling:
+
+			<key>com.apple.developer.applesignin</key>
+			<array><string>Default</string></array>
+
+		Currently disabled because the App ID at developer.apple.com
+		doesn't have "Sign In with Apple" enabled, which blocks
+		TestFlight archives with:
+
+			Provisioning profile doesn't include the Sign In with Apple
+			capability.
+
+		To re-enable (mandatory before public App Store release —
+		Apple Review requires Sign In with Apple as a parallel option
+		whenever Google OAuth is offered):
+
+			1. developer.apple.com → Identifiers → br.com.capitaolori.app
+			   → Edit → check "Sign In with Apple" → Save.
+			2. Local: `bundle exec fastlane ios regenerate_certs`.
+			3. Restore the <key> block above + restore the
+			   com.apple.SignInWithApple SystemCapability in
+			   ios/App/App.xcodeproj/project.pbxproj.
+			4. Push + re-run iOS TestFlight workflow.
+	-->
 </dict>
 </plist>

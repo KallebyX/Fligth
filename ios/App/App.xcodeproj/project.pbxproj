@@ -106,9 +106,10 @@
 						LastSwiftMigration = 1100;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
-							com.apple.SignInWithApple = {
-								enabled = 1;
-							};
+							/* com.apple.SignInWithApple intentionally disabled — App ID at
+							   developer.apple.com lacks this capability, blocking TestFlight
+							   archive. See ios/App/App/App.entitlements for the restore
+							   checklist before App Store submission. */
 							com.apple.Push = {
 								enabled = 1;
 							};
