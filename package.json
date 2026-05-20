@@ -1,6 +1,6 @@
 {
   "name": "fligth",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "description": "Duolingo da ANAC — app gamificado para o curso de Piloto Privado de Avião (PPA)",
   "scripts": {
