@@ -96,7 +96,7 @@ const SECTIONS: { id: string; icon: React.ReactNode; title: string; items: QA[] 
         a: (
           <>
             10 XP por questão respondida corretamente, 5 XP por mini-aula (teoria) concluída, e 10 XP de
-            bônus por terminar uma lição completa. Acertou tudo? Mais bônus de "lição perfeita".
+            bônus por terminar uma lição completa. Acertou tudo? Mais bônus de &ldquo;lição perfeita&rdquo;.
           </>
         ),
       },
@@ -230,7 +230,7 @@ const SECTIONS: { id: string; icon: React.ReactNode; title: string; items: QA[] 
         a: (
           <>
             Sim. Em <Link href="/pro" className="font-bold text-sky underline-offset-4 hover:underline">/pro</Link>{" "}
-            tem o botão <strong>"Restaurar compras"</strong>. Funciona em iOS (Apple ID) e Android
+            tem o botão <strong>&ldquo;Restaurar compras&rdquo;</strong>. Funciona em iOS (Apple ID) e Android
             (Google Play). No iOS, também tem em <strong>Configurações</strong> dentro do app.
           </>
         ),
@@ -271,7 +271,7 @@ const SECTIONS: { id: string; icon: React.ReactNode; title: string; items: QA[] 
         q: "Esqueci a senha.",
         a: (
           <>
-            Na tela de login, toque em <strong>"Esqueci minha senha"</strong>. Te mandamos um link por
+            Na tela de login, toque em <strong>&ldquo;Esqueci minha senha&rdquo;</strong>. Te mandamos um link por
             email com validade de 1h. Não temos sua senha em texto puro.
           </>
         ),
@@ -281,7 +281,7 @@ const SECTIONS: { id: string; icon: React.ReactNode; title: string; items: QA[] 
         a: (
           <>
             Vai em <Link href="/profile/edit" className="font-bold text-sky underline-offset-4 hover:underline">Perfil → Editar perfil</Link> e procura{" "}
-            <strong>"Excluir conta"</strong>. Te mandamos um email de confirmação e a exclusão acontece
+            <strong>&ldquo;Excluir conta&rdquo;</strong>. Te mandamos um email de confirmação e a exclusão acontece
             em 24h. Você pode cancelar antes disso.
           </>
         ),

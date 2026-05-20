@@ -86,7 +86,7 @@ export function LessonCompleteScreen({
       cancelAnimationFrame(raf);
       window.clearTimeout(confettiTimer);
     };
-  }, [xpAwarded, sfx, isPractice, goalJustHit]);
+  }, [xpAwarded, sfx, isPractice, goalJustHit, perfect]);
 
   const goldConfettiColors = ["#FBBF24", "#F59E0B", "#FCD34D", "#EAB308", "#FDE68A"];
   const standardConfettiColors = ["#0EA5E9", "#10B981", "#F97316", "#FBBF24", "#A78BFA"];

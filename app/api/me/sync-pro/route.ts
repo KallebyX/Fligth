@@ -1,4 +1,4 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { createClient, createServiceClient } from "@/lib/supabase/server";
 
 export const runtime = "nodejs";
@@ -22,7 +22,7 @@ export const dynamic = "force-dynamic";
  * future expansion (could call RC's REST API to reconcile if a
  * webhook gets lost).
  */
-export async function POST(_req: NextRequest) {
+export async function POST() {
   try {
     const supabase = await createClient();
     const {
