@@ -1,0 +1,22 @@
+# GitGuardian configuration.
+#
+# The Supabase "anon" JWT is a public key designed to be embedded in client
+# code (mobile apps, web bundles). It's NOT a secret in the traditional
+# sense — Supabase enforces row-level security at the database to make
+# this safe. GitGuardian's default JWT detector doesn't know about this
+# distinction, so we explicitly allowlist it here.
+#
+# Docs: https://docs.gitguardian.com/internal-repositories-monitoring/integrations/github/configuration
+
+version: 2
+api-version: 1
+
+paths-ignore:
+  # Edge function inlines the anon key for its own JWT.verify_jwt flow.
+  - "supabase/functions/apply-auth-config/**"
+
+matches-ignore:
+  # Supabase Fligth project anon JWT — public by design (RLS-protected).
+  # Rotation: regenerated via Supabase Dashboard, Vault secret 'fligth_anon_key'.
+  - name: "Supabase anon JWT (Fligth public project key)"
+    match: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdndmVkdXhma2xqaWR6a3JtbW9vIiwicm9sZSI6ImFub24i"

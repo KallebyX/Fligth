@@ -1,0 +1,253 @@
+{
+  "common": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "save": "Save",
+    "send": "Send",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "next": "Next",
+    "skip": "Skip",
+    "loading": "Loading…",
+    "tryAgain": "Try again",
+    "search": "Search",
+    "aria": {
+      "close": "Close",
+      "back": "Back",
+      "next": "Next",
+      "previous": "Previous",
+      "like": "Like",
+      "unlike": "Unlike",
+      "approve": "Approve",
+      "reject": "Reject",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "search": "Search",
+      "clear": "Clear",
+      "expand": "Expand",
+      "collapse": "Collapse",
+      "dragHandle": "Drag to close"
+    }
+  },
+  "learn": {
+    "heroTitle": "Time to fly",
+    "heroSubtitle": "Pick up where you left off.",
+    "continueLesson": "Continue lesson",
+    "startLesson": "Start lesson",
+    "perfect": "Perfect!",
+    "lessonComplete": "Lesson complete",
+    "xpAwarded": "+{xp} XP",
+    "goalHit": "Daily goal hit!",
+    "streakSaved": "Streak saved ❄️",
+    "outOfHearts": "Out of hearts",
+    "waitOrPro": "Wait {minutes} min or get Pro for unlimited hearts.",
+    "exitLesson": "Exit lesson",
+    "abandonTitle": "Leave without finishing?",
+    "abandonBody": "You'll lose this lesson's progress. Hearts lost will stay deducted.",
+    "abandonStay": "Continue lesson",
+    "abandonLeave": "Leave anyway",
+    "verify": "Check",
+    "verifying": "Checking…",
+    "continue": "Continue",
+    "transientError": "Connection error — try again.",
+    "practiceModeBadge": "Practice mode"
+  },
+  "deleteAccount": {
+    "confirmPhrase": "DELETE MY ACCOUNT"
+  },
+  "leagues": {
+    "title": "Leagues",
+    "subtitle": "Top 10 promote, bottom 5 relegate.",
+    "promoteZone": "Promotion zone",
+    "demoteZone": "Relegation zone",
+    "stayZone": "Holding position",
+    "yourPosition": "Your position",
+    "weeklyReset": "Resets in {days}d {hours}h",
+    "weeklyResetSoon": "Resets in {hours}h {minutes}min",
+    "earnXpToJoin": "Earn XP this week to join your league.",
+    "promoted": "You moved up to {division}!",
+    "demoted": "You dropped to {division}",
+    "stayed": "You held {division}",
+    "podiumYou": "you",
+    "tabAll": "All",
+    "emptyState": "Nobody earned XP this week. Set the record yourself."
+  },
+  "shop": {
+    "title": "Shop",
+    "outfitsTab": "Outfits",
+    "rouletteTitle": "Daily roulette",
+    "rouletteSubtitle": "Each spin drops a common or rare outfit. Duplicate? You get 20 gems back.",
+    "rouletteCta": "Spin for free",
+    "rouletteCooldown": "Available in {time}",
+    "rouletteReady": "Available now",
+    "jackpotTitle": "Jackpot",
+    "jackpotSubtitle": "Each spin costs {cost} gems and drops epic or legendary outfits. Cooldown: 1h.",
+    "jackpotCta": "Spin for {cost} gems",
+    "notEnoughGems": "Not enough gems.",
+    "alreadyOwned": "You already own this outfit.",
+    "outfitCommon": "Common",
+    "outfitRare": "Rare",
+    "outfitEpic": "Epic",
+    "outfitLegendary": "Legendary",
+    "equipped": "Equipped",
+    "equip": "Equip",
+    "exclusive": "Exclusive"
+  },
+  "nav": {
+    "learn": "Learn",
+    "feed": "Feed",
+    "leagues": "Leagues",
+    "shop": "Shop",
+    "friends": "Friends",
+    "profile": "Profile",
+    "settings": "Settings",
+    "gallery": "Gallery",
+    "schools": "Schools",
+    "pro": "Pro",
+    "season": "Season",
+    "invite": "Invite"
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Tweak notifications, sound, privacy and language.",
+    "section": {
+      "notifications": "Notifications",
+      "notificationsDesc": "Push and email — control what reaches you.",
+      "sound": "Sound & haptics",
+      "soundDesc": "Mixer and shortcuts. This device only.",
+      "privacy": "Privacy",
+      "privacyDesc": "Who can see your profile, XP and streaks.",
+      "appearance": "Appearance",
+      "appearanceDesc": "Light, dark or automatic (follows your system).",
+      "accessibility": "Accessibility",
+      "accessibilityDesc": "Larger text, high contrast and reduced motion.",
+      "language": "Language",
+      "languageDesc": "App interface (lessons remain in Portuguese).",
+      "account": "Account",
+      "accountDesc": "Profile, security and personal data.",
+      "explore": "Explore",
+      "exploreDesc": "Community gallery and aviation schools.",
+      "about": "About",
+      "aboutDesc": "Version, terms and support."
+    },
+    "theme": {
+      "title": "Theme",
+      "description": "This choice is per-device. \"Automatic\" switches at sundown if your system uses dark mode.",
+      "light": "Light",
+      "lightDescription": "Bright and clean — good for daytime.",
+      "dark": "Dark",
+      "darkDescription": "Calm black — easy on the eyes at night.",
+      "auto": "Automatic",
+      "autoDescription": "Follows the system (iOS / Android / browser)."
+    },
+    "language": {
+      "current": "App language",
+      "subcopy": "Choose the interface language. Exam lessons stay in Portuguese (Brazil).",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "es": "Español"
+    },
+    "accessibility": {
+      "textSize": {
+        "title": "Text size",
+        "description": "Scales the entire app — chips and buttons grow together.",
+        "default": "Default",
+        "large": "Larger",
+        "xlarge": "Extra large"
+      },
+      "motion": {
+        "title": "Motion",
+        "description": "Reduce or force animations. \"System\" follows your iOS / Android preference.",
+        "system": "System",
+        "reduce": "Reduce",
+        "allow": "Allow"
+      },
+      "contrast": {
+        "title": "High contrast",
+        "description": "Thickens text and borders for easier reading.",
+        "default": "Default",
+        "high": "Increase"
+      }
+    },
+    "about": {
+      "version": "Version",
+      "terms": "Terms of use",
+      "privacy": "Privacy policy",
+      "support": "Support"
+    }
+  },
+  "auth": {
+    "login": "Sign in",
+    "signup": "Create account",
+    "logout": "Sign out",
+    "forgotPassword": "Forgot password?",
+    "email": "Email",
+    "password": "Password",
+    "loginPage": {
+      "title": "Welcome back!",
+      "subtitle": "Sign in to keep flying.",
+      "submit": "Sign in",
+      "submitting": "Signing in…",
+      "forgot": "Forgot my password",
+      "noAccount": "Don't have an account?",
+      "signupCta": "Sign up free"
+    },
+    "signupPage": {
+      "title": "Start studying — free",
+      "subtitle": "5 paths, 25 lessons, daily streak. No card.",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "haveAccount": "Already have an account?",
+      "loginCta": "Sign in"
+    },
+    "forgotPasswordPage": {
+      "title": "Forgot your password?",
+      "titleSent": "Email sent!",
+      "subtitle": "We'll send you a link to create a new one.",
+      "subtitleSent": "Check your inbox. The link expires in 1 hour.",
+      "emailLabel": "Account email",
+      "submit": "Send link",
+      "submitting": "Sending…",
+      "remembered": "Remembered it?",
+      "backToLogin": "Back to sign in",
+      "successTitle": "All set.",
+      "successBody": "Look for an email from Supabase Auth and click the link. Didn't get it? Check spam or try another email."
+    }
+  },
+  "hud": {
+    "streak": "Streak",
+    "xp": "XP",
+    "hearts": "Hearts",
+    "gems": "Gems",
+    "upgrade": "Upgrade"
+  },
+  "onboarding": {
+    "skipTutorial": "Skip"
+  },
+  "pro": {
+    "restore": {
+      "button": "Restore purchases",
+      "restoring": "Restoring…",
+      "foundPro": "Pro restored! Updating…",
+      "restoredCount": "{count, plural, one {# entitlement restored} other {# entitlements restored}}",
+      "nothingToRestore": "Nothing to restore.",
+      "failed": "Restore failed. Check your Apple ID account and try again."
+    },
+    "disclosures": {
+      "ariaLabel": "Subscription terms and conditions",
+      "autoRenew": {
+        "title": "Auto-renewing subscription.",
+        "body": "Pro Monthly and Pro Yearly renew automatically until cancelled. Renewal is charged within 24h of the period's end."
+      },
+      "billing": "You'll be charged the price shown on the purchase screen in your local currency, billed by Apple (or Google) to your Apple ID / Google Play account.",
+      "cancel": "Cancel any time in Settings → your name → Subscriptions (iOS) or the Google Play app (Android). Cancellation keeps your access until the end of the paid period.",
+      "appleDisclaimer": "Apple Inc. and Google LLC are not sponsors of, nor responsible for, the content in CMTE Lorí.",
+      "links": {
+        "terms": "Terms of use",
+        "privacy": "Privacy policy",
+        "eula": "Apple standard EULA"
+      }
+    }
+  }
+}

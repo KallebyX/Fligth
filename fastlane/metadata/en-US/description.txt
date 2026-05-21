@@ -1,0 +1,57 @@
+CMTE Lori (Commander Lori) is a gamified study app for the Brazilian
+ANAC Private Pilot License (PPL) written exam. Bite-sized lessons,
+daily streaks, weekly leagues and a lot of aviation — built like
+Duolingo, made for Brazilian student pilots.
+
+WHY IT WORKS
+• 5-minute lessons focused on what's actually on the ANAC exam
+• Spaced repetition (SRS): you revisit what you're forgetting, not
+  what you already know
+• Daily streak to build the habit (the same trick that taught you a
+  second language)
+• Full mock exam in the official board format: 60 questions, 3 hours,
+  70% per subject
+
+CONTENT
+7 complete subjects:
+• Air Traffic Regulations
+• Aviation Meteorology
+• Air Navigation
+• Theory of Flight
+• Technical Knowledge
+• Communications (ICAO phonetic alphabet included)
+• Aircraft (image quiz of classic GA airplanes)
+
+GAMIFICATION
+• Hearts: lose them on wrong answers, regenerate over time
+• Gems: earn studying, spend on mascot outfits
+• Outfits: 12+ looks for Lori (Red Baron, Top Gun, Pro Gold…)
+• Leagues: Bronze → Diamond, weekly promotions for the top 10
+• Shop: daily roulette + weekly jackpot
+• Achievements: 30+ badges to unlock
+
+CMTE LORI PRO (optional)
+• Unlimited hearts
+• Extra mock exams + per-subject drills
+• Advanced stats (accuracy by topic, weekly trend)
+• Ad-free
+• Priority support
+• Pro Gold outfit
+• 7 days free, cancel anytime
+
+COMMUNITY
+• Gallery: post photos of your flight or aircraft, like others
+• Friends: follow classmates, watch their progress
+• Schools: find ANAC-certified aviation schools near you
+
+ABOUT THE BRAND
+"Commander Lori" (the duck mascot) is not affiliated with ANAC and
+doesn't represent any government body. Content is supplemental — read
+the official ANAC materials too.
+
+PRIVACY
+We don't ask for your location. We don't use IDFA. We don't sell your
+data. Full policy: https://capitaolori.com/privacy
+
+Note: lesson content is in Brazilian Portuguese. UI is available in
+English, Portuguese and Spanish.

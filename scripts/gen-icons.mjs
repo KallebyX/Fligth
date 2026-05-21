@@ -1,17 +1,20 @@
 /* eslint-disable no-console */
 import sharp from "sharp";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { mkdirSync, writeFileSync, readdirSync, unlinkSync } from "node:fs";
 import { join } from "node:path";
 
-const OUT = join(process.cwd(), "public/icons");
-mkdirSync(OUT, { recursive: true });
+const ROOT = process.cwd();
+const WEB_OUT = join(ROOT, "public/icons");
+const IOS_OUT = join(ROOT, "ios/App/App/Assets.xcassets/AppIcon.appiconset");
+mkdirSync(WEB_OUT, { recursive: true });
+mkdirSync(IOS_OUT, { recursive: true });
 
-// Inline Capitão Lorí SVG (matches components/mascot/Mascot.tsx visual identity).
+// Inline Comandante Lorí SVG (matches components/mascot/Mascot.tsx visual identity).
 function svgMascot({ size, bg = "#0EA5E9", maskable = false }) {
   const padding = maskable ? size * 0.18 : 0; // safe zone for maskable
   const inner = size - padding * 2;
   const cx = size / 2;
-  const cy = size / 2 + (maskable ? 0 : 0);
+  const cy = size / 2;
   const scale = inner / 120; // base viewBox is 120
   const tx = cx - 60 * scale;
   const ty = cy - 60 * scale;
@@ -37,7 +40,123 @@ function svgMascot({ size, bg = "#0EA5E9", maskable = false }) {
 </svg>`;
 }
 
-async function build() {
+// iOS app icons must be opaque (no alpha channel) per Apple guidelines.
+async function renderPng(path, size, maskable) {
+  const svg = svgMascot({ size, maskable });
+  await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path);
+}
+
+// Full universal iOS AppIcon set: iPhone + iPad + ios-marketing.
+// Filenames intentionally include the pixel size so they don't collide.
+const IOS_ICONS = [
+  // iPhone notification
+  { size: 40, idiom: "iphone", spec: "20x20", scale: "2x" },
+  { size: 60, idiom: "iphone", spec: "20x20", scale: "3x" },
+  // iPhone settings
+  { size: 58, idiom: "iphone", spec: "29x29", scale: "2x" },
+  { size: 87, idiom: "iphone", spec: "29x29", scale: "3x" },
+  // iPhone spotlight
+  { size: 80, idiom: "iphone", spec: "40x40", scale: "2x" },
+  { size: 120, idiom: "iphone", spec: "40x40", scale: "3x" },
+  // iPhone app
+  { size: 120, idiom: "iphone", spec: "60x60", scale: "2x" },
+  { size: 180, idiom: "iphone", spec: "60x60", scale: "3x" },
+  // iPad notification
+  { size: 20, idiom: "ipad", spec: "20x20", scale: "1x" },
+  { size: 40, idiom: "ipad", spec: "20x20", scale: "2x" },
+  // iPad settings
+  { size: 29, idiom: "ipad", spec: "29x29", scale: "1x" },
+  { size: 58, idiom: "ipad", spec: "29x29", scale: "2x" },
+  // iPad spotlight
+  { size: 40, idiom: "ipad", spec: "40x40", scale: "1x" },
+  { size: 80, idiom: "ipad", spec: "40x40", scale: "2x" },
+  // iPad app
+  { size: 76, idiom: "ipad", spec: "76x76", scale: "1x" },
+  { size: 152, idiom: "ipad", spec: "76x76", scale: "2x" },
+  // iPad Pro 12.9"
+  { size: 167, idiom: "ipad", spec: "83.5x83.5", scale: "2x" },
+  // App Store
+  { size: 1024, idiom: "ios-marketing", spec: "1024x1024", scale: "1x" },
+];
+
+async function buildIos() {
+  // Clean stale pngs to avoid orphan files. Keep Contents.json (we rewrite it below).
+  for (const f of readdirSync(IOS_OUT)) {
+    if (f.endsWith(".png")) unlinkSync(join(IOS_OUT, f));
+  }
+
+  // Render unique sizes once and reuse for entries sharing the same pixel size.
+  const renderedBySize = new Map();
+  for (const ic of IOS_ICONS) {
+    if (!renderedBySize.has(ic.size)) {
+      const path = join(IOS_OUT, `AppIcon-${ic.size}.png`);
+      await renderPng(path, ic.size, false);
+      renderedBySize.set(ic.size, `AppIcon-${ic.size}.png`);
+      console.log(`✓ ios/AppIcon-${ic.size}.png`);
+    }
+  }
+
+  const contents = {
+    images: IOS_ICONS.map((ic) => ({
+      size: ic.spec,
+      idiom: ic.idiom,
+      filename: renderedBySize.get(ic.size),
+      scale: ic.scale,
+    })),
+    info: { version: 1, author: "xcode" },
+  };
+  writeFileSync(join(IOS_OUT, "Contents.json"), JSON.stringify(contents, null, 2));
+  console.log("✓ ios/Contents.json");
+}
+
+// Open Graph / Twitter card image. 1200×630 is the canonical aspect for
+// social previews — used by Twitter, Facebook, LinkedIn, iMessage.
+async function buildOgImage() {
+  const w = 1200;
+  const h = 630;
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#0369A1"/>
+    </linearGradient>
+  </defs>
+  <rect width="${w}" height="${h}" fill="url(#bg)"/>
+  <g transform="translate(80, 165) scale(2.5)">
+    <ellipse cx="60" cy="72" rx="38" ry="34" fill="#10B981"/>
+    <ellipse cx="60" cy="80" rx="22" ry="20" fill="#FDE68A"/>
+    <circle cx="60" cy="42" r="28" fill="#10B981"/>
+    <path d="M32 38 Q60 14 88 38 L86 46 Q60 34 34 46 Z" fill="#0F172A"/>
+    <rect x="34" y="40" width="52" height="6" fill="#FBBF24"/>
+    <circle cx="48" cy="42" r="8" fill="#0F172A"/>
+    <circle cx="72" cy="42" r="8" fill="#0F172A"/>
+    <circle cx="48" cy="42" r="6" fill="#A7F3D0" opacity="0.4"/>
+    <circle cx="72" cy="42" r="6" fill="#A7F3D0" opacity="0.4"/>
+    <circle cx="48" cy="42" r="2" fill="#0F172A"/>
+    <circle cx="72" cy="42" r="2" fill="#0F172A"/>
+    <path d="M54 56 L66 56 L60 64 Z" fill="#F97316"/>
+  </g>
+  <text x="500" y="280" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="72" font-weight="900" fill="#ffffff">
+    Comandante Lorí
+  </text>
+  <text x="500" y="340" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="700" fill="#BAE6FD">
+    Estude para a prova teórica
+  </text>
+  <text x="500" y="380" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="32" font-weight="700" fill="#BAE6FD">
+    de Piloto Privado da ANAC.
+  </text>
+  <rect x="500" y="445" width="240" height="60" rx="30" fill="#FBBF24"/>
+  <text x="620" y="485" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="24" font-weight="800" fill="#0F172A">
+    Começar grátis
+  </text>
+</svg>`;
+  const path = join(ROOT, "public/og.png");
+  await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile(path);
+  console.log("✓ public/og.png");
+}
+
+async function buildWeb() {
   const targets = [
     { name: "icon-192.png", size: 192, maskable: false },
     { name: "icon-512.png", size: 512, maskable: false },
@@ -48,19 +167,21 @@ async function build() {
     { name: "android-launcher-432.png", size: 432, maskable: true },
     { name: "android-launcher-512.png", size: 512, maskable: true },
   ];
-
   for (const t of targets) {
-    const svg = svgMascot({ size: t.size, maskable: t.maskable });
-    await sharp(Buffer.from(svg)).png().toFile(join(OUT, t.name));
-    console.log(`✓ ${t.name}`);
+    await renderPng(join(WEB_OUT, t.name), t.size, t.maskable);
+    console.log(`✓ web/${t.name}`);
   }
-
-  // Also write a master SVG for any other use.
-  writeFileSync(join(OUT, "icon.svg"), svgMascot({ size: 512 }));
-  console.log("✓ icon.svg");
+  writeFileSync(join(WEB_OUT, "icon.svg"), svgMascot({ size: 512 }));
+  console.log("✓ web/icon.svg");
 }
 
-build().catch((err) => {
+async function main() {
+  await buildWeb();
+  await buildOgImage();
+  await buildIos();
+}
+
+main().catch((err) => {
   console.error(err);
   process.exit(1);
 });

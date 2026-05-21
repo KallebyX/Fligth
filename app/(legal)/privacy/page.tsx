@@ -2,24 +2,24 @@ import type { Metadata } from "next";
 import { Markdown } from "@/components/ui/markdown";
 
 export const metadata: Metadata = {
-  title: "Política de Privacidade — Capitão Lorí",
+  title: "Política de Privacidade — CMTE Lorí",
   description:
-    "Como o Capitão Lorí coleta, usa e protege seus dados. Conforme a LGPD (Lei 13.709/2018).",
+    "Como o CMTE Lorí coleta, usa e protege seus dados. Conforme a LGPD (Lei 13.709/2018).",
 };
 
 const CONTENT = `## Política de Privacidade
 
 **Última atualização:** 11 de maio de 2026.
 
-O **Capitão Lorí** ("nós", "app") é um aplicativo independente de estudo para a prova teórica de Piloto Privado. Esta política explica de forma transparente que dados coletamos, por que coletamos e como você pode exercer seus direitos previstos na **LGPD — Lei 13.709/2018**.
+O **CMTE Lorí** ("nós", "app") é um aplicativo independente de estudo para a prova teórica de Piloto Privado. Esta política explica de forma transparente que dados coletamos, por que coletamos e como você pode exercer seus direitos previstos na **LGPD — Lei 13.709/2018**.
 
 ### 1. Controlador de dados
 
 | | |
 |---|---|
-| Responsável | Capitão Lorí (projeto independente) |
-| Contato | privacidade@capitaolori.app |
-| Encarregado (DPO) | dpo@capitaolori.app |
+| Responsável | CMTE Lorí (projeto independente) |
+| Contato | privacidade@capitaolori.com |
+| Encarregado (DPO) | dpo@capitaolori.com |
 
 ### 2. Que dados coletamos
 
@@ -84,7 +84,7 @@ Você pode, a qualquer momento:
 - **Portar** seus dados para outro serviço.
 - **Revogar consentimento** e excluir a conta.
 
-Para exercer qualquer direito, envie e-mail para **privacidade@capitaolori.app**. Respondemos em até 15 dias.
+Para exercer qualquer direito, envie e-mail para **privacidade@capitaolori.com**. Respondemos em até 15 dias.
 
 ### 7. Segurança
 
@@ -108,7 +108,7 @@ Se entender que houve violação, você pode reclamar à **Autoridade Nacional d
 
 ---
 
-> **Importante:** Capitão Lorí não é filiado, endossado ou patrocinado pela **ANAC**. Material educacional baseado em fontes públicas (RBAC, ICA, MCA, AIP-Brasil). Sempre consulte os manuais oficiais antes de operar.`;
+> **Importante:** CMTE Lorí não é filiado, endossado ou patrocinado pela **ANAC**. Material educacional baseado em fontes públicas (RBAC, ICA, MCA, AIP-Brasil). Sempre consulte os manuais oficiais antes de operar.`;
 
 export default function PrivacyPage() {
   return (

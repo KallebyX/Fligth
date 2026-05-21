@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Card, CardTitle, CardDesc } from "@/components/ui/card";
+import Link from "next/link";
 import {
   BookOpen,
+  Building2,
+  Camera,
   HelpCircle,
   Layers,
-  ShieldAlert,
   Sparkles,
   Trophy,
   Users,
@@ -26,24 +28,12 @@ export default async function AdminPage() {
     .eq("id", user.id)
     .single();
 
+  // Match sub-admin routes (/admin/escolas, /admin/gallery/queue): redirect
+  // non-admins back to /learn rather than rendering an inline "Acesso
+  // restrito" card. Consistent UX + one fewer attack surface (no info leak
+  // about admin path existing).
   if (profile?.role !== "admin") {
-    return (
-      <main className="container max-w-xl py-10">
-        <Card className="text-center">
-          <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-alert/15 text-alert">
-            <ShieldAlert size={26} />
-          </div>
-          <CardTitle>Acesso restrito</CardTitle>
-          <CardDesc className="mt-2">
-            Esta página é só para administradores. Se você é o dono da
-            plataforma, eleve o seu perfil no Supabase:
-          </CardDesc>
-          <pre className="mt-3 overflow-x-auto rounded-xl bg-cloud px-3 py-2 text-left text-xs">
-            <code>{`update profiles set role = 'admin' where id = '...';`}</code>
-          </pre>
-        </Card>
-      </main>
-    );
+    redirect("/learn");
   }
 
   const [
@@ -81,6 +71,33 @@ export default async function AdminPage() {
         <Stat icon={<HelpCircle size={18} />} tint="bg-gold/20 text-gold" label="Questões" value={questionsCount} />
         <Stat icon={<Users size={18} />} tint="bg-alert/15 text-alert" label="Usuários" value={usersCount} />
         <Stat icon={<Trophy size={18} />} tint="bg-ink/10 text-ink" label="Em liga" value={leagueMembers} />
+      </section>
+
+      <section className="grid gap-3 sm:grid-cols-2">
+        <Link
+          href="/admin/gallery/queue"
+          className="card-pop flex items-center gap-3 p-4 hover:bg-cloud/40"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-sky/15 text-sky-deep">
+            <Camera size={20} />
+          </span>
+          <div className="flex-1">
+            <p className="font-black">Moderar galeria</p>
+            <p className="text-xs text-ink/60">Aprovar ou rejeitar fotos pendentes</p>
+          </div>
+        </Link>
+        <Link
+          href="/admin/escolas"
+          className="card-pop flex items-center gap-3 p-4 hover:bg-cloud/40"
+        >
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-grass/15 text-grass-deep">
+            <Building2 size={20} />
+          </span>
+          <div className="flex-1">
+            <p className="font-black">Escolas</p>
+            <p className="text-xs text-ink/60">Cadastrar e editar escolas afiliadas</p>
+          </div>
+        </Link>
       </section>
 
       <Card>

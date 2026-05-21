@@ -4,7 +4,17 @@ import { createClient } from "@/lib/supabase/server";
 import { LessonPath, type LessonNode } from "@/components/learn/LessonPath";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
+import { HUD } from "@/components/hud/HUD";
+import { HeartsOutCard } from "@/components/hearts/HeartsOutCard";
+import { WelcomeBanner } from "@/components/learn/WelcomeBanner";
+import { StreakAtRiskCard } from "@/components/learn/StreakAtRiskCard";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
+import { OnboardingCoach } from "@/components/onboarding/OnboardingCoach";
+import { Suspense } from "react";
 import { getDivision } from "@/lib/leagues/divisions";
+import { computeHearts } from "@/lib/hearts";
+import { computeProStatus } from "@/lib/pro";
+import { getTodayXP } from "@/lib/dailyGoal";
 import { Flame, Trophy, RotateCw, ClipboardCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -45,10 +55,25 @@ export default async function LearnPage({
       .single(),
     supabase
       .from("user_stats")
-      .select("current_streak")
+      .select(
+        "total_xp, current_streak, hearts, hearts_regen_at, pro_until, pro_plan, gems, streak_freezes, last_activity_date",
+      )
       .eq("user_id", user.id)
       .single(),
   ]);
+
+  const refreshed = stats
+    ? computeHearts({ hearts: stats.hearts, hearts_regen_at: stats.hearts_regen_at })
+    : { hearts: 5, hearts_regen_at: null, changed: false };
+  if (stats && refreshed.changed) {
+    await supabase
+      .from("user_stats")
+      .update({ hearts: refreshed.hearts, hearts_regen_at: refreshed.hearts_regen_at })
+      .eq("user_id", user.id);
+  }
+  const pro = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
+  const todayXp = await getTodayXP(supabase, user.id);
+  const goalXp = profile?.daily_goal_xp ?? 20;
 
   const completedSet = new Set(
     (progress ?? []).filter((p) => p.completed_at).map((p) => p.lesson_id),
@@ -57,20 +82,42 @@ export default async function LearnPage({
   const division = getDivision(profile?.current_league ?? "bronze");
   const friendlyName = profile?.display_name ?? profile?.username ?? "piloto";
   const streak = stats?.current_streak ?? 0;
+  const freezes = stats?.streak_freezes ?? 0;
+  const today = new Date().toISOString().slice(0, 10);
+  const trainedToday = stats?.last_activity_date === today;
+  const localHour = new Date().getHours();
+  const streakAtRisk =
+    streak > 0 && !trainedToday && freezes > 0 && localHour >= 18;
 
   return (
-    <main className="container max-w-3xl py-6">
+    <>
+      <OnboardingCoach />
+      <HUD
+        xp={stats?.total_xp ?? 0}
+        streak={stats?.current_streak ?? 0}
+        hearts={refreshed.hearts}
+        gems={stats?.gems ?? 0}
+        isPro={pro.isPro}
+        todayXp={todayXp}
+        goalXp={goalXp}
+        freezes={freezes}
+      />
+      <PullToRefresh>
+      <main className="container max-w-3xl py-6">
+      <Suspense fallback={null}>
+        <WelcomeBanner
+          displayName={friendlyName}
+          outfit={profile?.equipped_outfit_slug ?? null}
+        />
+      </Suspense>
       {params.out === "hearts" && (
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border-2 border-alert bg-alert/10 p-4">
-          <p className="text-sm font-bold text-alert">
-            Você ficou sem vidas — recupera 1 a cada 30 min.
-          </p>
-          <Link href="/shop">
-            <Button size="sm" variant="danger">
-              Recarregar agora
-            </Button>
-          </Link>
-        </div>
+        <HeartsOutCard
+          heartsRegenAt={refreshed.hearts_regen_at}
+          hearts={refreshed.hearts}
+        />
+      )}
+      {streakAtRisk && (
+        <StreakAtRiskCard streak={streak} freezes={freezes} />
       )}
 
       <section className="card-pop relative mb-6 overflow-hidden p-4 sm:p-5">
@@ -164,6 +211,8 @@ export default async function LearnPage({
           );
         })}
       </div>
-    </main>
+      </main>
+      </PullToRefresh>
+    </>
   );
 }

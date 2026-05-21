@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Lock, Check, Star, Cloud, Compass, Wind, Wrench, RadioTower } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/motion";
 
 export type LessonNode = {
   id: number;
@@ -38,6 +39,7 @@ export function LessonPath({
   const Icon = SUBJECT_ICONS[subjectIcon ?? ""] ?? Star;
   const completedCount = nodes.filter((n) => n.state === "done").length;
   const progressPct = nodes.length ? Math.round((completedCount / nodes.length) * 100) : 0;
+  const reducedMotion = useReducedMotion();
 
   return (
     <section className="mx-auto w-full max-w-md py-6">
@@ -70,9 +72,11 @@ export function LessonPath({
         </div>
       </motion.div>
 
-      <ol className="relative flex flex-col items-center gap-10">
+      <ol className="relative flex flex-col items-center gap-10 overflow-x-hidden">
         {nodes.map((n, i) => {
-          const offset = i % 4 === 0 ? 0 : i % 4 === 1 ? 56 : i % 4 === 2 ? 80 : 56;
+          // Offsets stay tight enough that the 80×80 node never crosses
+          // the 320 px viewport edge (max horizontal travel = 56 px).
+          const offset = i % 4 === 0 ? 0 : i % 4 === 1 ? 40 : i % 4 === 2 ? 56 : 40;
           const dir = Math.floor(i / 4) % 2 === 0 ? 1 : -1;
 
           return (
@@ -80,21 +84,25 @@ export function LessonPath({
               key={n.id}
               className="relative"
               style={{ transform: `translateX(${dir * offset}px)` }}
-              initial={{ opacity: 0, y: 24, scale: 0.85 }}
-              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              initial={reducedMotion ? false : { opacity: 0, y: 24, scale: 0.85 }}
+              whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
               viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 0.4, delay: i * 0.07, type: "spring", stiffness: 200 }}
+              transition={
+                reducedMotion
+                  ? { duration: 0 }
+                  : { duration: 0.4, delay: i * 0.07, type: "spring", stiffness: 200 }
+              }
             >
-              <p className="absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-bold uppercase tracking-wider text-ink/50">
+              <p className="absolute -top-5 left-1/2 max-w-[180px] -translate-x-1/2 truncate text-[10px] font-bold uppercase tracking-wider text-ink/50 dark:text-cloud/50">
                 {n.unitTitle}
               </p>
 
               {n.state === "locked" ? (
                 <div
-                  className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-cloud-deep bg-cloud opacity-60"
+                  className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-cloud-deep bg-cloud opacity-60 dark:border-ink-light/60 dark:bg-ink-mid"
                   aria-label={`${n.title} (bloqueado)`}
                 >
-                  <Lock size={28} className="text-ink/40" />
+                  <Lock size={28} className="text-ink/40 dark:text-cloud/40" />
                 </div>
               ) : (
                 <Link
@@ -109,14 +117,14 @@ export function LessonPath({
                   aria-label={n.title}
                 >
                   {n.state === "done" ? <Check size={32} /> : <Star size={32} />}
-                  {n.state === "available" && (
+                  {n.state === "available" && !reducedMotion && (
                     <motion.span
                       className="pointer-events-none absolute inset-0 rounded-full border-4 border-sky"
                       animate={{ scale: [1, 1.18, 1], opacity: [0.6, 0, 0.6] }}
                       transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                     />
                   )}
-                  <span className="pointer-events-none absolute -bottom-7 left-1/2 max-w-[180px] -translate-x-1/2 whitespace-nowrap rounded-full bg-white px-3 py-0.5 text-xs font-extrabold text-ink shadow-pop">
+                  <span className="pointer-events-none absolute -bottom-7 left-1/2 max-w-[180px] -translate-x-1/2 truncate rounded-full bg-white px-3 py-0.5 text-xs font-extrabold text-ink shadow-pop dark:bg-ink-mid dark:text-cloud dark:shadow-none">
                     {n.title}
                   </span>
                 </Link>

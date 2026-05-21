@@ -7,7 +7,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
   appId: "br.com.capitaolori.app",
-  appName: "Capitão Lorí",
+  appName: "CMTE Lorí",
   webDir: "public", // unused at runtime — server.url takes precedence
   server: {
     url: process.env.CAPACITOR_SERVER_URL ?? "https://fligth.vercel.app",
@@ -17,6 +17,11 @@ const config: CapacitorConfig = {
       "*.supabase.in",
       "*.vercel.app",
       "fligth.vercel.app",
+      // OAuth: Google and Apple redirect flows route through these domains
+      // before bouncing back to the Supabase callback.
+      "accounts.google.com",
+      "*.googleusercontent.com",
+      "appleid.apple.com",
     ],
   },
   ios: {
@@ -44,6 +49,13 @@ const config: CapacitorConfig = {
       style: "DARK",
       backgroundColor: "#0EA5E9",
       overlaysWebView: false,
+    },
+    Keyboard: {
+      // Resize the body instead of the native view so safe-area-inset based
+      // layouts don't shift unexpectedly when the keyboard opens.
+      resize: "body",
+      style: "default",
+      resizeOnFullScreen: true,
     },
   },
 };

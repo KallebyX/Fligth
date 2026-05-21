@@ -38,6 +38,55 @@ export type Database = {
         joined_at: string;
         // 0008_outfits
         equipped_outfit_slug: string | null;
+        // 0019_profile_completion_avatars
+        avatar_url: string | null;
+        // 0024_account_deletion_soft_delete
+        deletion_requested_at: string | null;
+        deletion_executes_at: string | null;
+        // 0027_seasons_referrals_social_p2w
+        referral_code: string | null;
+        referred_by: string | null;
+      }>;
+      seasons: Tbl<{
+        id: number;
+        slug: string;
+        name: string;
+        theme: string | null;
+        starts_at: string;
+        ends_at: string;
+        cover_url: string | null;
+        color: string;
+        created_at: string;
+      }>;
+      missions: Tbl<{
+        id: number;
+        season_id: number;
+        slug: string;
+        title: string;
+        description: string | null;
+        goal_kind: string;
+        goal_target: number;
+        reward_gems: number;
+        reward_xp: number;
+        reward_outfit_slug: string | null;
+        tier: number;
+        order_index: number;
+        created_at: string;
+      }>;
+      user_mission_progress: Tbl<{
+        user_id: string;
+        mission_id: number;
+        progress: number;
+        completed_at: string | null;
+        claimed_at: string | null;
+        updated_at: string;
+      }>;
+      referral_credits: Tbl<{
+        id: number;
+        referrer_id: string;
+        referred_id: string;
+        granted_at: string;
+        pro_days_granted: number;
       }>;
       subjects: Tbl<{
         id: number;
@@ -78,6 +127,14 @@ export type Database = {
         explanation_md: string | null;
         difficulty: number;
         source_ref: string | null;
+        kind:
+          | "multiple_choice"
+          | "match_pairs"
+          | "fill_blank"
+          | "true_false"
+          | "tap_tiles"
+          | "theory_step";
+        payload: Json | null;
       }>;
       user_progress: Tbl<{
         user_id: string;
@@ -113,6 +170,8 @@ export type Database = {
         gems: number;
         last_spin_at: string | null;
         last_jackpot_at: string | null;
+        // 0019_profile_completion_avatars
+        profile_completed_at: string | null;
       }>;
       subscriptions: Tbl<{
         id: number;
@@ -212,6 +271,26 @@ export type Database = {
         drop_weight: number;
         created_at: string;
       }>;
+      push_tokens: Tbl<{
+        id: number;
+        user_id: string;
+        token: string;
+        platform: "ios" | "android" | "web";
+        device_label: string | null;
+        created_at: string;
+        last_seen_at: string;
+        revoked_at: string | null;
+      }>;
+      notification_prefs: Tbl<{
+        user_id: string;
+        push_streak: boolean;
+        push_friends: boolean;
+        push_leagues: boolean;
+        push_promotions: boolean;
+        email_product_updates: boolean;
+        email_security: boolean;
+        updated_at: string;
+      }>;
       user_outfits: Tbl<{
         user_id: string;
         outfit_slug: string;
@@ -238,6 +317,107 @@ export type Database = {
         payload: Json;
         created_at: string;
       }>;
+      gallery_posts: Tbl<{
+        id: string;
+        user_id: string;
+        image_url: string;
+        thumbnail_url: string;
+        caption: string | null;
+        aircraft_model: string | null;
+        location: string | null;
+        taken_at: string | null;
+        status: "pending" | "approved" | "rejected";
+        rejection_reason: string | null;
+        moderator_id: string | null;
+        moderated_at: string | null;
+        likes_count: number;
+        comments_count: number;
+        created_at: string;
+        nsfw_score: number | null;
+        nsfw_checked_at: string | null;
+      }>;
+      gallery_likes: Tbl<{
+        user_id: string;
+        post_id: string;
+        created_at: string;
+      }>;
+      gallery_comments: Tbl<{
+        id: string;
+        post_id: string;
+        user_id: string;
+        body: string;
+        created_at: string;
+      }>;
+      gallery_reports: Tbl<{
+        id: string;
+        post_id: string;
+        reporter_id: string;
+        reason: "inappropriate" | "spam" | "irrelevant" | "other";
+        details: string | null;
+        status: "pending" | "resolved";
+        created_at: string;
+      }>;
+      schools: Tbl<{
+        id: string;
+        slug: string;
+        name: string;
+        legal_name: string | null;
+        cnpj: string | null;
+        description: string | null;
+        logo_url: string | null;
+        cover_url: string | null;
+        city: string;
+        state: string;
+        country: string;
+        address: string | null;
+        lat: number | null;
+        lng: number | null;
+        phone: string | null;
+        email: string;
+        website: string | null;
+        instagram: string | null;
+        whatsapp: string | null;
+        cursos: Json;
+        anac_codigo: string | null;
+        status: "active" | "suspended" | "inactive";
+        affiliate_active: boolean;
+        commission_pct: number | null;
+        featured: boolean;
+        featured_until: string | null;
+        created_at: string;
+        updated_at: string;
+      }>;
+      school_leads: Tbl<{
+        id: string;
+        school_id: string;
+        user_id: string | null;
+        name: string;
+        email: string;
+        phone: string;
+        course_interest: string | null;
+        message: string | null;
+        source: string | null;
+        utm_source: string | null;
+        utm_medium: string | null;
+        utm_campaign: string | null;
+        status: "new" | "contacted" | "qualified" | "converted" | "lost";
+        conversion_value: number | null;
+        converted_at: string | null;
+        notes: string | null;
+        consent_given: boolean;
+        ip_hash: string | null;
+        created_at: string;
+      }>;
+      school_lead_webhooks: Tbl<{
+        school_id: string;
+        webhook_url: string | null;
+        webhook_secret: string | null;
+        email_notify: string | null;
+        last_delivered_at: string | null;
+        last_status: number | null;
+        failure_count: number;
+        updated_at: string;
+      }>;
     };
     Views: {
       questions_public: View<{
@@ -245,6 +425,14 @@ export type Database = {
         subject_id: number;
         lesson_id: number | null;
         stem: string;
+        kind:
+          | "multiple_choice"
+          | "match_pairs"
+          | "fill_blank"
+          | "true_false"
+          | "tap_tiles"
+          | "theory_step";
+        payload: Json | null;
         choice_a: string;
         choice_b: string;
         choice_c: string;
@@ -259,6 +447,11 @@ export type Database = {
         created_at: string;
       }>;
     };
-    Functions: Record<string, never>;
+    Functions: {
+      find_user_id_by_email: {
+        Args: { p_email: string };
+        Returns: string;
+      };
+    };
   };
 };

@@ -2,10 +2,12 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Mascot } from "@/components/mascot/Mascot";
+import { OAuthButtons } from "@/components/auth/OAuthButtons";
 import { createClient } from "@/lib/supabase/client";
 import { Loader2 } from "lucide-react";
 
@@ -13,8 +15,8 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <main className="container py-12 text-center text-sm text-ink/50">
-          Carregando…
+        <main className="container py-12 text-center text-sm text-ink/50 dark:text-cloud/50">
+          …
         </main>
       }
     >
@@ -27,10 +29,12 @@ function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next") ?? "/learn";
+  const callbackError = params.get("error");
+  const t = useTranslations("auth");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(callbackError);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -55,19 +59,19 @@ function LoginForm() {
           <div className="rounded-full bg-sky/10 p-2 ring-4 ring-sky/15">
             <Mascot state="happy" size={128} />
           </div>
-          <h1 className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-            Bem-vindo de volta!
+          <h1 className="mt-4 text-3xl font-black tracking-tight dark:text-cloud md:text-4xl">
+            {t("loginPage.title")}
           </h1>
-          <p className="mt-1 text-sm text-ink/60">
-            Entre na sua conta para continuar voando.
+          <p className="mt-1 text-sm text-ink/60 dark:text-cloud/60">
+            {t("loginPage.subtitle")}
           </p>
         </div>
 
         <div className="card-pop space-y-4 p-5">
           <form className="space-y-3" onSubmit={handleSubmit}>
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
-                Email
+              <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
+                {t("email")}
               </label>
               <Input
                 type="email"
@@ -80,8 +84,8 @@ function LoginForm() {
               />
             </div>
             <div>
-              <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
-                Senha
+              <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
+                {t("password")}
               </label>
               <Input
                 type="password"
@@ -102,19 +106,28 @@ function LoginForm() {
               {loading ? (
                 <>
                   <Loader2 className="animate-spin" size={18} />
-                  Entrando…
+                  {t("loginPage.submitting")}
                 </>
               ) : (
-                "Entrar"
+                t("loginPage.submit")
               )}
             </Button>
+
+            <Link
+              href="/forgot-password"
+              className="block text-center text-xs font-bold text-ink/55 hover:text-sky dark:text-cloud/55"
+            >
+              {t("loginPage.forgot")}
+            </Link>
           </form>
+
+          <OAuthButtons next={next} />
         </div>
 
-        <p className="mt-5 text-center text-sm text-ink/60">
-          Ainda não tem conta?{" "}
+        <p className="mt-5 text-center text-sm text-ink/60 dark:text-cloud/60">
+          {t("loginPage.noAccount")}{" "}
           <Link href="/signup" className="font-extrabold text-sky hover:underline">
-            Cadastre-se grátis
+            {t("loginPage.signupCta")}
           </Link>
         </p>
       </div>

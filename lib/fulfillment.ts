@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/lib/supabase/types";
 import { MAX_HEARTS } from "@/lib/hearts";
 import { recordActivity } from "@/lib/activities";
+import { notifyUser } from "@/lib/notifications";
 
 type DB = SupabaseClient<Database, "public">;
 
@@ -184,6 +185,11 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
           outfit_name: "Pro Dourado",
           via: "pro_subscription",
         });
+        await notifyUser(userId, "outfit_unlocked", {
+          outfit_slug: PRO_OUTFIT_SLUG,
+          outfit_name: "Pro Dourado",
+          via: "pro_subscription",
+        });
       }
       break;
     }
@@ -199,6 +205,11 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
       if (granted) {
         fulfilled.pro_outfit_unlocked = PRO_OUTFIT_SLUG;
         await recordActivity(userId, "outfit_unlocked", {
+          outfit_slug: PRO_OUTFIT_SLUG,
+          outfit_name: "Pro Dourado",
+          via: "pro_lifetime",
+        });
+        await notifyUser(userId, "outfit_unlocked", {
           outfit_slug: PRO_OUTFIT_SLUG,
           outfit_name: "Pro Dourado",
           via: "pro_lifetime",
@@ -223,6 +234,11 @@ export async function fulfillPurchase(supabase: DB, input: FulfillmentInput) {
           outfit_name: outfit?.name,
           rarity: outfit?.rarity,
           via: "purchase_cash",
+        });
+        await notifyUser(userId, "outfit_unlocked", {
+          outfit_slug: slug,
+          outfit_name: outfit?.name,
+          rarity: outfit?.rarity,
         });
       }
       break;

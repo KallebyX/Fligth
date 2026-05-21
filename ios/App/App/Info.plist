@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>pt-BR</string>
 	<key>CFBundleDisplayName</key>
-	<string>Capitão Lorí</string>
+	<string>CMTE Lorí</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -70,20 +70,11 @@
 		</dict>
 	</array>
 
-	<!-- Privacy usage strings. Even if a permission isn't requested today, declaring -->
-	<!-- the strings here prevents review surprises if a future plugin starts asking. -->
-	<key>NSCameraUsageDescription</key>
-	<string>O Capitão Lorí não acessa sua câmera. Esta entrada existe apenas para conformidade.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>O Capitão Lorí não acessa seu microfone. Esta entrada existe apenas para conformidade.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>O Capitão Lorí não acessa suas fotos. Esta entrada existe apenas para conformidade.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>O Capitão Lorí não usa sua localização. Esta entrada existe apenas para conformidade.</string>
-	<key>NSContactsUsageDescription</key>
-	<string>O Capitão Lorí não acessa seus contatos. Esta entrada existe apenas para conformidade.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>O Capitão Lorí não acessa seu calendário. Esta entrada existe apenas para conformidade.</string>
+	<!-- Face ID prompt copy. Apple requires this string whenever the app
+	     calls LAContext / Local Authentication. Used by BiometricGate +
+	     BiometricEnrollPrompt to ungate the WebView after first login. -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>O CMTE Lorí usa Face ID para desbloquear sua conta rapidamente, sem precisar digitar a senha toda vez.</string>
 
 	<!-- Disable file sharing and document browser by default. -->
 	<key>UIFileSharingEnabled</key>
@@ -91,13 +82,19 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<false/>
 
-	<!-- Required for App Store: prevent App Tracking Transparency prompt mistakes. -->
-	<key>NSUserTrackingUsageDescription</key>
-	<string>O Capitão Lorí não rastreia você para fins publicitários. Esta entrada existe apenas para conformidade.</string>
-
 	<!-- ITSAppUsesNonExemptEncryption=false avoids the export compliance prompt in -->
 	<!-- App Store Connect, since we use only HTTPS/TLS (standard system encryption). -->
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+
+	<!-- Automatic: respects the user's iOS theme preference. The WebView
+	     in turn defers to our ThemeProvider, which reads system pref when
+	     theme="auto" (default for new users). -->
+	<key>UIUserInterfaceStyle</key>
+	<string>Automatic</string>
+
+	<!-- App Store category. Required for proper placement and review. -->
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.education</string>
 </dict>
 </plist>

@@ -1,11 +1,18 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Settings } from "lucide-react";
 import { EditProfileForm } from "@/components/profile/EditProfileForm";
 import { OutfitPicker, type CatalogOutfit } from "@/components/mascot/OutfitPicker";
+import { SecuritySection } from "@/components/profile/SecuritySection";
+import { NotificationPrefsSection } from "@/components/profile/NotificationPrefsSection";
 import { Card, CardDesc, CardTitle } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { loadOutfits } from "@/lib/outfits/catalog";
+import { getNotificationPrefs } from "@/app/actions/notificationPrefs";
+import { computeProStatus } from "@/lib/pro";
+import { calculateCompletion } from "@/lib/profileCompletion";
+import { CompletionMeter } from "@/components/profile/CompletionMeter";
+import { AvatarPicker } from "@/components/profile/AvatarPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -16,17 +23,33 @@ export default async function EditProfilePage() {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const [{ data: profile }, { data: owned }, catalog] = await Promise.all([
+  const [{ data: profile }, { data: owned }, catalog, notifPrefs, { data: stats }] = await Promise.all([
     supabase
       .from("profiles")
       .select(
-        "username, display_name, bio, country_code, profile_color, profile_public, equipped_outfit_slug",
+        "username, display_name, bio, country_code, profile_color, profile_public, equipped_outfit_slug, avatar_url",
       )
       .eq("id", user.id)
       .single(),
     supabase.from("user_outfits").select("outfit_slug").eq("user_id", user.id),
     loadOutfits(),
+    getNotificationPrefs(),
+    supabase
+      .from("user_stats")
+      .select("pro_until, pro_plan, profile_completed_at")
+      .eq("user_id", user.id)
+      .single(),
   ]);
+
+  const proStatus = computeProStatus(stats?.pro_until ?? null, stats?.pro_plan ?? null);
+  const completion = calculateCompletion({
+    username: profile?.username ?? null,
+    display_name: profile?.display_name ?? null,
+    bio: profile?.bio ?? null,
+    country_code: profile?.country_code ?? null,
+    avatar_url: profile?.avatar_url ?? null,
+    equipped_outfit_slug: profile?.equipped_outfit_slug ?? null,
+  });
 
   const ownedSet = new Set((owned ?? []).map((o) => o.outfit_slug));
   const items: CatalogOutfit[] = catalog
@@ -56,15 +79,35 @@ export default async function EditProfilePage() {
         Voltar
       </Link>
 
-      <header>
-        <h1 className="text-3xl font-black">Editar perfil</h1>
-        <p className="text-sm text-ink/60">
-          Personalize como o mundo vê o piloto.
-        </p>
+      <header className="flex items-start justify-between gap-3">
+        <div>
+          <h1 className="text-3xl font-black">Editar perfil</h1>
+          <p className="text-sm text-ink/60">
+            Personalize como o mundo vê o piloto.
+          </p>
+        </div>
+        <Link
+          href="/configuracoes"
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-2xl border-2 border-cloud-deep bg-white px-3 py-2 text-xs font-extrabold text-ink hover:bg-cloud/40"
+        >
+          <Settings size={14} />
+          Configurações
+        </Link>
       </header>
 
+      <CompletionMeter
+        completion={completion}
+        alreadyClaimed={!!stats?.profile_completed_at}
+      />
+
+      <AvatarPicker
+        userId={user.id}
+        initialAvatarUrl={profile?.avatar_url ?? null}
+        outfit={profile?.equipped_outfit_slug ?? null}
+      />
+
       <Card>
-        <CardTitle>Outfit do Capitão Lorí</CardTitle>
+        <CardTitle>Outfit do Comandante Lorí</CardTitle>
         <CardDesc>
           O outfit equipado aparece em todo lugar onde seu mascote é mostrado.
         </CardDesc>
@@ -83,6 +126,10 @@ export default async function EditProfilePage() {
           profile_public: profile?.profile_public ?? true,
         }}
       />
+
+      <NotificationPrefsSection initial={notifPrefs} />
+
+      <SecuritySection email={user.email ?? null} isPro={proStatus.isPro} />
     </main>
   );
 }

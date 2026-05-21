@@ -334,5 +334,70 @@
     "difficulty": 4,
     "source_ref": "ICA 100-12",
     "lesson_slug": "servicos-ats"
+  },
+  {
+    "kind": "theory_step",
+    "stem": "Classes de espaço aéreo (resumo)",
+    "explanation_md": "",
+    "difficulty": 1,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "classes-de-espaco-aereo",
+    "payload": {
+      "heading": "A até G, do mais controlado ao mais livre",
+      "body_md": "O espaço aéreo brasileiro vai de **Classe A** (só IFR, ATC separa tudo) até **Classe G** (não controlado, piloto se vira). Para o voo VFR diurno típico, você opera em **E** e **G**, com travessia por **C** e **D** ao redor de aeródromos com torre.\n\n- **A**: só IFR.\n- **B/C/D**: IFR + VFR, com ATC.\n- **E**: IFR controlado, VFR sem autorização.\n- **G**: não controlado."
+    }
+  },
+  {
+    "kind": "true_false",
+    "stem": "Verdadeiro ou falso?",
+    "explanation_md": "Classe A é **exclusiva IFR**. VFR não é permitido em nenhuma altitude.",
+    "difficulty": 1,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "classes-de-espaco-aereo",
+    "payload": {
+      "statement": "Em Classe A, voos VFR são autorizados desde que abaixo de FL245.",
+      "correct": false
+    }
+  },
+  {
+    "kind": "match_pairs",
+    "stem": "Conecte cada classe ao serviço prestado.",
+    "explanation_md": "A é exclusiva IFR. C tem separação entre IFR e VFR. E é controlada para IFR mas VFR não precisa de autorização. G é não controlada.",
+    "difficulty": 3,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "classes-de-espaco-aereo",
+    "payload": {
+      "pairs": [
+        { "left": "Classe A", "right": "Só IFR; ATC separa tudo" },
+        { "left": "Classe C", "right": "Separação IFR↔VFR" },
+        { "left": "Classe E", "right": "VFR sem autorização do ATC" },
+        { "left": "Classe G", "right": "Não controlado" }
+      ]
+    }
+  },
+  {
+    "kind": "fill_blank",
+    "stem": "Complete a frase sobre mínimos VFR em Classe G.",
+    "explanation_md": "Em Classe G abaixo de 3.000 ft AGL e até 140 kt, a visibilidade mínima é **1.500 m**, fora de nuvens, com solo à vista.",
+    "difficulty": 2,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "classes-de-espaco-aereo",
+    "payload": {
+      "template": "Em Classe G, abaixo de 3.000 ft AGL e até 140 kt, a visibilidade mínima é {0}.",
+      "bank": ["1.500 m", "5 km", "8 km", "3 km"],
+      "answer": 0
+    }
+  },
+  {
+    "kind": "tap_tiles",
+    "stem": "Monte a frase sobre Classe A.",
+    "explanation_md": "Em Classe A, o serviço de tráfego aéreo (ATC) é obrigatório e presta separação completa entre todas as aeronaves IFR.",
+    "difficulty": 2,
+    "source_ref": "ICA 100-12",
+    "lesson_slug": "classes-de-espaco-aereo",
+    "payload": {
+      "words": ["O", "ATC", "separa", "todas", "as", "aeronaves", "em", "Classe", "A"],
+      "correct": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+    }
   }
 ]

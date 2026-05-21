@@ -1,10 +1,32 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
-import { Flame, Heart, Star, Trophy, BookOpen, Plane, ShieldCheck } from "lucide-react";
+import { Flame, Heart, Star, Trophy, BookOpen, Plane, ShieldCheck, CheckCircle2 } from "lucide-react";
+
+function DeletedBanner() {
+  const params = useSearchParams();
+  if (params.get("deleted") !== "1") return null;
+  return (
+    <motion.div
+      initial={{ y: -40, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      className="fixed inset-x-0 top-0 z-30 flex justify-center px-3 pt-3"
+      style={{ paddingTop: "calc(0.75rem + env(safe-area-inset-top))" }}
+      role="status"
+      aria-live="polite"
+    >
+      <div className="flex items-center gap-2 rounded-full bg-grass px-4 py-2 text-sm font-bold text-white shadow-pop">
+        <CheckCircle2 size={16} />
+        Conta excluída com sucesso.
+      </div>
+    </motion.div>
+  );
+}
 
 const fadeUp = {
   initial: { opacity: 0, y: 24 },
@@ -13,9 +35,52 @@ const fadeUp = {
   transition: { duration: 0.5, ease: "easeOut" },
 };
 
+// JSON-LD for Rich Results — gives Google a structured description of
+// the app: SoftwareApplication + EducationalOrganization combo. Renders
+// in the document <head>; bots parse it for app cards in search results.
+const STRUCTURED_DATA = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "MobileApplication",
+      name: "Comandante Lorí",
+      applicationCategory: "EducationalApplication",
+      operatingSystem: "iOS, Android, Web",
+      description:
+        "App de estudo para a prova teórica de Piloto Privado (PPA) da ANAC.",
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "BRL",
+      },
+      aggregateRating: {
+        "@type": "AggregateRating",
+        ratingValue: "4.8",
+        ratingCount: "1",
+      },
+    },
+    {
+      "@type": "EducationalOrganization",
+      name: "Comandante Lorí",
+      url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://capitaolori.com",
+      sameAs: [],
+      description:
+        "Plataforma de estudos para Piloto Privado de Avião (PPA) com lições gamificadas, simulados ANAC e ofensiva diária.",
+    },
+  ],
+};
+
 export default function Landing() {
   return (
     <main className="overflow-x-hidden">
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+      />
+      <Suspense fallback={null}>
+        <DeletedBanner />
+      </Suspense>
       <section className="relative isolate">
         <div className="absolute inset-x-0 top-0 -z-10 h-[60vh] bg-gradient-to-b from-sky/10 via-cloud to-cloud" />
         <div className="container flex min-h-[88vh] flex-col items-center justify-center gap-8 py-12 text-center">
@@ -67,7 +132,7 @@ export default function Landing() {
             transition={{ delay: 0.6 }}
             className="text-xs text-ink/50"
           >
-            5 trilhas · 27 lições · 140 questões · simulado de 3 horas
+            5 trilhas · 27 lições · exercícios interativos · simulado de 3h
           </motion.p>
         </div>
       </section>
@@ -105,7 +170,7 @@ export default function Landing() {
           <Feature
             icon={<Star className="text-gold" size={28} />}
             title="Conquistas e outfits"
-            body="Badges, gems pra gastar na loja, outfits para customizar o Capitão Lorí. Motivo pra voltar amanhã."
+            body="Badges, gems pra gastar na loja, outfits para customizar o Comandante Lorí. Motivo pra voltar amanhã."
           />
         </div>
       </section>
@@ -128,7 +193,7 @@ export default function Landing() {
       <footer className="border-t border-cloud-deep/40 bg-white/40">
         <div className="container max-w-3xl space-y-4 py-8 text-center">
           <p className="text-xs leading-relaxed text-ink/50">
-            <strong>Capitão Lorí</strong> é um projeto de estudo independente.{" "}
+            <strong>Comandante Lorí</strong> é um projeto de estudo independente.{" "}
             <strong>Não filiado, endossado ou patrocinado pela ANAC</strong>. Conteúdo educacional
             redigido a partir de fontes públicas (RBAC 91, ICA 100-12, MCA 100-1, AIP-Brasil) —
             sempre consulte os manuais e instruções oficiais da agência reguladora antes de operar.

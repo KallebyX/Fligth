@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { LessonRunner } from "@/components/learn/LessonRunner";
-import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
+import type { Exercise } from "@/components/learn/exercises/types";
 import { Markdown } from "@/components/ui/markdown";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
@@ -22,10 +22,15 @@ export type LessonShellProps = {
   title: string;
   theory: string | null;
   questionCount: number;
-  questions: PlayerQuestion[];
+  exercises: Exercise[];
   subjectName: string;
   subjectColor: string;
   unitTitle: string;
+  hearts: number;
+  gems: number;
+  mascotOutfit: string | null;
+  isPractice?: boolean;
+  isPro?: boolean;
 };
 
 export function LessonShell({
@@ -33,15 +38,30 @@ export function LessonShell({
   title,
   theory,
   questionCount,
-  questions,
+  exercises,
   subjectName,
   subjectColor,
   unitTitle,
+  hearts,
+  gems,
+  mascotOutfit,
+  isPractice = false,
+  isPro = false,
 }: LessonShellProps) {
   const [stage, setStage] = useState<"intro" | "run">(theory ? "intro" : "run");
 
   if (stage === "run") {
-    return <LessonRunner lessonId={lessonId} questions={questions} />;
+    return (
+      <LessonRunner
+        lessonId={lessonId}
+        exercises={exercises}
+        initialHearts={hearts}
+        initialGems={gems}
+        mascotOutfit={mascotOutfit}
+        isPractice={isPractice}
+        isPro={isPro}
+      />
+    );
   }
 
   const xpReward = questionCount * 10 + 10; // mirrors XP_PER_CORRECT_LESSON * count + bonus
@@ -50,7 +70,7 @@ export function LessonShell({
     <main className="container max-w-2xl pb-32 pt-4">
       <Link
         href="/learn"
-        className="mb-3 inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink"
+        className="mb-3 inline-flex items-center gap-1 text-sm font-bold text-ink/60 hover:text-ink dark:text-cloud/60 dark:hover:text-cloud"
       >
         <ChevronLeft size={16} />
         Voltar para as trilhas
@@ -89,7 +109,8 @@ export function LessonShell({
               até {xpReward} XP
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1">
-              <Heart size={14} />5 vidas
+              <Heart size={14} />
+              {hearts} {hearts === 1 ? "vida" : "vidas"}
             </span>
           </div>
         </div>
@@ -102,10 +123,10 @@ export function LessonShell({
           transition={{ duration: 0.4, delay: 0.1 }}
           className="card-pop mt-5 p-5 md:p-6"
         >
-          <header className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-ink/55">
+          <header className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-ink/55 dark:text-cloud/55">
             <BookOpen size={14} />
             <span>O que estudar antes</span>
-            <span className="h-px flex-1 bg-cloud-deep/40" />
+            <span className="h-px flex-1 bg-cloud-deep/40 dark:bg-ink-light/40" />
           </header>
           <Markdown content={theory} />
         </motion.section>
@@ -118,14 +139,14 @@ export function LessonShell({
         className="card-pop mt-5 flex items-center gap-4 bg-gradient-to-r from-sky/10 to-grass/10 p-5"
       >
         <div className="shrink-0 rounded-full bg-white/80 p-1.5 ring-2 ring-sky/30">
-          <Mascot state="happy" size={72} />
+          <Mascot state="happy" size={72} outfit={mascotOutfit} />
         </div>
         <div className="flex-1">
-          <p className="flex items-center gap-1 text-base font-extrabold text-ink">
+          <p className="flex items-center gap-1 text-base font-extrabold text-ink dark:text-cloud">
             <Sparkles size={16} className="text-sky" />
             Vamos voar!
           </p>
-          <p className="mt-0.5 text-sm leading-snug text-ink/70">
+          <p className="mt-0.5 text-sm leading-snug text-ink/70 dark:text-cloud/70">
             Cada acerto vale XP. Erros descontam uma vida — você recupera 1 a
             cada 30 min. Acertou tudo? Voo perfeito + bônus.
           </p>

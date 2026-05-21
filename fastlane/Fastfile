@@ -1,6 +1,7 @@
 default_platform(:ios)
 
 XCODEPROJ = "./ios/App/App.xcodeproj"
+XCWORKSPACE = "./ios/App/App.xcworkspace"
 SCHEME = "App"
 EXPORT_METHOD = "app-store"
 OUTPUT_DIR = "./build"
@@ -21,15 +22,24 @@ platform :ios do
     setup_ci if ENV["CI"]
   end
 
-  desc "Sync Capacitor (SPM resolves plugin dependencies — no Cocoapods)"
+  desc "Sync Capacitor + install Pods"
   lane :prepare do
     sh("cd .. && npm run mobile:sync")
+    # Capacitor 8 plugins (status-bar, splash-screen, etc.) reference the
+    # Capacitor framework API that ships in @capacitor/ios via Cocoapods —
+    # capacitor-swift-pm has a divergent API and these plugins won't compile
+    # against it. So we keep iOS on Cocoapods.
+    cocoapods(podfile: "./ios/App/Podfile", repo_update: true)
   end
 
   desc "Fetch / refresh App Store signing artifacts via match (uses API Key, never Apple ID password)"
   lane :certs do
     api_key = asc_api_key
-    match(
+    # Let match use the keychain that setup_ci created (default
+    # "fastlane_tmp_keychain" with the password setup_ci injected into ENV).
+    # Forcing an empty keychain_password breaks the partition-list step and
+    # the private key becomes unreachable to xcodebuild at archive time.
+    match_args = {
       type: "appstore",
       app_identifier: "br.com.capitaolori.app",
       team_id: ENV["APPLE_TEAM_ID"],
@@ -37,10 +47,35 @@ platform :ios do
       readonly: ENV["CI"] == "true",
       git_url: ENV.fetch("MATCH_GIT_URL"),
       git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
-      keychain_name: ENV["CI"] == "true" ? (ENV["MATCH_KEYCHAIN_NAME"] || "fastlane_tmp_keychain") : "login.keychain",
-      keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || "",
+      verbose: ENV["FASTLANE_VERBOSE"] == "true",
+    }
+    unless ENV["CI"] == "true"
+      match_args[:keychain_name] = "login.keychain"
+    end
+    match(**match_args)
+  end
+
+  desc "Regenerate signing artifacts after adding a new capability (Sign In with Apple, Push, etc.) to the App ID. RUN LOCAL ONLY — pushes a new profile to the match git repo."
+  lane :regenerate_certs do
+    UI.user_error!("Don't run this in CI — set CI=false and run locally.") if ENV["CI"] == "true"
+    api_key = asc_api_key
+    # `force: true` forces match to re-create the provisioning profile even
+    # if one already exists, picking up any new capabilities the App ID has
+    # gained since the last run. Use after enabling a capability (e.g. Sign
+    # In with Apple, Push Notifications) on the Apple Developer Portal.
+    match(
+      type: "appstore",
+      app_identifier: "br.com.capitaolori.app",
+      team_id: ENV["APPLE_TEAM_ID"],
+      api_key: api_key,
+      readonly: false,
+      force: true,
+      git_url: ENV.fetch("MATCH_GIT_URL"),
+      git_basic_authorization: ENV["MATCH_GIT_BASIC_AUTHORIZATION"],
+      keychain_name: "login.keychain",
       verbose: ENV["FASTLANE_VERBOSE"] == "true",
     )
+    UI.success("Profile regenerated + pushed to match git repo. Re-run the GitHub Actions iOS workflow now.")
   end
 
   desc "Bump CFBundleVersion to (latest TestFlight build + 1)"
@@ -57,24 +92,19 @@ platform :ios do
     certs
     bump_build
 
-    profile_name = ENV["sigh_br.com.capitaolori.app_appstore_profile-name"]
-
-    # Scope manual signing to the App target only. Passing CODE_SIGN_STYLE /
-    # PROVISIONING_PROFILE_SPECIFIER via xcargs leaks into SPM dependency
-    # targets (RevenueCat etc.) and breaks the archive.
-    update_code_signing_settings(
-      path: XCODEPROJ,
-      use_automatic_signing: false,
-      team_id: ENV["APPLE_TEAM_ID"],
-      code_sign_identity: "Apple Distribution",
-      profile_name: profile_name,
-      bundle_identifier: "br.com.capitaolori.app",
-      targets: ["App"],
-      build_configurations: ["Release"],
-    )
+    # Signing is baked into project.pbxproj (App target → Release):
+    #   CODE_SIGN_STYLE=Manual
+    #   CODE_SIGN_IDENTITY="Apple Distribution"
+    #   DEVELOPMENT_TEAM=FWVSMZ9APG
+    #   PROVISIONING_PROFILE_SPECIFIER="match AppStore br.com.capitaolori.app 1778520305"
+    # Plus TargetAttributes.ProvisioningStyle=Manual. SPM packages stay on
+    # their defaults so RevenueCat doesn't complain about a profile being
+    # forced on a target that doesn't support one.
+    profile_name = ENV["sigh_br.com.capitaolori.app_appstore_profile-name"] ||
+                   "match AppStore br.com.capitaolori.app 1778520305"
 
     build_app(
-      project: XCODEPROJ,
+      workspace: XCWORKSPACE,
       scheme: SCHEME,
       configuration: "Release",
       export_method: EXPORT_METHOD,
@@ -83,6 +113,9 @@ platform :ios do
       output_name: "Capitao_Lori.ipa",
       include_symbols: true,
       include_bitcode: false,
+      # Disable xcbeautify so any xcodebuild error surfaces in the GitHub
+      # Actions log instead of being filtered. Re-enable once stable.
+      xcodebuild_formatter: "",
       export_options: {
         method: EXPORT_METHOD,
         signingStyle: "manual",

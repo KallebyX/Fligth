@@ -1,0 +1,54 @@
+Comandante Lorí (CMTE Lorí) é o app para você estudar pra prova teórica
+de Piloto Privado (PPA) da ANAC do jeito que apps como Duolingo viraram
+referência mundial: lições curtas, ofensiva diária, ligas semanais e
+muita aviação brasileira.
+
+POR QUE FUNCIONA
+• Lições de 5 minutos focadas no que cai na banca da ANAC
+• Repetição espaçada (SRS) — você revisa o que tá esquecendo, não o que
+  já sabe
+• Ofensiva diária pra criar hábito (foi assim que você aprendeu inglês)
+• Simulado completo no formato da banca: 60 questões, 3 horas, 70% por
+  matéria
+
+CONTEÚDO
+7 matérias completas:
+• Regulamentos de Tráfego Aéreo
+• Meteorologia Aeronáutica
+• Navegação Aérea
+• Teoria de Voo
+• Conhecimentos Técnicos
+• Comunicações (ICAO alfabeto fonético incluído)
+• Aeronaves (quiz com fotos de aviões clássicos da aviação geral)
+
+GAMIFICAÇÃO
+• Vidas: você erra muito? Recompõe sozinho ou compra refil
+• Gemas: moeda do app — ganhe estudando, gaste em outfits da Lorí
+• Outfits: 12+ visuais pro mascote (Barão Vermelho, Top Gun, Pro Dourado…)
+• Ligas: Bronze → Diamante a cada semana, top 10 promove
+• Loja: roleta diária + jackpot semanal pra mexer a mecânica
+• Conquistas (badges): 30+ pra desbloquear
+
+CMTE LORÍ PRO (opcional)
+• Vidas ilimitadas — erre à vontade, aprendizado real é assim mesmo
+• Simulados extras + simulado por matéria isolada
+• Estatísticas avançadas (acertos por tópico, evolução semanal)
+• Sem anúncios
+• Suporte prioritário
+• Outfit Pro Dourado pro mascote
+• 7 dias grátis, cancela quando quiser
+
+COMUNIDADE
+• Galeria: poste foto do voo ou da aeronave, curta dos outros
+• Amigos: siga colegas de turma, veja a evolução
+• Escolas: encontre aeroclubes e escolas de aviação certificadas pela
+  ANAC perto de você
+
+SOBRE A MARCA
+Comandante Lorí (a Lorí, uma marreca aviadora) não é filiado à ANAC nem
+representa qualquer instituição oficial. O conteúdo é estudo
+complementar — leia o material oficial da ANAC pra prova.
+
+PRIVACIDADE
+Não pedimos sua localização. Não usamos IDFA. Não vendemos seus dados.
+Detalhes em: https://capitaolori.com/privacy

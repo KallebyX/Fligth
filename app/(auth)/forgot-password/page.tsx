@@ -1,0 +1,118 @@
+"use client";
+
+import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Mascot } from "@/components/mascot/Mascot";
+import { createClient } from "@/lib/supabase/client";
+import { CheckCircle2, Loader2 } from "lucide-react";
+
+export default function ForgotPasswordPage() {
+  const t = useTranslations("auth.forgotPasswordPage");
+  const params = useSearchParams();
+  const expired = params.get("expired") === "1";
+  const [email, setEmail] = useState("");
+  const [sent, setSent] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+    const supabase = createClient();
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      // The Supabase email link will hit /callback with a recovery code;
+      // callback exchanges it for a session and forwards to /reset-password.
+      redirectTo: `${window.location.origin}/callback?next=/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      setError(error.message);
+      return;
+    }
+    setSent(true);
+  }
+
+  return (
+    <main className="container flex min-h-[100dvh] flex-col items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md">
+        <div className="mb-5 flex flex-col items-center text-center">
+          <div className="rounded-full bg-sky/10 p-2 ring-4 ring-sky/15">
+            <Mascot state={sent ? "celebrate" : "thinking"} size={128} />
+          </div>
+          {expired && !sent && (
+            <p
+              role="alert"
+              className="mt-4 w-full rounded-xl bg-alert/10 px-3 py-2 text-sm font-bold text-alert"
+            >
+              Seu link expirou. Pode pedir um novo agora mesmo.
+            </p>
+          )}
+          <h1 className="mt-4 text-3xl font-black tracking-tight dark:text-cloud md:text-4xl">
+            {sent ? t("titleSent") : t("title")}
+          </h1>
+          <p className="mt-1 text-sm text-ink/60 dark:text-cloud/60">
+            {sent ? t("subtitleSent") : t("subtitle")}
+          </p>
+        </div>
+
+        <div className="card-pop space-y-4 p-5">
+          {sent ? (
+            <div className="flex items-start gap-3 rounded-2xl bg-grass/10 p-4 text-sm">
+              <CheckCircle2 size={20} className="mt-0.5 shrink-0 text-grass" />
+              <div>
+                <p className="font-bold text-grass-deep">{t("successTitle")}</p>
+                <p className="mt-1 text-ink/70 dark:text-cloud/70">
+                  {t("successBody")}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <form className="space-y-3" onSubmit={handleSubmit}>
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
+                  {t("emailLabel")}
+                </label>
+                <Input
+                  type="email"
+                  placeholder="voce@email.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  autoComplete="email"
+                  className="mt-1"
+                />
+              </div>
+              {error && (
+                <p className="rounded-xl bg-alert/10 px-3 py-2 text-sm font-bold text-alert">
+                  {error}
+                </p>
+              )}
+              <Button type="submit" size="lg" className="w-full" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Loader2 className="animate-spin" size={18} />
+                    {t("submitting")}
+                  </>
+                ) : (
+                  t("submit")
+                )}
+              </Button>
+            </form>
+          )}
+        </div>
+
+        <p className="mt-5 text-center text-sm text-ink/60 dark:text-cloud/60">
+          {t("remembered")}{" "}
+          <Link href="/login" className="font-extrabold text-sky hover:underline">
+            {t("backToLogin")}
+          </Link>
+        </p>
+      </div>
+    </main>
+  );
+}

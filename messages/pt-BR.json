@@ -1,0 +1,253 @@
+{
+  "common": {
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "send": "Enviar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "next": "Próximo",
+    "skip": "Pular",
+    "loading": "Carregando…",
+    "tryAgain": "Tentar de novo",
+    "search": "Buscar",
+    "aria": {
+      "close": "Fechar",
+      "back": "Voltar",
+      "next": "Próximo",
+      "previous": "Anterior",
+      "like": "Curtir",
+      "unlike": "Descurtir",
+      "approve": "Aprovar",
+      "reject": "Rejeitar",
+      "notifications": "Notificações",
+      "settings": "Configurações",
+      "search": "Buscar",
+      "clear": "Limpar",
+      "expand": "Expandir",
+      "collapse": "Recolher",
+      "dragHandle": "Arraste para fechar"
+    }
+  },
+  "learn": {
+    "heroTitle": "Hora de voar",
+    "heroSubtitle": "Continue de onde parou.",
+    "continueLesson": "Continuar lição",
+    "startLesson": "Começar lição",
+    "perfect": "Perfeito!",
+    "lessonComplete": "Lição completa",
+    "xpAwarded": "+{xp} XP",
+    "goalHit": "Meta diária batida!",
+    "streakSaved": "Ofensiva salva ❄️",
+    "outOfHearts": "Sem vidas",
+    "waitOrPro": "Espere {minutes} min ou assine Pro pra coração infinito.",
+    "exitLesson": "Sair da lição",
+    "abandonTitle": "Sair sem terminar?",
+    "abandonBody": "Você perde o progresso desta lição. As vidas perdidas continuam descontadas.",
+    "abandonStay": "Continuar lição",
+    "abandonLeave": "Sair mesmo assim",
+    "verify": "Verificar",
+    "verifying": "Conferindo…",
+    "continue": "Continuar",
+    "transientError": "Erro de conexão — tente novamente.",
+    "practiceModeBadge": "Modo prática"
+  },
+  "deleteAccount": {
+    "confirmPhrase": "EXCLUIR MINHA CONTA"
+  },
+  "leagues": {
+    "title": "Ligas",
+    "subtitle": "Top 10 sobem, últimos 5 caem.",
+    "promoteZone": "Zona de promoção",
+    "demoteZone": "Zona de queda",
+    "stayZone": "Mantendo posição",
+    "yourPosition": "Sua posição",
+    "weeklyReset": "Reset em {days}d {hours}h",
+    "weeklyResetSoon": "Reset em {hours}h {minutes}min",
+    "earnXpToJoin": "Ganhe XP esta semana pra entrar na sua liga.",
+    "promoted": "Você subiu para {division}!",
+    "demoted": "Você caiu para {division}",
+    "stayed": "Você manteve {division}",
+    "podiumYou": "você",
+    "tabAll": "Tudo",
+    "emptyState": "Ninguém ganhou XP esta semana. Bata você o primeiro recorde."
+  },
+  "shop": {
+    "title": "Loja",
+    "outfitsTab": "Outfits",
+    "rouletteTitle": "Roleta diária",
+    "rouletteSubtitle": "Cada giro entrega um outfit comum ou raro. Repetiu? Você ganha 20 gems de consolação.",
+    "rouletteCta": "Girar grátis",
+    "rouletteCooldown": "Disponível em {time}",
+    "rouletteReady": "Disponível agora",
+    "jackpotTitle": "Jackpot",
+    "jackpotSubtitle": "Cada giro custa {cost} gems e entrega outfits épicos ou lendários. Cooldown: 1h.",
+    "jackpotCta": "Girar por {cost} gems",
+    "notEnoughGems": "Você não tem gems suficientes.",
+    "alreadyOwned": "Você já tem esse outfit.",
+    "outfitCommon": "Comum",
+    "outfitRare": "Raro",
+    "outfitEpic": "Épico",
+    "outfitLegendary": "Lendário",
+    "equipped": "Equipado",
+    "equip": "Equipar",
+    "exclusive": "Exclusivo"
+  },
+  "nav": {
+    "learn": "Aprender",
+    "feed": "Feed",
+    "leagues": "Ligas",
+    "shop": "Loja",
+    "friends": "Amigos",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "gallery": "Galeria",
+    "schools": "Escolas",
+    "pro": "Pro",
+    "season": "Temporada",
+    "invite": "Indicar"
+  },
+  "settings": {
+    "title": "Configurações",
+    "subtitle": "Ajuste notificações, som, privacidade e idioma.",
+    "section": {
+      "notifications": "Notificações",
+      "notificationsDesc": "Push e email — controle o que chega até você.",
+      "sound": "Som & vibração",
+      "soundDesc": "Mixer e atalhos. Vale só pra este dispositivo.",
+      "privacy": "Privacidade",
+      "privacyDesc": "Quem pode ver seu perfil, XP e ofensivas.",
+      "appearance": "Aparência",
+      "appearanceDesc": "Claro, escuro ou automático (segue o sistema).",
+      "accessibility": "Acessibilidade",
+      "accessibilityDesc": "Texto maior, alto contraste e movimento reduzido.",
+      "language": "Idioma",
+      "languageDesc": "Interface do app (lições continuam em português).",
+      "account": "Conta",
+      "accountDesc": "Perfil, segurança e dados pessoais.",
+      "explore": "Explorar",
+      "exploreDesc": "Galeria da comunidade e escolas de aviação.",
+      "about": "Sobre",
+      "aboutDesc": "Versão, termos e suporte."
+    },
+    "theme": {
+      "title": "Tema",
+      "description": "A escolha vale neste dispositivo. \"Automático\" muda sozinho ao anoitecer se seu sistema usar tema noturno.",
+      "light": "Claro",
+      "lightDescription": "Branco e leve — bom pra dia.",
+      "dark": "Escuro",
+      "darkDescription": "Preto e calmo — bom pra noite.",
+      "auto": "Automático",
+      "autoDescription": "Segue o sistema (iOS / Android / browser)."
+    },
+    "language": {
+      "current": "Idioma do app",
+      "subcopy": "Escolha o idioma da interface. As lições da prova continuam em português.",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "es": "Español"
+    },
+    "accessibility": {
+      "textSize": {
+        "title": "Tamanho do texto",
+        "description": "Aumenta a fonte do app inteiro — chips e botões crescem junto.",
+        "default": "Padrão",
+        "large": "Maior",
+        "xlarge": "Muito maior"
+      },
+      "motion": {
+        "title": "Movimento",
+        "description": "Reduz ou força animações. \"Sistema\" segue o ajuste do iOS/Android.",
+        "system": "Sistema",
+        "reduce": "Reduzir",
+        "allow": "Permitir"
+      },
+      "contrast": {
+        "title": "Alto contraste",
+        "description": "Engrossa textos e bordas pra melhorar a leitura.",
+        "default": "Padrão",
+        "high": "Aumentar"
+      }
+    },
+    "about": {
+      "version": "Versão",
+      "terms": "Termos de uso",
+      "privacy": "Política de privacidade",
+      "support": "Suporte"
+    }
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Criar conta",
+    "logout": "Sair",
+    "forgotPassword": "Esqueceu a senha?",
+    "email": "Email",
+    "password": "Senha",
+    "loginPage": {
+      "title": "Bem-vindo de volta!",
+      "subtitle": "Entre na sua conta para continuar voando.",
+      "submit": "Entrar",
+      "submitting": "Entrando…",
+      "forgot": "Esqueci minha senha",
+      "noAccount": "Ainda não tem conta?",
+      "signupCta": "Cadastre-se grátis"
+    },
+    "signupPage": {
+      "title": "Comece a estudar grátis",
+      "subtitle": "5 trilhas, 25 lições, ofensiva diária. Sem cartão.",
+      "submit": "Criar conta",
+      "submitting": "Criando…",
+      "haveAccount": "Já tem conta?",
+      "loginCta": "Entrar"
+    },
+    "forgotPasswordPage": {
+      "title": "Esqueceu a senha?",
+      "titleSent": "Email enviado!",
+      "subtitle": "Te mandamos um link pra criar uma nova.",
+      "subtitleSent": "Confira sua caixa de entrada. O link expira em 1 hora.",
+      "emailLabel": "Email da conta",
+      "submit": "Enviar link",
+      "submitting": "Enviando…",
+      "remembered": "Lembrou?",
+      "backToLogin": "Voltar ao login",
+      "successTitle": "Tudo certo.",
+      "successBody": "Procure por um email do Supabase Auth e clique no link. Não recebeu? Verifique o spam ou tente outro email."
+    }
+  },
+  "hud": {
+    "streak": "Ofensiva",
+    "xp": "XP",
+    "hearts": "Vidas",
+    "gems": "Gems",
+    "upgrade": "Upgrade"
+  },
+  "onboarding": {
+    "skipTutorial": "Pular"
+  },
+  "pro": {
+    "restore": {
+      "button": "Restaurar compras",
+      "restoring": "Restaurando…",
+      "foundPro": "Pro restaurado! Atualizando…",
+      "restoredCount": "{count, plural, one {# entitlement restaurado} other {# entitlements restaurados}}",
+      "nothingToRestore": "Nenhuma compra pra restaurar.",
+      "failed": "Falha ao restaurar. Verifique sua conta Apple ID e tente novamente."
+    },
+    "disclosures": {
+      "ariaLabel": "Termos e condições da assinatura",
+      "autoRenew": {
+        "title": "Renovação automática.",
+        "body": "Pro Mensal e Pro Anual renovam automaticamente até serem cancelados. A renovação acontece dentro de 24h antes do fim do período pago."
+      },
+      "billing": "O valor cobrado é o exibido na tela de compra, na sua moeda local, e é descontado pela Apple (ou Google) na conta do seu Apple ID / Google Play.",
+      "cancel": "Você pode cancelar a qualquer momento em Ajustes → seu nome → Assinaturas (iOS) ou no app do Google Play (Android). O cancelamento mantém seu acesso até o fim do período atual.",
+      "appleDisclaimer": "Apple Inc. e Google LLC não são patrocinadoras nem responsáveis pelo conteúdo do CMTE Lorí.",
+      "links": {
+        "terms": "Termos de uso",
+        "privacy": "Política de privacidade",
+        "eula": "EULA padrão da Apple"
+      }
+    }
+  }
+}

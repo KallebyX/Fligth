@@ -1,3 +1,4 @@
+import * as React from "react";
 import Link from "next/link";
 import { Mascot } from "@/components/mascot/Mascot";
 import { Crown } from "lucide-react";
@@ -19,13 +20,20 @@ export function Podium({
   meId: string;
 }) {
   // Render slots in order [2nd, 1st, 3rd] so 1st sits in the middle/up.
-  const ordered = [top[1], top[0], top[2]];
-  const heights = ["h-20", "h-24", "h-16"]; // pedestal heights
-  const sizes = [88, 112, 80]; // mascot sizes
+  // useMemo because Podium re-renders whenever the parent leaderboard
+  // ticks (every second on `/leagues` for the ResetTimer) — keep the
+  // ordered array referentially stable.
+  const ordered = React.useMemo(() => [top[1], top[0], top[2]], [top]);
+  // Pedestal heights scale with screen width — on iPhone SE (320 px)
+  // the 88 px gold pedestal would crowd the mascot above it.
+  const heights = ["h-16 sm:h-24", "h-20 sm:h-32", "h-12 sm:h-20"];
+  // Mascot sizes scale down on mobile to fit the 320 px iPhone SE width.
+  const sizesSm = [72, 96, 64];
+  const sizesMd = [88, 112, 80];
   const ranks = [2, 1, 3];
 
   return (
-    <div className="grid grid-cols-3 items-end gap-2 sm:gap-4">
+    <div className="grid grid-cols-3 items-end gap-3 sm:gap-4">
       {ordered.map((entry, idx) => {
         if (!entry)
           return (
@@ -51,11 +59,20 @@ export function Podium({
                   fill="currentColor"
                 />
               )}
-              <Mascot
-                state={isFirst ? "celebrate" : "happy"}
-                size={sizes[idx]}
-                outfit={entry.outfit}
-              />
+              <span className="sm:hidden">
+                <Mascot
+                  state={isFirst ? "celebrate" : "happy"}
+                  size={sizesSm[idx]}
+                  outfit={entry.outfit}
+                />
+              </span>
+              <span className="hidden sm:inline">
+                <Mascot
+                  state={isFirst ? "celebrate" : "happy"}
+                  size={sizesMd[idx]}
+                  outfit={entry.outfit}
+                />
+              </span>
               <span
                 className={cn(
                   "mt-1 max-w-[120px] truncate text-center text-xs font-extrabold",

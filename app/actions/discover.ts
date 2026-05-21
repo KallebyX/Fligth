@@ -18,8 +18,11 @@ export type SearchResult =
   | { ok: false; error: string };
 
 // Search users by username/display_name. Limited and prefix-friendly.
+// Hard-cap the query length so an oversized input can't full-table-scan
+// the profiles table (Postgres `ilike` with no index on `%query%` would
+// sequential-scan; an unbounded query string is a cheap DoS vector).
 export async function searchUsers(query: string): Promise<SearchResult> {
-  const q = query.trim();
+  const q = query.trim().slice(0, 100);
   if (!q || q.length < 2) return { ok: true, users: [] };
 
   const supabase = await createClient();

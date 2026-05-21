@@ -10,6 +10,10 @@ on:
   push:
     branches:
       - main
+      # Allow the active feature branch to also trigger TestFlight builds
+      # so we can test mid-PR without merging. Remove once the branch is
+      # merged.
+      - "claude/anac-pilot-training-app-sVhHF"
     paths:
       - "ios/**"
       - "capacitor.config.ts"
@@ -25,7 +29,9 @@ concurrency:
 jobs:
   build:
     name: Archive + Upload TestFlight
-    runs-on: macos-14
+    # macos-26 ships Xcode 26 + iOS 26 SDK, which Apple requires for all
+    # TestFlight/App Store submissions starting April 2026.
+    runs-on: macos-26
     timeout-minutes: 60
 
     env:
@@ -72,10 +78,10 @@ jobs:
           ruby-version: "3.2"
           bundler-cache: true
 
-      - name: Select Xcode (latest stable)
+      - name: Select Xcode 26 (iOS 26 SDK)
         uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: latest-stable
+          xcode-version: "26"
 
       - name: Print versions
         run: |

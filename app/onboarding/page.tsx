@@ -61,9 +61,46 @@ export default function Onboarding() {
       return;
     }
     const cleanUsername = username.trim().toLowerCase();
+    // Auto-populate display_name from the OAuth provider's metadata
+    // (Google sends `name`, `full_name` or `display_name`; Apple sends `name`).
+    // This is only used if the profile didn't already have one set.
+    const meta = (user.user_metadata ?? {}) as Record<string, unknown>;
+    const oauthName =
+      (typeof meta.full_name === "string" && meta.full_name) ||
+      (typeof meta.name === "string" && meta.name) ||
+      (typeof meta.display_name === "string" && meta.display_name) ||
+      null;
+    const oauthPicture =
+      (typeof meta.picture === "string" && meta.picture) ||
+      (typeof meta.avatar_url === "string" && meta.avatar_url) ||
+      null;
+
+    const { data: existingProfile } = await supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const baseUpdate: {
+      username: string | null;
+      daily_goal_xp: number;
+      display_name?: string;
+      avatar_url?: string;
+    } = {
+      username: cleanUsername || null,
+      daily_goal_xp: goal,
+    };
+    if (oauthName && !existingProfile?.display_name) {
+      baseUpdate.display_name = oauthName;
+    }
+    if (oauthPicture && !existingProfile?.avatar_url) {
+      baseUpdate.avatar_url = oauthPicture;
+    }
+    const updates = baseUpdate;
+
     const { error } = await supabase
       .from("profiles")
-      .update({ username: cleanUsername || null, daily_goal_xp: goal })
+      .update(updates)
       .eq("id", user.id);
     setSaving(false);
     if (error) {
@@ -76,7 +113,7 @@ export default function Onboarding() {
       return;
     }
     if (toPaywall) setStep(2);
-    else router.push("/learn");
+    else router.push("/learn?welcome=1");
   }
 
   return (
@@ -239,7 +276,7 @@ export default function Onboarding() {
               <div className="text-center">
                 <h2 className="text-2xl font-black">Última coisa</h2>
                 <p className="mt-1 text-sm text-ink/60">
-                  <strong>7 dias grátis</strong> do Capitão Lorí Pro. Cancele a
+                  <strong>7 dias grátis</strong> do CMTE Lorí Pro. Cancele a
                   qualquer momento, sem cobrança no trial.
                 </p>
               </div>

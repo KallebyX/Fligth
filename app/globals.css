@@ -16,13 +16,46 @@
     --ring: 199 89% 48%;
   }
 
+  /* Dark theme variables. Class `dark` is added to <html> by the
+     ThemeProvider so the theme survives reloads and respects system
+     preference when set to "auto". */
+  .dark {
+    --background: 222 47% 4%;       /* matches ink.deep #020617 */
+    --foreground: 210 40% 98%;
+    --primary: 199 89% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 24 95% 53%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+    --border: 217 33% 17%;
+    --ring: 199 89% 60%;
+  }
+
   body {
     @apply bg-cloud text-ink antialiased font-sans;
-    font-feature-settings: "cv11", "ss01";
+    @apply dark:bg-ink-deep dark:text-cloud;
+    /* cv11 = alternative single-story "a" + tighter "g"; ss01 = stylistic
+       set with rounded numerals. Both ship with Nunito and Inter. Falls
+       back gracefully on Apple system fonts. */
+    font-feature-settings: "cv11", "ss01", "kern";
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Smooth color transition when toggling theme — but not so slow it
+       feels laggy. Used only for top-level surfaces. */
+    transition: background-color 0.18s ease, color 0.18s ease;
   }
 
   button {
     @apply select-none;
+  }
+
+  /* Bigger numbers in HUD chips should look TABULAR so they don't dance
+     while incrementing. Numerals with the same width — Duolingo trick. */
+  .tabular,
+  [data-tabular="true"] {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -31,7 +64,125 @@
     @apply rounded-2xl font-bold uppercase tracking-wide transition-transform active:translate-y-[2px] active:shadow-none shadow-pop;
   }
 
+  /* Light: white card on cloud bg. Dark: ink-mid card on ink-deep bg. */
   .card-pop {
     @apply rounded-2xl bg-white shadow-pop border border-cloud-deep/40;
+    @apply dark:bg-ink-mid dark:border-ink-light/60 dark:shadow-none;
+  }
+
+  /* Softer secondary surface (modals, sheets) — Apple depth without the
+     chunky bottom-pop. */
+  .card-soft {
+    @apply rounded-2xl bg-white shadow-soft ring-1 ring-cloud-deep/30;
+    @apply dark:bg-ink-mid dark:ring-ink-light/60 dark:shadow-none;
+  }
+
+  /* Hairline divider. */
+  .hairline {
+    @apply border-t border-cloud-deep/40 dark:border-ink-light/60;
+  }
+
+  /* Skeleton shimmer for loading states — dark-aware. */
+  .skeleton {
+    @apply animate-shimmer rounded-xl;
+    background: linear-gradient(
+      90deg,
+      rgba(203, 213, 225, 0.4) 0%,
+      rgba(203, 213, 225, 0.7) 50%,
+      rgba(203, 213, 225, 0.4) 100%
+    );
+    background-size: 200% 100%;
+  }
+  .dark .skeleton {
+    background: linear-gradient(
+      90deg,
+      rgba(51, 65, 85, 0.4) 0%,
+      rgba(51, 65, 85, 0.7) 50%,
+      rgba(51, 65, 85, 0.4) 100%
+    );
+    background-size: 200% 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ */
+/* Accessibility overrides — toggled by A11yProvider via classes on    */
+/* <html>. Kept in @layer base so they win over component utilities    */
+/* without `!important` spam.                                          */
+/* ------------------------------------------------------------------ */
+@layer base {
+  /* "Larger text" scales the root font-size. Tailwind's `rem` units
+     ride this scale automatically, so every chip/badge grows in
+     proportion — no per-component changes needed. */
+  html.a11y-text-large {
+    font-size: 112.5%; /* 16 → 18 */
+  }
+  html.a11y-text-xlarge {
+    font-size: 125%;   /* 16 → 20 */
+  }
+
+  /* "High contrast" — boost text floors (avoid `text-ink/40` etc.
+     looking washed out), thicken borders, kill faded surfaces. */
+  html.a11y-contrast-high {
+    --tw-text-opacity-min: 0.85;
+  }
+  html.a11y-contrast-high :where(.text-ink\/40, .text-ink\/45, .text-ink\/50, .text-ink\/55, .text-ink\/60, .text-ink\/65, .text-ink\/70) {
+    color: rgb(15 23 42 / 0.92);
+  }
+  html.a11y-contrast-high.dark :where(.text-cloud\/40, .text-cloud\/45, .text-cloud\/50, .text-cloud\/55, .text-cloud\/60, .text-cloud\/65, .text-cloud\/70) {
+    color: rgb(241 245 249 / 0.95);
+  }
+  html.a11y-contrast-high :where(.border-cloud-deep\/40, .border-cloud-deep\/30, .divide-cloud-deep\/30, .divide-cloud-deep\/40) {
+    border-color: rgb(15 23 42 / 0.45);
+  }
+  html.a11y-contrast-high.dark :where(.border-ink-light\/60, .divide-ink-light\/60) {
+    border-color: rgb(241 245 249 / 0.55);
+  }
+  html.a11y-contrast-high *:focus-visible {
+    outline: 3px solid #0EA5E9;
+    outline-offset: 2px;
+  }
+
+  /* Force-reduce motion — overrides OS pref if user explicitly chose
+     "Reduzir movimento" in app settings. Mirrors the
+     prefers-reduced-motion: reduce block but is class-gated. */
+  html.a11y-motion-reduce *,
+  html.a11y-motion-reduce *::before,
+  html.a11y-motion-reduce *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pl-safe {
+    padding-left: env(safe-area-inset-left);
+  }
+  .pr-safe {
+    padding-right: env(safe-area-inset-right);
+  }
+
+  .focus-ring {
+    @apply outline-none;
+  }
+  .focus-ring:focus-visible {
+    @apply ring-2 ring-sky ring-offset-2 ring-offset-cloud dark:ring-offset-ink-deep;
+  }
+
+  /* Surface tokens — use these in new components for automatic
+     theme-awareness instead of hand-writing `bg-cloud dark:bg-ink-deep`
+     everywhere. They map to the CSS vars defined in :root and .dark. */
+  .bg-app {
+    background-color: hsl(var(--background));
+  }
+  .text-app {
+    color: hsl(var(--foreground));
   }
 }

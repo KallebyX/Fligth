@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { Loader2 } from "lucide-react";
 import { ActivityItem } from "@/components/friends/ActivityItem";
 import {
@@ -30,6 +30,21 @@ export function ActivityFeed({
   const [pending, start] = useTransition();
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
+  const loadMore = useCallback(() => {
+    if (done || pending) return;
+    start(async () => {
+      const fetcher = source === "following" ? getFollowingFeed : getDiscoverFeed;
+      const res = await fetcher(cursor);
+      if (!res.ok) {
+        setDone(true);
+        return;
+      }
+      setItems((prev) => [...prev, ...res.items]);
+      setCursor(res.nextCursor);
+      if (res.nextCursor === null) setDone(true);
+    });
+  }, [done, pending, source, cursor]);
+
   useEffect(() => {
     if (done || !loaderRef.current) return;
     const observer = new IntersectionObserver(
@@ -42,7 +57,7 @@ export function ActivityFeed({
     );
     observer.observe(loaderRef.current);
     return () => observer.disconnect();
-  }, [done, pending, cursor]);
+  }, [done, pending, loadMore]);
 
   // Live updates: subscribe to user_activities INSERTs. RLS filters to only
   // visible rows (own + followed). Discover tab sees the same firehose but
@@ -74,21 +89,6 @@ export function ActivityFeed({
       void supabase.removeChannel(channel);
     };
   }, [source]);
-
-  function loadMore() {
-    if (done || pending) return;
-    start(async () => {
-      const fetcher = source === "following" ? getFollowingFeed : getDiscoverFeed;
-      const res = await fetcher(cursor);
-      if (!res.ok) {
-        setDone(true);
-        return;
-      }
-      setItems((prev) => [...prev, ...res.items]);
-      setCursor(res.nextCursor);
-      if (res.nextCursor === null) setDone(true);
-    });
-  }
 
   if (items.length === 0) {
     return <>{emptyState}</>;

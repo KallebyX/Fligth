@@ -25,17 +25,31 @@ type SubjectSeed = {
   weight_pct: number;
 };
 type UnitSeed = { slug: string; title: string; order_index: number };
+type ExerciseKindSeed =
+  | "multiple_choice"
+  | "match_pairs"
+  | "fill_blank"
+  | "true_false"
+  | "tap_tiles"
+  | "theory_step";
+
 type QuestionSeed = {
   stem: string;
-  choice_a: string;
-  choice_b: string;
-  choice_c: string;
-  choice_d: string;
-  correct: "A" | "B" | "C" | "D";
+  // MCQ fields — required by the schema (NOT NULL) but ignored for non-MCQ
+  // kinds. Non-MCQ rows in the JSON should still set these to empty strings
+  // or pick-one placeholder text; the seeder fills sensible defaults.
+  choice_a?: string;
+  choice_b?: string;
+  choice_c?: string;
+  choice_d?: string;
+  correct?: "A" | "B" | "C" | "D";
   explanation_md: string;
   difficulty: number;
   source_ref?: string;
   lesson_slug?: string;
+  // Polymorphic exercise fields (introduced in migration 0012).
+  kind?: ExerciseKindSeed;
+  payload?: Json;
 };
 type BadgeSeed = {
   slug: string;
@@ -171,18 +185,25 @@ async function seedQuestions() {
         .eq("stem", q.stem)
         .maybeSingle();
 
+      const kind = q.kind ?? "multiple_choice";
+      // Non-MCQ rows still need values for the four NOT NULL choice columns.
+      // Fill with empty strings — they're never surfaced to the player when
+      // `kind` is not "multiple_choice".
+      const placeholder = "";
       const payload = {
         subject_id: subj.id,
         lesson_id: lessonId,
         stem: q.stem,
-        choice_a: q.choice_a,
-        choice_b: q.choice_b,
-        choice_c: q.choice_c,
-        choice_d: q.choice_d,
-        correct: q.correct,
+        choice_a: q.choice_a ?? placeholder,
+        choice_b: q.choice_b ?? placeholder,
+        choice_c: q.choice_c ?? placeholder,
+        choice_d: q.choice_d ?? placeholder,
+        correct: q.correct ?? "A",
         explanation_md: q.explanation_md,
         difficulty: q.difficulty,
         source_ref: q.source_ref ?? null,
+        kind,
+        payload: q.payload ?? null,
       };
 
       if (existing) {

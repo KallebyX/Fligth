@@ -1,4 +1,4 @@
-// Capitão Lorí — service worker
+// Comandante Lorí — service worker
 // Strategy: app-shell + offline fallback. Network-first for HTML; cache-first for static.
 
 const VERSION = "v1";

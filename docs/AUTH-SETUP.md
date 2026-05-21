@@ -1,0 +1,241 @@
+# Auth — configuração de OAuth, biometria + emails
+
+## Quick start — configurar emails + redirect URLs em 1 comando
+
+Os templates de email (confirmação, recuperação de senha, magic link, troca
+de email e convite) já estão prontos em `supabase/templates/*.html`. O
+script `scripts/setup-auth.mjs` pusha tudo pro projeto remoto via
+Supabase Management API:
+
+```bash
+# 1. Gere um Personal Access Token em https://supabase.com/dashboard/account/tokens
+#    (escopo "All access" ou "project:write" pro projeto).
+export SUPABASE_ACCESS_TOKEN=sbp_xxxxxxxxxxxxxxxxxxxxx
+
+# 2. Conferir o payload antes de aplicar:
+npm run setup-auth:dry
+
+# 3. Aplicar de verdade:
+npm run setup-auth
+```
+
+O script é **idempotente** — pode rodar quantas vezes quiser. Aplica:
+- HTML body + subject pra cada flow (confirmation, recovery, magic_link,
+  email_change, invite).
+- `site_url = https://fligth.vercel.app`.
+- `uri_allow_list` com web + previews + localhost + `capitaolori://callback`
+  (Capacitor native deep link).
+- `mailer_autoconfirm = false` (exige confirmação por email).
+- `mailer_secure_email_change_enabled = true` (confirmação dupla).
+- `password_min_length = 6` (sincroniza com a validação do form).
+- `mailer_otp_exp = 3600` (1h — bate com a copy nos templates).
+
+Para customizar os templates, edite os HTMLs em `supabase/templates/` e
+rode `npm run setup-auth` novamente.
+
+### Opcional: habilitar Google + Apple no mesmo comando
+
+Defina as envs OAuth antes de rodar:
+
+```bash
+# Google (passos abaixo na seção 1 deste doc):
+export GOOGLE_OAUTH_CLIENT_ID=000-xxxxxx.apps.googleusercontent.com
+export GOOGLE_OAUTH_CLIENT_SECRET=GOCSPX-xxxxxx
+
+# Apple (passos abaixo na seção 2):
+export APPLE_SERVICES_ID=br.com.capitaolori.web
+export APPLE_OAUTH_SECRET="$(cat ~/Downloads/AuthKey_XYZ.p8)"
+
+npm run setup-auth
+```
+
+O Supabase vai aceitar o `.p8` raw como secret e gerar o JWT internamente.
+Se preferir compilar você mesmo o JWT (recomendado em CI), passe o JWT
+pronto em `APPLE_OAUTH_SECRET`.
+
+> Por que via script e não via Supabase MCP? O MCP atualmente expõe
+> `execute_sql` + `apply_migration` mas não a Management API. Email
+> templates e providers OAuth são configurados via Management API HTTP
+> endpoints (`PATCH /v1/projects/{ref}/config/auth`), então o script é
+> a forma programática de fazer isso.
+
+---
+
+## Detalhes por método de login
+
+Este projeto suporta três caminhos de login:
+
+| Método | Status do código | Configuração externa necessária |
+|---|---|---|
+| Email + senha | Pronto | Já em produção |
+| Google Sign-In | Pronto | Supabase Dashboard + Google Cloud Console |
+| Apple Sign-In | Pronto | Supabase Dashboard + Apple Developer |
+| Face ID / Touch ID | Pronto | Build nativo via `cap sync` |
+
+Os botões "Continuar com Google/Apple" já aparecem em `/login` e `/signup`.
+Eles só vão funcionar **depois** de você completar a configuração abaixo.
+
+---
+
+## 1. Google OAuth — passo a passo
+
+1. Acesse [Google Cloud Console → APIs & Services → Credentials](https://console.cloud.google.com/apis/credentials).
+2. **Create credentials → OAuth client ID → Web application**.
+3. Em **Authorized redirect URIs**, adicione exatamente:
+   ```
+   https://<SEU_PROJETO>.supabase.co/auth/v1/callback
+   ```
+   Substitua `<SEU_PROJETO>` pelo subdomínio do seu Supabase (ex.: `ggveduxfkljidzkrmmoo`).
+4. Salve. O console mostrará `Client ID` e `Client secret`.
+5. Vá ao [Supabase Dashboard → Authentication → Providers → Google](https://supabase.com/dashboard/project/_/auth/providers).
+6. Habilite Google, cole `Client ID` + `Client secret`, salve.
+7. Em **Authentication → URL Configuration**, garanta que `Site URL` é
+   `https://fligth.vercel.app` e que **Redirect URLs** inclui:
+   - `https://fligth.vercel.app/callback`
+   - `https://fligth-*.vercel.app/callback` (previews)
+   - `http://localhost:*/callback` (dev)
+   - `capitaolori://callback` (Capacitor iOS / Android — deep link nativo)
+
+Pronto. O botão "Google" no `/login` agora redireciona via
+`signInWithOAuth({ provider: 'google' })` para o Supabase, que faz o
+round-trip com a Google e devolve o usuário em `/callback`, que troca o
+code por uma sessão.
+
+---
+
+## 2. Apple Sign-In — passo a passo
+
+> **Importante.** A App Store Review Guideline 4.8 exige Sign in with Apple
+> sempre que o app oferece outras opções de login OAuth (Google etc).
+> Sem Apple Sign-In configurado, a build pode ser rejeitada.
+
+### 2.1 No Apple Developer Account
+
+1. Em [identifiers](https://developer.apple.com/account/resources/identifiers/list), abra o **App ID** `br.com.capitaolori.app`.
+2. Em **Capabilities**, habilite **Sign In with Apple**. Salve.
+3. Volte para identifiers → **Services IDs** → crie um novo:
+   - Description: `Capitao Lori Web`
+   - Identifier: `br.com.capitaolori.web`
+   - Habilite **Sign In with Apple** → **Configure**:
+     - Primary App ID: o App ID acima.
+     - Domains and Subdomains: `<SEU_PROJETO>.supabase.co`
+     - Return URLs: `https://<SEU_PROJETO>.supabase.co/auth/v1/callback`
+   - Save.
+4. Em **Keys**, crie uma nova chave com a capability **Sign In with Apple**.
+   - Configure → escolha o App ID principal → Save.
+   - **Baixe o .p8** (só baixa uma vez). Anote também o **Key ID** (10 chars).
+5. Anote também o **Team ID** (no canto superior direito da conta).
+
+### 2.2 No Supabase Dashboard
+
+1. [Auth → Providers → Apple](https://supabase.com/dashboard/project/_/auth/providers) → habilite.
+2. **Service ID**: `br.com.capitaolori.web` (o Services ID criado, NÃO o App ID).
+3. **Team ID**: o Team ID do passo 5 acima.
+4. **Key ID**: o Key ID do passo 4.
+5. **Secret Key**: cole o conteúdo INTEIRO do `.p8` (incluindo `-----BEGIN PRIVATE KEY-----` e fim).
+6. Save.
+
+### 2.3 Native vs Web
+
+A implementação atual usa `signInWithOAuth({ provider: 'apple' })` que abre
+um fluxo web. Funciona dentro do WebView do Capacitor. Mais tarde, para
+uma UX nativa "Sign in with Apple" estilo iOS (com o botão preto oficial e
+sheet integrado), seria necessário o plugin
+[`@capacitor-community/apple-sign-in`](https://github.com/capacitor-community/apple-sign-in)
++ trocar para `supabase.auth.signInWithIdToken({ provider: 'apple', token })`.
+Por enquanto o flow web é suficiente para passar Review.
+
+---
+
+## 3. Capacitor — redirect & WebView
+
+No nativo (iOS + Android), o OAuth NÃO abre dentro do WebView do app — usamos
+`@capacitor/browser` para mostrar Safari View Controller. Sem isso, o Google
+detecta WebView pelo User-Agent e recusa o login (App-bound domains policy).
+
+Fluxo nativo:
+
+1. Tap no botão **Google / Apple** → `signInWithOAuth({ skipBrowserRedirect: true })`
+   devolve a URL OAuth do provider.
+2. `Browser.open({ url })` abre Safari View Controller com aquela URL.
+3. Usuário autoriza no Google / Apple.
+4. Provider redireciona para `https://<supabase>.supabase.co/auth/v1/callback?code=...`.
+5. Supabase troca o code com o provider e redireciona para o **redirect URL
+   configurado**, que no nativo é `capitaolori://callback?next=<destino>`.
+6. iOS / Android forwarda esse deep link de volta para o app via Capacitor
+   `appUrlOpen`. `NativeOAuthListener` captura, fecha o Safari View,
+   chama `exchangeCodeForSession(code)` e navega para `next`.
+
+Para isso funcionar você precisa garantir:
+
+- `capitaolori://callback` está na lista de Redirect URLs do Supabase (passo 1.7).
+- O scheme `capitaolori` está em `CFBundleURLSchemes` no `Info.plist` (já está).
+- O `capacitor.config.ts` permite navegar para os domínios de auth:
+
+```ts
+allowNavigation: [
+  "*.supabase.co",
+  "*.supabase.in",
+  "*.vercel.app",
+  "fligth.vercel.app",
+  // OAuth provider domains
+  "accounts.google.com",
+  "*.googleusercontent.com",
+  "appleid.apple.com",
+]
+```
+
+> Se OAuth abrir mas voltar com erro de "redirect uri not allowed", revise a
+> lista de Redirect URLs no Supabase (passo 1.7).
+
+---
+
+## 4. Face ID / Touch ID
+
+Implementação local-only:
+
+- Plugin: `@aparajita/capacitor-biometric-auth`
+- `Info.plist` ganhou a chave **`NSFaceIDUsageDescription`** com copy em PT-BR.
+- Após primeiro login bem-sucedido no app nativo, o usuário vê o banner
+  `BiometricEnrollPrompt` ("Use Face ID na próxima vez?"). Opt-in seta
+  `localStorage.capitao-lori.biometric-enabled = "1"`.
+- Em todo boot do app, `BiometricGate` (no `app/layout.tsx`) checa:
+  - É Capacitor nativo?
+  - Tem sessão Supabase válida no storage?
+  - O flag de opt-in está ligado?
+  - Se sim → bloqueia a UI com tela de Face ID até o usuário autorizar.
+  - Falhou ou cancelou → "Entrar com senha" sai da conta e volta a `/login`.
+
+> A sessão do Supabase persiste sozinha em `localStorage` do WebView (sobrevive
+> a launches). O Face ID é apenas a camada de **re-autenticação** por cima —
+> não estamos guardando tokens no Keychain. Para esse plus de segurança,
+> integraríamos `@capacitor/preferences` com `accessibility:
+> SecureStorage`, mas não é necessário pra ANAC PPA atual.
+
+### Rebuild necessário
+
+Sempre que o plugin nativo for instalado/atualizado:
+
+```bash
+npm install
+npx cap sync ios
+# (no Xcode) Product → Clean Build Folder → Archive
+```
+
+O CI workflow `.github/workflows/ios-pr-build.yml` faz isso automaticamente
+em PRs que tocam `ios/**` ou `package.json`.
+
+---
+
+## 5. Smoke test
+
+Depois de configurar Google + Apple no Supabase:
+
+1. Em `https://fligth.vercel.app/login`, clique **Google** → autorize → cai em `/learn`.
+2. Em `/login`, clique **Apple** → autorize → cai em `/learn`.
+3. Faça logout, repita o login com Google e desta vez confirme que o banner
+   `BiometricEnrollPrompt` NÃO aparece (web não tem biometria).
+4. Na build nativa (TestFlight), faça login com email/senha →
+   `BiometricEnrollPrompt` aparece → "Ativar" → confirma Face ID.
+5. Mate o app e reabra → vê a tela de lock com mascote feliz → Face ID →
+   destrava direto sem digitar nada.

@@ -18,7 +18,7 @@ export function DivisionBadge({
     size === "lg" ? "h-14 w-14" : size === "sm" ? "h-7 w-7" : "h-10 w-10";
   const icon = size === "lg" ? 28 : size === "sm" ? 14 : 18;
   const text =
-    size === "lg" ? "text-base" : size === "sm" ? "text-[10px]" : "text-xs";
+    size === "lg" ? "text-base" : size === "sm" ? "text-[11px]" : "text-xs";
 
   return (
     <div className={cn("inline-flex items-center gap-2", className)}>
@@ -35,7 +35,7 @@ export function DivisionBadge({
       {showLabel && (
         <span
           className={cn(
-            "font-extrabold uppercase tracking-wider text-ink",
+            "font-extrabold uppercase leading-tight tracking-wider text-ink dark:text-cloud",
             text,
           )}
         >

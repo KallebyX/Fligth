@@ -1,106 +1,49 @@
 "use client";
 
 import { useCallback, useEffect, useRef } from "react";
+import { playPatch, type PatchName } from "@/lib/sound/synth";
+import { warmupAudio } from "@/lib/sound/mixer";
 
-export type SfxName =
-  | "tap"
-  | "correct"
-  | "wrong"
-  | "level-up"
-  | "streak"
-  | "lesson-complete";
+// SfxName is preserved (and now widened) so existing call sites keep working
+// while new sites can use the aviation patches added in Phase 18.
+export type SfxName = PatchName;
 
-const STORAGE_KEY = "lori.sfx.enabled";
+const LEGACY_KEY = "lori.sfx.enabled";
 
-// Frequency in Hz, duration in ms.
-type Note = { freq: number; dur: number; type?: OscillatorType; gain?: number };
-
-// Designed sequences — short, snappy, mobile-friendly.
-const PATCHES: Record<SfxName, Note[]> = {
-  tap: [{ freq: 660, dur: 40, type: "square", gain: 0.04 }],
-  correct: [
-    { freq: 523.25, dur: 80 }, // C5
-    { freq: 659.25, dur: 80 }, // E5
-    { freq: 783.99, dur: 140 }, // G5
-  ],
-  wrong: [
-    { freq: 311.13, dur: 110, type: "sawtooth", gain: 0.08 }, // Eb4
-    { freq: 246.94, dur: 180, type: "sawtooth", gain: 0.08 }, // B3
-  ],
-  "level-up": [
-    { freq: 523.25, dur: 90 },
-    { freq: 659.25, dur: 90 },
-    { freq: 783.99, dur: 90 },
-    { freq: 1046.5, dur: 220 }, // C6
-  ],
-  streak: [
-    { freq: 880, dur: 90 },
-    { freq: 880, dur: 90 },
-  ],
-  "lesson-complete": [
-    { freq: 523.25, dur: 110 }, // C5
-    { freq: 659.25, dur: 110 }, // E5
-    { freq: 783.99, dur: 110 }, // G5
-    { freq: 1046.5, dur: 320 }, // C6 (sustain)
-  ],
-};
-
+/**
+ * Thin React shim around the singleton synth. The real audio plumbing lives
+ * in lib/sound/{mixer,synth,patches}.ts; this hook just exposes a stable
+ * imperative API to UI components.
+ */
 export function useSfx() {
-  const ctxRef = useRef<AudioContext | null>(null);
-
+  // Schedule audio context warmup on first user gesture per page. Avoids
+  // the audible click when the first real SFX plays — iOS Safari needs
+  // the context unlocked + at least one silent ramp before "real" notes.
+  const warmedUp = useRef(false);
   useEffect(() => {
+    if (warmedUp.current) return;
+    function once() {
+      if (warmedUp.current) return;
+      warmedUp.current = true;
+      warmupAudio();
+      window.removeEventListener("pointerdown", once);
+      window.removeEventListener("keydown", once);
+    }
+    window.addEventListener("pointerdown", once, { passive: true });
+    window.addEventListener("keydown", once);
     return () => {
-      ctxRef.current?.close().catch(() => undefined);
-      ctxRef.current = null;
+      window.removeEventListener("pointerdown", once);
+      window.removeEventListener("keydown", once);
     };
   }, []);
 
-  const getCtx = useCallback((): AudioContext | null => {
-    if (typeof window === "undefined") return null;
-    const AC =
-      window.AudioContext ||
-      (window as unknown as { webkitAudioContext?: typeof AudioContext })
-        .webkitAudioContext;
-    if (!AC) return null;
-    if (!ctxRef.current) ctxRef.current = new AC();
-    return ctxRef.current;
+  const play = useCallback((name: SfxName) => {
+    playPatch(name);
   }, []);
-
-  const play = useCallback(
-    (name: SfxName) => {
-      if (typeof window === "undefined") return;
-      if (window.localStorage.getItem(STORAGE_KEY) === "false") return;
-      const ctx = getCtx();
-      if (!ctx) return;
-      // Browsers suspend audio context until user gesture; resume is cheap.
-      if (ctx.state === "suspended") void ctx.resume();
-
-      const now = ctx.currentTime;
-      let cursor = now;
-      for (const note of PATCHES[name]) {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = note.type ?? "sine";
-        osc.frequency.value = note.freq;
-        const peak = note.gain ?? 0.12;
-        gain.gain.setValueAtTime(0, cursor);
-        gain.gain.linearRampToValueAtTime(peak, cursor + 0.005);
-        gain.gain.exponentialRampToValueAtTime(
-          0.0001,
-          cursor + note.dur / 1000,
-        );
-        osc.connect(gain).connect(ctx.destination);
-        osc.start(cursor);
-        osc.stop(cursor + note.dur / 1000 + 0.02);
-        cursor += note.dur / 1000;
-      }
-    },
-    [getCtx],
-  );
 
   const setEnabled = useCallback((on: boolean) => {
     if (typeof window === "undefined") return;
-    window.localStorage.setItem(STORAGE_KEY, on ? "true" : "false");
+    window.localStorage.setItem(LEGACY_KEY, on ? "true" : "false");
   }, []);
 
   return { play, setEnabled };

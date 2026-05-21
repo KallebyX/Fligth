@@ -72,12 +72,6 @@ export function PublicProfile({
         />
 
         <div className="relative flex flex-col items-center gap-3 px-5 py-7 text-center">
-          {profile.country_code && (
-            <span className="absolute right-4 top-4 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-extrabold tracking-wider">
-              {profile.country_code}
-            </span>
-          )}
-
           <div className="rounded-full bg-white/15 p-2 ring-4 ring-white/30">
             <Mascot state="happy" size={132} outfit={profile.equipped_outfit_slug} />
           </div>
@@ -105,6 +99,11 @@ export function PublicProfile({
               <Trophy size={14} />
               Liga {division.name}
             </span>
+            {profile.country_code && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 opacity-90">
+                {profile.country_code}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-3 py-1 opacity-90">
               <CalendarDays size={14} />
               Entrou {joined}
@@ -130,7 +129,7 @@ export function PublicProfile({
           <div className="mt-3">
             {isSelf ? (
               <Link href="/profile/edit">
-                <Button size="md" variant="outline" className="bg-white text-ink">
+                <Button size="md" variant="outline" className="bg-white text-ink dark:bg-ink-mid dark:text-cloud">
                   <Pencil size={16} />
                   Editar perfil
                 </Button>

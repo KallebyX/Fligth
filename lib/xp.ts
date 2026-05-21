@@ -6,6 +6,8 @@ type DB = Awaited<ReturnType<typeof createClient>>;
 export const XP_PER_CORRECT_LESSON = 10;
 export const XP_PER_CORRECT_REVIEW = 5;
 export const XP_LESSON_COMPLETE_BONUS = 10;
+// Mini-aulas (theory_step) sempre acertam; XP menor que questão de avaliação.
+export const XP_PER_THEORY = 5;
 
 // Increments user_stats.total_xp and the current league_members.weekly_xp.
 // Idempotent? No — the caller is responsible for not double-awarding.

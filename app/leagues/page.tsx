@@ -7,6 +7,7 @@ import { Podium, type PodiumEntry } from "@/components/leagues/Podium";
 import { LeaderboardRow } from "@/components/leagues/LeaderboardRow";
 import { ResetTimer } from "@/components/leagues/ResetTimer";
 import { LevelUpDialog, type Promotion } from "@/components/leagues/LevelUpDialog";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import {
   DIVISIONS,
   PROMOTE_TOP,
@@ -62,12 +63,37 @@ export default async function LeaguesPage() {
   const division = getDivision(profile?.current_league ?? "bronze");
   const week = isoWeek();
 
-  const { data: league } = await supabase
+  // Ensure the league row + user's membership exist for the current week.
+  // Without this, brand-new users (or returning users who haven't earned
+  // XP yet this week) see an empty leaderboard. awardXP() does the same
+  // lazy creation, but this gives instant visual feedback the moment the
+  // user opens the tab.
+  let { data: league } = await supabase
     .from("leagues")
     .select("id")
     .eq("iso_week", week)
     .eq("division", division.slug)
     .maybeSingle();
+
+  if (!league) {
+    const { data: created } = await supabase
+      .from("leagues")
+      .insert({ iso_week: week, division: division.slug })
+      .select("id")
+      .single();
+    league = created ?? null;
+  }
+
+  if (league) {
+    // upsert membership with 0 weekly_xp (insert-only — never zeroes out
+    // an existing score).
+    await supabase
+      .from("league_members")
+      .upsert(
+        { league_id: league.id, user_id: user.id, weekly_xp: 0 },
+        { onConflict: "league_id,user_id", ignoreDuplicates: true },
+      );
+  }
 
   let board: {
     user_id: string;
@@ -75,6 +101,7 @@ export default async function LeaguesPage() {
     username: string | null;
     display_name: string | null;
     outfit: string | null;
+    avatar_url: string | null;
   }[] = [];
 
   if (league) {
@@ -88,7 +115,7 @@ export default async function LeaguesPage() {
     const ids = (members ?? []).map((m) => m.user_id);
     const { data: profiles } = await supabase
       .from("profiles")
-      .select("id, username, display_name, equipped_outfit_slug")
+      .select("id, username, display_name, equipped_outfit_slug, avatar_url")
       .in("id", ids);
     const map = new Map((profiles ?? []).map((p) => [p.id, p]));
 
@@ -100,6 +127,7 @@ export default async function LeaguesPage() {
         username: p?.username ?? null,
         display_name: p?.display_name ?? null,
         outfit: p?.equipped_outfit_slug ?? null,
+        avatar_url: p?.avatar_url ?? null,
       };
     });
   }
@@ -118,6 +146,7 @@ export default async function LeaguesPage() {
   const isBottomTier = division.tier === 1;
 
   return (
+    <PullToRefresh>
     <main className="container max-w-2xl space-y-5 py-6">
       <LevelUpDialog promo={promo} />
 
@@ -154,7 +183,7 @@ export default async function LeaguesPage() {
           <ResetTimer />
         </div>
 
-        {myRank >= 0 && (
+        {myRank >= 3 && (
           <div className="relative mt-4 flex items-center justify-between rounded-2xl bg-white/95 px-4 py-3 text-ink shadow-pop">
             <div>
               <p className="text-[10px] font-bold uppercase tracking-widest text-ink/55">
@@ -232,6 +261,8 @@ export default async function LeaguesPage() {
                       rank={rank}
                       username={m.username}
                       displayName={m.display_name}
+                      avatarUrl={m.avatar_url}
+                      outfit={m.outfit}
                       weeklyXp={m.weekly_xp}
                       isMe={m.user_id === user.id}
                       zone={zone}
@@ -254,7 +285,7 @@ export default async function LeaguesPage() {
       <Card>
         <CardTitle>Mapa das divisões</CardTitle>
         <CardDesc>10 ligas de Bronze até Diamante.</CardDesc>
-        <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-5">
+        <div className="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-5">
           {DIVISIONS.map((d) => {
             const here = d.slug === division.slug;
             return (
@@ -282,5 +313,6 @@ export default async function LeaguesPage() {
         </div>
       </Card>
     </main>
+    </PullToRefresh>
   );
 }

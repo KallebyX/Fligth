@@ -1,7 +1,23 @@
+import { withSentryConfig } from "@sentry/nextjs";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     serverActions: { bodySizeLimit: "2mb" },
+  },
+  images: {
+    // User-uploaded photos live in Supabase Storage (public buckets:
+    // `avatars`, `gallery`). OAuth providers serve avatars on a couple
+    // well-known CDNs — whitelist them so `next/image` accepts the URLs.
+    remotePatterns: [
+      { protocol: "https", hostname: "*.supabase.co" },
+      { protocol: "https", hostname: "*.supabase.in" },
+      { protocol: "https", hostname: "lh3.googleusercontent.com" },
+      { protocol: "https", hostname: "avatars.githubusercontent.com" },
+    ],
   },
   async headers() {
     return [
@@ -31,4 +47,17 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+// Sentry wraps the Next config. When SENTRY_DSN/NEXT_PUBLIC_SENTRY_DSN are
+// absent (e.g. local dev without keys), the runtime SDK simply doesn't init —
+// builds and routes work normally. Source-map upload only happens when
+// SENTRY_AUTH_TOKEN is set in CI / Vercel project env.
+export default withSentryConfig(withNextIntl(nextConfig), {
+  org: "oryum-tech",
+  project: "fligth",
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  hideSourceMaps: true,
+  disableLogger: true,
+  // Tunneling through /monitoring lets the SDK ping survive ad-blocker rules.
+  tunnelRoute: "/monitoring",
+});

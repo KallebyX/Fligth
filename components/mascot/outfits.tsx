@@ -1,4 +1,4 @@
-// Outfit overlays for Capitão Lorí. Coordinates are in the 120×140 viewBox
+// Outfit overlays for Comandante Lorí. Coordinates are in the 120×140 viewBox
 // shared with Mascot.tsx. Head center: (60, 50), r=34. Body center: (60, 98).
 // Overlays are intentionally painted ABOVE the base face, so they style the
 // hair/cap/scarf area without ever covering the eyes or beak.

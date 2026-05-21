@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {
   Award,
+  ChevronRight,
   Flame,
   GraduationCap,
   ShieldCheck,
@@ -29,6 +30,14 @@ function renderInfo(item: FeedItem): RenderInfo {
             <strong className="text-ink">
               {String(p.lesson_title ?? "uma lição")}
             </strong>
+            {Boolean(p.has_mixed_kinds) && (
+              <span
+                title="Lição com exercícios interativos"
+                className="ml-1 inline-flex items-center gap-0.5 rounded-full bg-sky/20 px-1.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-sky-deep align-middle"
+              >
+                interativa
+              </span>
+            )}
             {Boolean(p.perfect) && " com tudo certo 🌟"}
           </>
         ),
@@ -112,30 +121,37 @@ export function ActivityItem({ item }: { item: FeedItem }) {
   const info = renderInfo(item);
   const handle = item.user.username ?? "sem-usuario";
   const name = item.user.display_name ?? handle;
+  const href = `/profile/${handle}`;
   return (
-    <li className="card-pop flex items-center gap-3 p-3">
-      <span
-        className={cn(
-          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-          info.tint,
-        )}
+    <li>
+      <Link
+        href={href}
+        className="card-pop flex items-center gap-3 p-3 transition-colors hover:bg-cloud/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky focus-visible:ring-offset-2 focus-visible:ring-offset-cloud dark:hover:bg-ink-deep/40 dark:focus-visible:ring-offset-ink-deep"
       >
-        {info.icon}
-      </span>
-      <div className="min-w-0 flex-1">
-        <p className="truncate text-sm leading-snug text-ink/80">
-          <Link
-            href={`/profile/${handle}`}
-            className="font-extrabold text-ink hover:underline"
-          >
-            {name}
-          </Link>{" "}
-          {info.text}
-        </p>
-        <p className="mt-0.5 text-xs text-ink/50">
-          {formatRelativeTime(item.created_at)}
-        </p>
-      </div>
+        <span
+          aria-hidden
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+            info.tint,
+          )}
+        >
+          {info.icon}
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="line-clamp-2 text-sm leading-snug text-ink/80 dark:text-cloud/80">
+            <span className="font-extrabold text-ink dark:text-cloud">{name}</span>{" "}
+            {info.text}
+          </p>
+          <p className="mt-0.5 text-xs text-ink/50 dark:text-cloud/50">
+            {formatRelativeTime(item.created_at)}
+          </p>
+        </div>
+        <ChevronRight
+          size={18}
+          aria-hidden
+          className="shrink-0 text-ink/30 dark:text-cloud/30"
+        />
+      </Link>
     </li>
   );
 }

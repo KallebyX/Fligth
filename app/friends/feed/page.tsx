@@ -30,10 +30,10 @@ export default async function FeedPage(props: {
   const nextCursor = res.ok ? res.nextCursor : null;
 
   return (
-    <main className="container max-w-2xl space-y-5 py-6">
+    <main className="container max-w-xl space-y-5 py-6">
       <header>
-        <h1 className="text-3xl font-black">Feed</h1>
-        <p className="text-sm text-ink/60">
+        <h1 className="text-3xl font-black dark:text-cloud">Feed</h1>
+        <p className="text-sm text-ink/60 dark:text-cloud/60">
           Acompanhe as conquistas dos seus amigos e descubra novos pilotos.
         </p>
       </header>

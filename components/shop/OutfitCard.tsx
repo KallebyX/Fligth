@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { CreditCard, Gem, Check, Loader2, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
@@ -28,13 +29,6 @@ const RARITY_RING: Record<ShopOutfit["rarity"], string> = {
   legendary: "ring-gold",
 };
 
-const RARITY_LABEL: Record<ShopOutfit["rarity"], string> = {
-  common: "Comum",
-  rare: "Raro",
-  epic: "Épico",
-  legendary: "Lendário",
-};
-
 export function OutfitCard({
   outfit,
   owned,
@@ -47,8 +41,16 @@ export function OutfitCard({
   userGems: number;
 }) {
   const router = useRouter();
+  const t = useTranslations("shop");
   const [pending, start] = useTransition();
   const [error, setError] = useState<string | null>(null);
+
+  const RARITY_TKEY: Record<ShopOutfit["rarity"], string> = {
+    common: "outfitCommon",
+    rare: "outfitRare",
+    epic: "outfitEpic",
+    legendary: "outfitLegendary",
+  };
 
   const canBuyGems = outfit.price_gems != null && outfit.price_gems > 0;
   const canAfford = outfit.price_gems != null && userGems >= outfit.price_gems;
@@ -64,9 +66,9 @@ export function OutfitCard({
         void notify("error");
         setError(
           res.error === "not_enough_gems"
-            ? "Você não tem gems suficientes."
+            ? t("notEnoughGems")
             : res.error === "already_owned"
-              ? "Você já tem esse outfit."
+              ? t("alreadyOwned")
               : "Não foi possível comprar agora.",
         );
         return;
@@ -127,18 +129,20 @@ export function OutfitCard({
     >
       <div
         className={cn(
-          "mx-auto flex h-28 w-28 items-center justify-center rounded-2xl bg-cloud/60",
+          "mx-auto flex h-28 w-28 items-center justify-center rounded-2xl bg-cloud/60 dark:bg-ink-mid/60",
           !owned && "grayscale",
         )}
       >
         <Mascot state="happy" size={96} outfit={outfit.slug} />
       </div>
-      <p className="mt-2 text-sm font-extrabold text-ink">{outfit.name}</p>
-      <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50">
-        {RARITY_LABEL[outfit.rarity]}
+      <p className="mt-2 text-sm font-extrabold text-ink dark:text-cloud">
+        {outfit.name}
+      </p>
+      <p className="text-[10px] font-bold uppercase tracking-wider text-ink/50 dark:text-cloud/50">
+        {t(RARITY_TKEY[outfit.rarity])}
       </p>
       {outfit.description && (
-        <p className="mt-1 line-clamp-2 text-[11px] text-ink/60">
+        <p className="mt-1 line-clamp-2 text-[11px] text-ink/60 dark:text-cloud/60">
           {outfit.description}
         </p>
       )}
@@ -147,7 +151,7 @@ export function OutfitCard({
         {equipped ? (
           <Button variant="outline" size="sm" disabled className="w-full">
             <Check size={14} />
-            Equipado
+            {t("equipped")}
           </Button>
         ) : owned ? (
           <Button
@@ -156,7 +160,7 @@ export function OutfitCard({
             onClick={equip}
             disabled={pending}
           >
-            {pending ? <Loader2 size={14} className="animate-spin" /> : "Equipar"}
+            {pending ? <Loader2 size={14} className="animate-spin" /> : t("equip")}
           </Button>
         ) : canBuyGems || canBuyCash ? (
           <>
@@ -200,7 +204,7 @@ export function OutfitCard({
         ) : (
           <Button variant="outline" size="sm" disabled className="w-full">
             <Lock size={14} />
-            Exclusivo
+            {t("exclusive")}
           </Button>
         )}
       </div>

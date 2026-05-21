@@ -1,0 +1,253 @@
+{
+  "common": {
+    "back": "Volver",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "send": "Enviar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "skip": "Saltar",
+    "loading": "Cargando…",
+    "tryAgain": "Reintentar",
+    "search": "Buscar",
+    "aria": {
+      "close": "Cerrar",
+      "back": "Volver",
+      "next": "Siguiente",
+      "previous": "Anterior",
+      "like": "Me gusta",
+      "unlike": "Ya no me gusta",
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "notifications": "Notificaciones",
+      "settings": "Ajustes",
+      "search": "Buscar",
+      "clear": "Limpiar",
+      "expand": "Expandir",
+      "collapse": "Contraer",
+      "dragHandle": "Arrastra para cerrar"
+    }
+  },
+  "learn": {
+    "heroTitle": "Hora de volar",
+    "heroSubtitle": "Continúa donde lo dejaste.",
+    "continueLesson": "Continuar lección",
+    "startLesson": "Comenzar lección",
+    "perfect": "¡Perfecto!",
+    "lessonComplete": "Lección completa",
+    "xpAwarded": "+{xp} XP",
+    "goalHit": "¡Meta diaria alcanzada!",
+    "streakSaved": "Racha salvada ❄️",
+    "outOfHearts": "Sin corazones",
+    "waitOrPro": "Espera {minutes} min o suscríbete a Pro para corazones ilimitados.",
+    "exitLesson": "Salir de la lección",
+    "abandonTitle": "¿Salir sin terminar?",
+    "abandonBody": "Perderás el progreso de esta lección. Los corazones perdidos quedan descontados.",
+    "abandonStay": "Continuar lección",
+    "abandonLeave": "Salir de todos modos",
+    "verify": "Verificar",
+    "verifying": "Comprobando…",
+    "continue": "Continuar",
+    "transientError": "Error de conexión — vuelve a intentarlo.",
+    "practiceModeBadge": "Modo práctica"
+  },
+  "deleteAccount": {
+    "confirmPhrase": "ELIMINAR MI CUENTA"
+  },
+  "leagues": {
+    "title": "Ligas",
+    "subtitle": "Top 10 suben, últimos 5 bajan.",
+    "promoteZone": "Zona de promoción",
+    "demoteZone": "Zona de descenso",
+    "stayZone": "Manteniendo posición",
+    "yourPosition": "Tu posición",
+    "weeklyReset": "Reset en {days}d {hours}h",
+    "weeklyResetSoon": "Reset en {hours}h {minutes}min",
+    "earnXpToJoin": "Gana XP esta semana para entrar en tu liga.",
+    "promoted": "¡Subiste a {division}!",
+    "demoted": "Bajaste a {division}",
+    "stayed": "Mantuviste {division}",
+    "podiumYou": "tú",
+    "tabAll": "Todo",
+    "emptyState": "Nadie ganó XP esta semana. Establece el récord tú mismo."
+  },
+  "shop": {
+    "title": "Tienda",
+    "outfitsTab": "Outfits",
+    "rouletteTitle": "Ruleta diaria",
+    "rouletteSubtitle": "Cada giro entrega un outfit común o raro. ¿Repetido? Recibes 20 gems de consuelo.",
+    "rouletteCta": "Girar gratis",
+    "rouletteCooldown": "Disponible en {time}",
+    "rouletteReady": "Disponible ahora",
+    "jackpotTitle": "Jackpot",
+    "jackpotSubtitle": "Cada giro cuesta {cost} gems y entrega outfits épicos o legendarios. Cooldown: 1h.",
+    "jackpotCta": "Girar por {cost} gems",
+    "notEnoughGems": "No tienes gems suficientes.",
+    "alreadyOwned": "Ya tienes este outfit.",
+    "outfitCommon": "Común",
+    "outfitRare": "Raro",
+    "outfitEpic": "Épico",
+    "outfitLegendary": "Legendario",
+    "equipped": "Equipado",
+    "equip": "Equipar",
+    "exclusive": "Exclusivo"
+  },
+  "nav": {
+    "learn": "Aprender",
+    "feed": "Feed",
+    "leagues": "Ligas",
+    "shop": "Tienda",
+    "friends": "Amigos",
+    "profile": "Perfil",
+    "settings": "Ajustes",
+    "gallery": "Galería",
+    "schools": "Escuelas",
+    "pro": "Pro",
+    "season": "Temporada",
+    "invite": "Invitar"
+  },
+  "settings": {
+    "title": "Ajustes",
+    "subtitle": "Configura notificaciones, sonido, privacidad e idioma.",
+    "section": {
+      "notifications": "Notificaciones",
+      "notificationsDesc": "Push y email — controla lo que recibes.",
+      "sound": "Sonido y vibración",
+      "soundDesc": "Mezclador y atajos. Solo para este dispositivo.",
+      "privacy": "Privacidad",
+      "privacyDesc": "Quién puede ver tu perfil, XP y rachas.",
+      "appearance": "Apariencia",
+      "appearanceDesc": "Claro, oscuro o automático (sigue al sistema).",
+      "accessibility": "Accesibilidad",
+      "accessibilityDesc": "Texto más grande, alto contraste y movimiento reducido.",
+      "language": "Idioma",
+      "languageDesc": "Interfaz de la app (las lecciones siguen en portugués).",
+      "account": "Cuenta",
+      "accountDesc": "Perfil, seguridad y datos personales.",
+      "explore": "Explorar",
+      "exploreDesc": "Galería de la comunidad y escuelas de aviación.",
+      "about": "Acerca de",
+      "aboutDesc": "Versión, términos y soporte."
+    },
+    "theme": {
+      "title": "Tema",
+      "description": "La elección vale solo para este dispositivo. \"Automático\" cambia al anochecer si tu sistema usa modo oscuro.",
+      "light": "Claro",
+      "lightDescription": "Blanco y ligero — bueno para el día.",
+      "dark": "Oscuro",
+      "darkDescription": "Negro y tranquilo — bueno para la noche.",
+      "auto": "Automático",
+      "autoDescription": "Sigue al sistema (iOS / Android / navegador)."
+    },
+    "language": {
+      "current": "Idioma de la app",
+      "subcopy": "Elige el idioma de la interfaz. Las lecciones de examen permanecen en portugués (Brasil).",
+      "ptBR": "Português (Brasil)",
+      "en": "English",
+      "es": "Español"
+    },
+    "accessibility": {
+      "textSize": {
+        "title": "Tamaño de texto",
+        "description": "Escala toda la app — chips y botones crecen juntos.",
+        "default": "Estándar",
+        "large": "Grande",
+        "xlarge": "Muy grande"
+      },
+      "motion": {
+        "title": "Movimiento",
+        "description": "Reduce o fuerza animaciones. \"Sistema\" sigue tu ajuste de iOS / Android.",
+        "system": "Sistema",
+        "reduce": "Reducir",
+        "allow": "Permitir"
+      },
+      "contrast": {
+        "title": "Alto contraste",
+        "description": "Engrosa textos y bordes para facilitar la lectura.",
+        "default": "Estándar",
+        "high": "Aumentar"
+      }
+    },
+    "about": {
+      "version": "Versión",
+      "terms": "Términos de uso",
+      "privacy": "Política de privacidad",
+      "support": "Soporte"
+    }
+  },
+  "auth": {
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "logout": "Cerrar sesión",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "email": "Email",
+    "password": "Contraseña",
+    "loginPage": {
+      "title": "¡Bienvenido de vuelta!",
+      "subtitle": "Inicia sesión para seguir volando.",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando…",
+      "forgot": "Olvidé mi contraseña",
+      "noAccount": "¿Aún no tienes cuenta?",
+      "signupCta": "Regístrate gratis"
+    },
+    "signupPage": {
+      "title": "Empieza a estudiar — gratis",
+      "subtitle": "5 rutas, 25 lecciones, racha diaria. Sin tarjeta.",
+      "submit": "Crear cuenta",
+      "submitting": "Creando…",
+      "haveAccount": "¿Ya tienes cuenta?",
+      "loginCta": "Iniciar sesión"
+    },
+    "forgotPasswordPage": {
+      "title": "¿Olvidaste tu contraseña?",
+      "titleSent": "¡Email enviado!",
+      "subtitle": "Te mandamos un enlace para crear una nueva.",
+      "subtitleSent": "Revisa tu bandeja de entrada. El enlace caduca en 1 hora.",
+      "emailLabel": "Email de la cuenta",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando…",
+      "remembered": "¿Lo recordaste?",
+      "backToLogin": "Volver al inicio de sesión",
+      "successTitle": "Todo listo.",
+      "successBody": "Busca un email de Supabase Auth y haz clic en el enlace. ¿No lo recibiste? Revisa spam o prueba con otro email."
+    }
+  },
+  "hud": {
+    "streak": "Racha",
+    "xp": "XP",
+    "hearts": "Vidas",
+    "gems": "Gems",
+    "upgrade": "Mejorar"
+  },
+  "onboarding": {
+    "skipTutorial": "Saltar"
+  },
+  "pro": {
+    "restore": {
+      "button": "Restaurar compras",
+      "restoring": "Restaurando…",
+      "foundPro": "¡Pro restaurado! Actualizando…",
+      "restoredCount": "{count, plural, one {# entitlement restaurado} other {# entitlements restaurados}}",
+      "nothingToRestore": "Nada que restaurar.",
+      "failed": "Falló la restauración. Verifica tu Apple ID e inténtalo de nuevo."
+    },
+    "disclosures": {
+      "ariaLabel": "Términos y condiciones de la suscripción",
+      "autoRenew": {
+        "title": "Renovación automática.",
+        "body": "Pro Mensual y Pro Anual se renuevan automáticamente hasta que se cancelen. El cobro de renovación ocurre dentro de las 24h previas al fin del período pago."
+      },
+      "billing": "Se te cobrará el precio mostrado en la pantalla de compra, en tu moneda local, facturado por Apple (o Google) en tu cuenta de Apple ID / Google Play.",
+      "cancel": "Cancela cuando quieras en Ajustes → tu nombre → Suscripciones (iOS) o en la app de Google Play (Android). La cancelación mantiene tu acceso hasta el fin del período actual.",
+      "appleDisclaimer": "Apple Inc. y Google LLC no patrocinan ni son responsables del contenido en CMTE Lorí.",
+      "links": {
+        "terms": "Términos de uso",
+        "privacy": "Política de privacidad",
+        "eula": "EULA estándar de Apple"
+      }
+    }
+  }
+}

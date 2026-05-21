@@ -99,7 +99,7 @@ export default async function ShopPage({
               Novo
             </span>
             <p className="mt-1 text-base font-extrabold">
-              Outfits do Capitão Lorí
+              Outfits do Comandante Lorí
             </p>
             <p className="text-xs opacity-90">
               Roleta diária grátis · jackpot · compra com gems

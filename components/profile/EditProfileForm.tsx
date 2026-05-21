@@ -102,7 +102,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
         <CardDesc>É como os amigos te encontram na busca.</CardDesc>
         <div className="mt-3 flex gap-2">
           <div className="relative flex-1">
-            <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink/40">
+            <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-ink/40 dark:text-cloud/40">
               <AtSign size={18} />
             </span>
             <input
@@ -112,9 +112,10 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
                   e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, ""),
                 )
               }
+              autoComplete="username"
               maxLength={20}
               placeholder="seu_at"
-              className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-3 text-base font-medium outline-none transition-colors focus:border-sky"
+              className="h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white pl-10 pr-3 text-base font-medium outline-none transition-colors focus:border-sky dark:border-ink-light dark:bg-ink-mid dark:text-cloud"
             />
           </div>
           <Button
@@ -138,7 +139,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
             ✓ @ atualizado
           </p>
         )}
-        <p className="mt-2 text-[11px] text-ink/50">
+        <p className="mt-2 text-[11px] text-ink/50 dark:text-cloud/50">
           3–20 caracteres. Letras minúsculas, números e _ apenas.
         </p>
       </Card>
@@ -149,20 +150,21 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
 
         <div className="mt-3 space-y-4">
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
+            <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
               Nome de exibição
             </label>
             <input
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               maxLength={40}
-              placeholder="Capitão Lorí"
-              className="mt-1 h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white px-3 text-base font-medium outline-none focus:border-sky"
+              placeholder="Comandante Lorí"
+              autoComplete="name"
+              className="mt-1 h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white px-3 text-base font-medium outline-none focus:border-sky dark:border-ink-light dark:bg-ink-mid dark:text-cloud"
             />
           </div>
 
           <div>
-            <label className="flex justify-between text-xs font-bold uppercase tracking-wider text-ink/60">
+            <label className="flex justify-between text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
               <span>Bio</span>
               <span>{bio.length}/280</span>
             </label>
@@ -171,18 +173,19 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
               onChange={(e) => setBio(e.target.value.slice(0, 280))}
               rows={3}
               placeholder="Pretendo virar piloto privado em..."
-              className="mt-1 w-full resize-none rounded-2xl border-2 border-cloud-deep bg-white p-3 text-base font-medium outline-none focus:border-sky"
+              autoComplete="off"
+              className="mt-1 w-full resize-none rounded-2xl border-2 border-cloud-deep bg-white p-3 text-base font-medium outline-none focus:border-sky dark:border-ink-light dark:bg-ink-mid dark:text-cloud"
             />
           </div>
 
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
+            <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
               País
             </label>
             <select
               value={country}
               onChange={(e) => setCountry(e.target.value)}
-              className="mt-1 h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white px-3 text-base font-medium outline-none focus:border-sky"
+              className="mt-1 h-12 w-full rounded-2xl border-2 border-cloud-deep bg-white px-3 text-base font-medium outline-none focus:border-sky dark:border-ink-light dark:bg-ink-mid dark:text-cloud"
             >
               {COUNTRIES.map((c) => (
                 <option key={c.code} value={c.code}>
@@ -193,7 +196,7 @@ export function EditProfileForm({ initial }: { initial: EditProfileInitial }) {
           </div>
 
           <div>
-            <label className="text-xs font-bold uppercase tracking-wider text-ink/60">
+            <label className="text-xs font-bold uppercase tracking-wider text-ink/60 dark:text-cloud/60">
               Cor do perfil
             </label>
             <div className="mt-1 flex gap-2">

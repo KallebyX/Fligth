@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Mascot } from "@/components/mascot/Mascot";
 import { createClient } from "@/lib/supabase/server";
 import { suggestedUsers, type DiscoverUser } from "@/app/actions/discover";
+import { PullToRefresh } from "@/components/ui/PullToRefresh";
 import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
@@ -59,6 +60,7 @@ export default async function FriendsPage(props: {
   }
 
   return (
+    <PullToRefresh>
     <main className="container max-w-2xl space-y-5 py-6">
       <header className="flex items-start justify-between gap-3">
         <div>
@@ -126,6 +128,7 @@ export default async function FriendsPage(props: {
         </div>
       )}
     </main>
+    </PullToRefresh>
   );
 }
 

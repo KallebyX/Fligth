@@ -2,10 +2,9 @@
 
 import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Crown, Gem, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Mascot } from "@/components/mascot/Mascot";
+import { SpinningWheel } from "@/components/shop/SpinningWheel";
 import { spinJackpotAction } from "@/app/actions/outfits";
 import { impact, notify } from "@/lib/haptics";
 import { useSfx } from "@/components/learn/useSfx";
@@ -42,7 +41,8 @@ export function JackpotPanel({
     void impact("heavy");
     sfx.play("level-up");
     setError(null);
-    setSpinAngle((a) => a + 2160 + Math.floor(Math.random() * 360));
+    // Jackpot spins MORE rotations than the daily roulette for extra drama.
+    setSpinAngle((a) => a + 2520 + Math.floor(Math.random() * 360));
     start(async () => {
       const res = await spinJackpotAction();
       if (!res.ok) {
@@ -80,28 +80,28 @@ export function JackpotPanel({
       <div className="card-pop overflow-hidden bg-gradient-to-br from-gold/15 to-sun/15">
         <div className="grid gap-4 p-5 sm:grid-cols-[auto,1fr] sm:items-center">
           <div className="flex justify-center">
-            <motion.div
-              animate={{ rotate: spinAngle }}
-              transition={{ duration: 1.8, ease: [0.2, 0.8, 0.2, 1] }}
-              className="rounded-full bg-gradient-to-br from-gold/40 to-sun/40 p-4"
-            >
-              <Mascot state="celebrate" size={120} outfit="diamante-jacket" />
-            </motion.div>
+            <SpinningWheel
+              variant="jackpot"
+              spinAngle={spinAngle}
+              spinning={spinning}
+              outfit="diamante-jacket"
+              size={200}
+            />
           </div>
           <div>
             <p className="inline-flex items-center gap-1 rounded-full bg-gold/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-gold">
               <Crown size={12} />
               Épicos e lendários
             </p>
-            <h3 className="mt-2 text-xl font-black">Jackpot</h3>
-            <p className="mt-1 text-sm text-ink/70">
+            <h3 className="mt-2 text-xl font-black dark:text-cloud">Jackpot</h3>
+            <p className="mt-1 text-sm text-ink/70 dark:text-cloud/70">
               Cada giro custa{" "}
-              <strong className="text-ink">{JACKPOT_COST_GEMS} gems</strong> e
-              entrega outfits <strong className="text-ink">épicos</strong> ou{" "}
-              <strong className="text-ink">lendários</strong>. Cooldown: 1h.
+              <strong className="text-ink dark:text-cloud">{JACKPOT_COST_GEMS} gems</strong> e
+              entrega outfits <strong className="text-ink dark:text-cloud">épicos</strong> ou{" "}
+              <strong className="text-ink dark:text-cloud">lendários</strong>. Cooldown: 1h.
             </p>
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink/70">
-              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 font-extrabold">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-ink/70 dark:text-cloud/70">
+              <span className="inline-flex items-center gap-1 rounded-full bg-white px-2 py-0.5 font-extrabold dark:bg-ink-mid dark:text-cloud">
                 <Gem size={12} className="text-sky" />
                 {gems}
               </span>

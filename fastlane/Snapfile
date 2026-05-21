@@ -1,0 +1,63 @@
+# fastlane snapshot configuration — Apple Store screenshots automation.
+#
+# Run from repo root on macOS with Xcode installed:
+#
+#   bundle exec fastlane snapshot
+#
+# Output: fastlane/screenshots/<locale>/<device>/<name>.png
+#
+# These get uploaded automatically when you ship a build via fastlane:
+#
+#   bundle exec fastlane ios beta            # build + TestFlight
+#   bundle exec fastlane snapshot            # capture
+#   bundle exec fastlane deliver --skip_metadata --skip_binary_upload \
+#     --skip_app_version_update --force        # upload screenshots only
+#
+# Apple's currently-required device classes (Dec 2025):
+#   - iPhone 6.9" (16 Pro Max)              → 1320 × 2868
+#   - iPhone 6.7" (15 Pro Max) [legacy]     → 1290 × 2796
+#   - iPhone 6.5" (11 Pro Max) [legacy 2]   → 1242 × 2688
+#   - iPad Pro 13" M4                       → 2064 × 2752
+#   - iPad Pro 12.9" Gen 2-6 [legacy]       → 2048 × 2732
+
+devices([
+  "iPhone 16 Pro Max",
+  "iPhone 15 Pro Max",
+  "iPhone 11 Pro Max",
+  "iPad Pro 13-inch (M4)",
+  "iPad Pro (12.9-inch) (6th generation)",
+])
+
+languages([
+  "pt-BR",
+  "en-US",
+  "es-ES",
+])
+
+# Xcode scheme that has the UI test target wired up. To wire it up:
+#   - In Xcode, File → New → Target → iOS UI Testing Bundle
+#   - Add SnapshotHelper.swift to the UI test target (copy from
+#     ~/.fastlane/swift/snapshot/SnapshotHelper.swift)
+#   - In your XCUITest cases, call `snapshot("01-Learn")` etc.
+scheme("AppUITests")
+
+# Run snapshots concurrently for faster captures (10x speedup).
+concurrent_simulators(true)
+
+# Set the status bar to a clean "9:41 / WiFi / full battery" look — Apple
+# requirement for App Store screenshots since iOS 14.
+override_status_bar(true)
+override_status_bar_arguments("--time '9:41' --dataNetwork wifi --wifiBars 3 --cellularBars 4 --batteryState charged --batteryLevel 100")
+
+# Clear previous runs so we don't ship stale screenshots.
+clear_previous_screenshots(true)
+
+# Output goes here. Already in .gitignore by convention.
+output_directory("./fastlane/screenshots")
+
+# Show Xcode build/test logs in the console (helpful for debugging).
+buildlog_path("./fastlane/build-logs")
+
+# Don't take a screenshot if the test fails (the screenshot would be
+# whatever errored state the UI happens to be in).
+stop_after_first_error(true)

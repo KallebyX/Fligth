@@ -1,4 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
+import * as Sentry from "@sentry/nextjs";
 import { getStripe } from "@/lib/stripe/server";
 import { createServiceClient } from "@/lib/supabase/server";
 import { fulfillPurchase } from "@/lib/fulfillment";
@@ -34,7 +35,10 @@ export async function POST(request: NextRequest) {
         const userId = session.metadata?.user_id;
         const productId = session.metadata?.product_id;
         if (!userId || !productId) {
-          console.warn("[stripe webhook] checkout.session.completed missing metadata", session.id);
+          Sentry.captureMessage("stripe checkout.session.completed missing metadata", {
+            level: "warning",
+            tags: { session_id: session.id, stripe_event: event.type },
+          });
           break;
         }
         // Persist the actual payment method used (card, apple_pay, google_pay…)
@@ -104,9 +108,32 @@ export async function POST(request: NextRequest) {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
         const sub = event.data.object as Stripe.Subscription;
-        const userId = sub.metadata?.user_id ?? null;
+        let userId = sub.metadata?.user_id ?? null;
+
+        // Recovery path: when subscription comes in without user_id metadata
+        // (rare — e.g. portal-created subs), look up the Stripe customer's
+        // email and match to a Supabase auth user. Avoids dropping events.
+        if (!userId && typeof sub.customer === "string") {
+          try {
+            const customer = await stripe.customers.retrieve(sub.customer);
+            const email = (customer as Stripe.Customer).email;
+            if (email) {
+              const { data: matched } = await supabase.rpc("find_user_id_by_email", {
+                p_email: email,
+              });
+              if (typeof matched === "string") userId = matched;
+            }
+          } catch (err) {
+            Sentry.captureException(err, {
+              tags: { stripe_event: event.type, sub_id: sub.id },
+            });
+          }
+        }
         if (!userId) {
-          // Try to recover via customer email
+          Sentry.captureMessage("stripe subscription event missing user_id", {
+            level: "warning",
+            tags: { stripe_event: event.type, sub_id: sub.id },
+          });
           break;
         }
         const status = mapSubStatus(sub.status);
@@ -199,6 +226,10 @@ export async function POST(request: NextRequest) {
         break;
     }
   } catch (err) {
+    Sentry.captureException(err, {
+      tags: { stripe_event: event.type },
+      extra: { event_id: event.id },
+    });
     console.error("[stripe webhook] handler error", err);
     return NextResponse.json({ error: "handler_error" }, { status: 500 });
   }

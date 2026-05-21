@@ -6,7 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardTitle, CardDesc } from "@/components/ui/card";
 import { Mascot } from "@/components/mascot/Mascot";
 import { todayISO } from "@/lib/utils";
-import type { PlayerQuestion } from "@/components/learn/QuestionPlayer";
+import type { Exercise } from "@/components/learn/exercises/types";
+import {
+  EXERCISE_SELECT,
+  toExercise,
+  type QuestionRow,
+} from "@/lib/exercises/toExercise";
 import { GraduationCap, RotateCw, ShieldCheck } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -104,18 +109,25 @@ export default async function ReviewPage() {
     );
   }
 
-  // Cap at 20 per session.
+  // Cap at 20 per session. Exclude theory_step from review (mini-aulas
+  // are pedagogical, not assessment — they don't make sense as SRS items
+  // even when persisted from a prior lesson).
   const ids = dueIds.slice(0, 20);
   const { data: questions } = await supabase
     .from("questions_public")
-    .select("id, stem, choice_a, choice_b, choice_c, choice_d")
-    .in("id", ids);
+    .select(EXERCISE_SELECT)
+    .in("id", ids)
+    .neq("kind", "theory_step");
 
-  const playerQuestions: PlayerQuestion[] = (questions ?? []).map((q) => ({
-    id: q.id,
-    stem: q.stem,
-    choices: { A: q.choice_a, B: q.choice_b, C: q.choice_c, D: q.choice_d },
-  }));
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("equipped_outfit_slug")
+    .eq("id", user.id)
+    .single();
+
+  const exercises = ((questions ?? []) as QuestionRow[])
+    .map(toExercise)
+    .filter((e): e is Exercise => e !== null);
 
   return (
     <main>
@@ -129,14 +141,17 @@ export default async function ReviewPage() {
               Revisão de hoje
             </p>
             <p className="text-base font-extrabold leading-tight">
-              {playerQuestions.length}{" "}
-              {playerQuestions.length === 1 ? "questão pendente" : "questões pendentes"}
+              {exercises.length}{" "}
+              {exercises.length === 1 ? "questão pendente" : "questões pendentes"}
             </p>
             <p className="text-xs text-ink/60">Sem perder vidas — só pra fixar.</p>
           </div>
         </div>
       </div>
-      <ReviewRunner questions={playerQuestions} />
+      <ReviewRunner
+        exercises={exercises}
+        mascotOutfit={profile?.equipped_outfit_slug ?? null}
+      />
     </main>
   );
 }
